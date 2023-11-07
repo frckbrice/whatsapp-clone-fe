@@ -3,6 +3,10 @@ import React from "react";
 import Avatar from "./Avatar";
 import { MdGroups2 } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
+import { GoSearch } from "react-icons/go";
+import { BsEmojiSmile } from "react-icons/bs";
+import { IoSendSharp } from "react-icons/io5";
+import { IoMdAdd } from "react-icons/io";
 
 const Discossions = () => {
   return (
@@ -12,7 +16,7 @@ const Discossions = () => {
           <div className="flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r">
             <Avatar
               onClick={() => alert("clicked")}
-              dp="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600"
+              profilePicture="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600"
               size={10}
             />
 
@@ -29,13 +33,46 @@ const Discossions = () => {
         </div>
       </div>
       <div className="w-[70vw] bg-[url('https://w0.peakpx.com/wallpaper/557/521/HD-wallpaper-whatsapp-v-background-doodle-pattern-patterns-whatsapp-thumbnail.jpg')]">
-        <div className="flex items-center max-h-16 justify-between w-full h-max-5 px-3 py-2 ">
-          <Avatar
-            onClick={() => alert("clicked")}
-            dp="https://avatars.githubusercontent.com/u/106551910?v=4"
-            size={10}
-          />
+        <div className="flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 ">
+          <div className="flex gap-3">
+            <Avatar
+              onClick={() => alert("clicked")}
+              profilePicture="https://avatars.githubusercontent.com/u/106551910?v=4"
+              size={10}
+            />
+            <div>
+              <h3 className="text-gray-700">Colins</h3>
+              <p className="text-gray-500 text-xs">+2374568457</p>
+            </div>
+          </div>
+
+          <div className="flex gap-5">
+            <button className="text-2xl text-gray-600">
+              <GoSearch />
+            </button>
+            <button className="text-2xl text-gray-600">
+              <HiDotsVertical />
+            </button>
+          </div>
         </div>
+
+        <form
+          action=""
+          className="flex items-center bg-bgGray h-[] fixed bottom-0 w-full py-2 px-4 gap-5"
+        >
+          <IoMdAdd className="text-2xl text-gray-700" />
+          <div className="flex bg-white items-center rounded-md gap-5 p-1">
+            <BsEmojiSmile className="text-2xl text-gray-700" />
+            <input
+              type="text"
+              className="w-[57vw] my-2 outline-none text-gray-600"
+              placeholder="Type a message"
+            />
+          </div>
+          <button className="text-2xl text-gray-700">
+            <IoSendSharp />
+          </button>
+        </form>
       </div>
     </div>
   );
