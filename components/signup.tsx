@@ -4,7 +4,7 @@ import Image from "next/image";
 const Signup = () => {
   return (
     <div>
-      <div className="flex flex-col justify-center w-[75vw] mobile:max-sm:w-[95%]">
+      <div className="flex flex-col justify-center xl:mt-5 w-[75vw] mobile:max-sm:w-[95%]">
         <div className="flex items-center gap-4 text-white">
           <Image src={"/logo.png"} width={50} height={50} alt={""}></Image>
           <p>WHATSAPP WEB</p>
