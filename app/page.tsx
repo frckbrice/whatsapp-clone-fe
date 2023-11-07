@@ -5,6 +5,7 @@ import ConnectSupabaseSteps from "@/components/ConnectSupabaseSteps";
 import SignUpUserSteps from "@/components/SignUpUserSteps";
 import Header from "@/components/Header";
 import { cookies } from "next/headers";
+import Signup from "@/components/signup";
 
 export default async function Index() {
   const cookieStore = cookies();
@@ -23,8 +24,8 @@ export default async function Index() {
   const isSupabaseConnected = canInitSupabaseClient();
 
   return (
-    <div className="flex-1 h-[80vh] w-[100%] bg-white flex flex-col gap-20 items-center rounded-sm">
-      hello WhatsApp
+    <div className="flex-1 h-[80vh] w-[100%] flex flex-col items-center mx-auto rounded-sm">
+      <Signup />
     </div>
   );
 }
