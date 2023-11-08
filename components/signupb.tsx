@@ -28,10 +28,10 @@ const Signupb = () => {
               <div className="flex justify-between">
                 <div className="flex flex-col gap-8">
                   <h1 className="text-gray-700 text-[30px]">
-                    Enter the number on your phone
+                    Enter the verification code
                   </h1>
                   <p className="text-gray-700 text-[18px]">
-                    Association du compte Whatsapp +237 676612446 <br />(
+                    Association du compte Whatsapp email address <br />(
                     <a href="/autha" className="text-teal-600">
                       modify
                     </a>
@@ -41,9 +41,8 @@ const Signupb = () => {
                     <ol className="flex flex-col gap-5 text-gray-800 text-[19px] list-decimal">
                       <li> Open your email account</li>
                       <li>
-                        Access the settings by clicking on your <br /> profil
-                        picture,
-                        <span className="text-gray-600 font-semibold">
+                        Access the settings by clicking on your profil picture,
+                        <span className="text-gray-600 font-semibold flex items-center gap-1">
                           Menu
                           <CiMenuKebab className="bg-gray-100 rounded w-4 h-4" />{" "}
                           or settings
@@ -52,7 +51,7 @@ const Signupb = () => {
                       </li>
                       <li>
                         click on
-                        <span className="text-gray-600 font-semibold">
+                        <span className="text-gray-600 font-semibold px-1">
                           paired devices
                         </span>{" "}
                         , next on{" "}
