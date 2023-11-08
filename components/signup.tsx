@@ -19,13 +19,13 @@ const Signup = () => {
       return
     }
 
-    const { error, data } = await supabase.auth.signIn({ email })
+    // const { error, data } = await supabase.auth.signIn({ email })
 
-    if (error) console.log(error)
-    if (data) {
-      console.log(data)
-      setSubmitted(true)
-    }
+    // if (error) console.log(error)
+    // if (data) {
+    //   console.log(data)
+    //   setSubmitted(true)
+    // }
   }
 
   return (
@@ -51,13 +51,13 @@ const Signup = () => {
             />
             <p className="text-red-600">{error}</p>
             <button
-            onClick={() => signup()}
+              onClick={() => signup()}
               className="bg-secondry w-20 py-2 text-sm text-white rounded">
               NEXT
             </button>
           </form>
           {submitted ? <p>Please check out your email</p> : ""}
-          
+
         </div>
       </div>
     </div>
