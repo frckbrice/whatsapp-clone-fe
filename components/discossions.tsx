@@ -69,7 +69,7 @@ const Discossions = () => {
               placeholder="Type a message"
             />
           </div>
-          <button className="text-2xl text-gray-700">
+          <button className="text-2xl ">
             <IoSendSharp />
           </button>
         </form>
