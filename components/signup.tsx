@@ -19,15 +19,15 @@ const Signup = () => {
       return
     }
 
-    // const { error, data } = await supabase.auth.signIn({ email })
+    const { error, data } = await supabase.auth.signInWithOtp({ email })
 
-    // if (error) console.log(error)
-    // if (data) {
-    //   console.log(data)
-    //   setSubmitted(true)
-    // }
+    if (error) console.log(error)
+    if (data) {
+      console.log(data)
+      setSubmitted(true)
+    }
   }
-
+  
   return (
     <div>
       <div className="flex flex-col justify-center w-[75vw] mobile:max-sm:w-[95%]">
