@@ -21,7 +21,7 @@ export default function RootLayout({
       <body>
         <div className="flex flex-col h-screen absolute w-[100vw] items-center">
           <div className=" h-[32vh] w-full bg-themecolor absolute top-0"></div>
-          <div className=" flex flex-col items-center w-[95vw] mx-auto relative mt-5">
+          <div className=" flex flex-col items-center w-full mx-auto relative">
             {children}
           </div>
         </div>
