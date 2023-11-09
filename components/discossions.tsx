@@ -12,7 +12,6 @@ import HeaderMainPageL from "./mainLayoutPage/HeaderPage";
 import {
   dropdownRight,
   dropdownLeft,
-  dropdownBottomLeft,
 } from "../utils/data/mainpageDropdownLists";
 import DropDownR from "./mainLayoutPage/DropdownR";
 
