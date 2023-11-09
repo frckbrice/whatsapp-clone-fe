@@ -14,7 +14,7 @@ import {
   dropdownLeft,
 } from "../utils/data/mainpageDropdownLists";
 import DropDownR from "./mainLayoutPage/DropdownR";
-import { useWhatSappContext } from "@/app/context";
+import { useWhatSappContext } from "@/components/context";
 import SideNavRight from "./RightSideBar/SideNavRight";
 import SearchField from "./RightSideBar/SearchField";
 

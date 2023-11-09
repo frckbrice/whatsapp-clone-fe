@@ -2,7 +2,7 @@
 import React, { useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Avatar from "../Avatar";
-import { useWhatSappContext } from "@/app/context";
+import { useWhatSappContext } from "@/components/context";
 
 type Props = {
   children: React.ReactElement;

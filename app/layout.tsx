@@ -1,7 +1,7 @@
 import { GeistSans } from "geist/font";
 import "./globals.css";
 import type { Metadata } from "next";
-import { WhatSappContextProvider } from "./context";
+import { WhatSappContextProvider } from "../components/context";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`

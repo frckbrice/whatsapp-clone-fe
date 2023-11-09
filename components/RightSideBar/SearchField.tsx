@@ -2,7 +2,6 @@
 import React, { useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import InputWithIcon from "./InputWithIcon";
 
 type Props = {};
 
