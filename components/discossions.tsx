@@ -14,6 +14,9 @@ import {
   dropdownLeft,
 } from "../utils/data/mainpageDropdownLists";
 import DropDownR from "./mainLayoutPage/DropdownR";
+import { useWhatSappContext } from "@/app/context";
+import SideNavRight from "./RightSideBar/SideNavRight";
+import SearchField from "./RightSideBar/SearchField";
 
 const Discossions = () => {
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
@@ -21,6 +24,8 @@ const Discossions = () => {
   // const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
+
+  const { setOpenSideNav, openSideNav } = useWhatSappContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -41,7 +46,7 @@ const Discossions = () => {
 
   return (
     <div className="flex w-full">
-      <div className="bg-white w-[30vw] h-screen">
+      <div className="bg-white w-[25vw] h-screen">
         <div>
           <div className="flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r">
             <Avatar
@@ -71,23 +76,30 @@ const Discossions = () => {
       </div>
       <div
         ref={ref}
-        className="w-[70vw] bg-[url('https://w0.peakpx.com/wallpaper/557/521/HD-wallpaper-whatsapp-v-background-doodle-pattern-patterns-whatsapp-thumbnail.jpg')]"
+        className={
+          openSideNav
+            ? "relative w-[50vw] bg-[url('https://w0.peakpx.com/wallpaper/557/521/HD-wallpaper-whatsapp-v-background-doodle-pattern-patterns-whatsapp-thumbnail.jpg')] border-r border-r-gray-300"
+            : "relative w-[75vw] bg-[url('https://w0.peakpx.com/wallpaper/557/521/HD-wallpaper-whatsapp-v-background-doodle-pattern-patterns-whatsapp-thumbnail.jpg')]"
+        }
       >
         <div className="flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 ">
           <div className="flex gap-3">
             <Avatar
               onClick={() => alert("clicked")}
-              profilePicture="https://avatars.githubusercontent.com/u/106551910?v=4"
+              profilePicture="/alexander-shatov-_whatsapp-unsplash.jpg"
               size={10}
             />
             <div>
-              <h3 className="text-gray-700">Colins</h3>
-              <p className="text-gray-500 text-xs">+2374568457</p>
+              <h3 className="text-gray-700">add name here</h3>
+              <p className="text-gray-500 text-xs">email or phone number</p>
             </div>
           </div>
 
           <div className="flex gap-5">
-            <button className="text-2xl text-gray-600">
+            <button
+              className="text-2xl text-gray-600"
+              onClick={() => setOpenSideNav(true)}
+            >
               <GoSearch />
             </button>
             <button
@@ -102,7 +114,15 @@ const Discossions = () => {
           </div>
         </div>
 
-        <div className="flex items-center bg-bgGray h-[] fixed bottom-0 w-full py-2 px-4 gap-5">
+        <div>{}</div>
+
+        <div
+          className={
+            openSideNav
+              ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5"
+              : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5"
+          }
+        >
           {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}
           <BsEmojiSmile className="text-2xl text-gray-700" />
           <button
@@ -126,10 +146,10 @@ const Discossions = () => {
             />
           </button>
 
-          <div className="flex bg-white items-center rounded-md gap-5 p-1">
+          <div className="flex bg-white items-center rounded-md gap-5 p-1 w-full">
             <input
               type="text"
-              className="w-[57vw] my-2 outline-none text-gray-600 px-3 "
+              className="w-full my-2 outline-none text-gray-600 px-3 "
               placeholder="Type a message"
             />
           </div>
@@ -138,6 +158,9 @@ const Discossions = () => {
           </button>
         </div>
       </div>
+      <SideNavRight>
+        <SearchField />
+      </SideNavRight>
     </div>
   );
 };
