@@ -25,7 +25,7 @@ const Signupb = () => {
         <div className="w-full drop-shadow">
           <div className="bg-white mobile:max-sm:ml-2 flex flex-col justify-center w-full p-20 mobile:max-sm:p-5 mt-8 rounded ">
             <div>
-              <div className="flex justify-between">
+              <div className="flex justify-between max-[800px]:flex-col max-[800px]:px-6">
                 <div className="flex flex-col gap-8">
                   <h1 className="text-gray-700 text-[30px]">
                     Enter the verification code
@@ -126,9 +126,10 @@ const Signupb = () => {
             <p className="text-teal-600 font-bold">Besoin d'aide ?</p>
             <Image
               src="/qr-video.png"
-              width={400}
-              height={300}
+              width={700}
+              height={500}
               alt="login_img"
+              className="pt-4 pb-[70px]"
             />
           </div>
         </div>
