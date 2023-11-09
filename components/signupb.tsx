@@ -5,7 +5,7 @@ import { CiMenuKebab } from "react-icons/ci";
 import { GrSettingsOption } from "react-icons/gr";
 
 const Signupb = () => {
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     const regex = /^[A-Za-z0-9]+$/;
 

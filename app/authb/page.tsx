@@ -30,6 +30,7 @@ const Autha = () => {
             </li>
           </ol>
         </div>
+        <div></div>
       </div>
 
       <hr />
