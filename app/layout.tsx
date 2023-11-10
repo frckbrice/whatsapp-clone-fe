@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.className}>
+    <html dir="ltr" lang="en" className={GeistSans.className}>
       <body>
         <div className="flex flex-col h-screen absolute w-[100vw] items-center">
           <div className=" h-[32vh] w-full bg-themecolor absolute top-0"></div>

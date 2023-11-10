@@ -114,7 +114,18 @@ const Discossions = () => {
           </div>
         </div>
 
-        <div>{}</div>
+        <div className=" flex flex-col justify-center items-center m-20 ">
+          {" "}
+          <div className="box arrow-right">
+            This is a box with some content and an arrow at the top.
+          </div>
+          <div className="box arrow-left">
+            This is a box with some content and an arrow at the top.
+          </div>
+          <div className="box">
+            This is a box with some content and an arrow at the top.
+          </div>
+        </div>
 
         <div
           className={

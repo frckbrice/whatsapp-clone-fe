@@ -25,9 +25,6 @@ export const WhatSappContextProvider = ({ children }: any) => {
 
   const values = { openSideNav, setOpenSideNav };
 
-  console.log("in the context");
-  console.log("openSideNav: " + openSideNav);
-
   return (
     <WhatSappContext.Provider value={values}>
       {children}
