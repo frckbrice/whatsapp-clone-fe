@@ -8,16 +8,37 @@ const Signup = () => {
   const [email, setEmail] = React.useState('')
   const [submitted, setSubmitted] = React.useState(false)
   const [error, setError] = React.useState('')
-  const mailformat = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
-  const signup = async () => {
+  const signup = async (e: any) => {
+    e.preventDefault()
     if (!email) {
       return
     }
-    else if (!(email.match(mailformat))) {
-      setError("Invalid email address")
-      return
-    }
+    // const { data, error } = await supabase.auth.signInWithOtp({
+    //   email: email,
+
+    //   options: {
+    //     // set this to false if you do not want the user to be automatically signed up
+    //     shouldCreateUser: false,
+    //     emailRedirectTo: 'http://localhost:3000/welcome',
+    //   },
+    // })
+    // if (error) {
+    //   console.log(error)
+    // }
+    // if (data) {
+    //   console.log(data)
+    //   setSubmitted(true)
+    // }
+    // if (submitted) {
+    //   console.log("check email")
+    //   return (
+    //     <div>
+    //       <p>check your mails</p>
+    //     </div>
+    //   )
+    // }
+    
 
     const { error, data } = await supabase.auth.signInWithOtp({ email })
 
@@ -26,8 +47,16 @@ const Signup = () => {
       console.log(data)
       setSubmitted(true)
     }
+    if (submitted) {
+      console.log("check your email address")
+      return (
+        <div className="text-center">
+          <h1>Please check your email to signup</h1>
+        </div>
+      )
+    }
   }
-  
+
   return (
     <div>
       <div className="flex flex-col justify-center xl:mt-5 w-[75vw] mobile:max-sm:w-[95%]">
@@ -40,9 +69,9 @@ const Signup = () => {
             Enter your email
           </h2>
           <p className="text-center text-slate-500 mt-2">
-            signup to whatsapp by entering your email acount
+            signup to whatsapp by entering your email address
           </p>
-          <form action="" className="flex flex-col mt-5 gap-5 items-center">
+          <form action="" onSubmit={signup} className="flex flex-col mt-5 gap-5 items-center">
             <input
               className="w-60 mx-auto border border-slate-200 p-2 rounded outline-1 outline-secondry"
               type="email"
@@ -51,7 +80,8 @@ const Signup = () => {
             />
             <p className="text-red-600">{error}</p>
             <button
-              onClick={() => signup()}
+              // onClick={() => signup()}
+              type="submit"
               className="bg-secondry w-20 py-2 text-sm text-white rounded">
               NEXT
             </button>
