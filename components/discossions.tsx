@@ -117,13 +117,13 @@ const Discossions = () => {
         <div className=" flex flex-col justify-center items-center m-20 ">
           {" "}
           <div className="box arrow-right">
-            This is a box with some content and an arrow at the top.
+            This is a box with some content and an arrow at the top right.
           </div>
           <div className="box arrow-left">
-            This is a box with some content and an arrow at the top.
+            This is a box with some content and an arrow at the top left.
           </div>
           <div className="box">
-            This is a box with some content and an arrow at the top.
+            This is a box with some content without arrow.
           </div>
         </div>
 
