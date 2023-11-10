@@ -20,8 +20,11 @@ const nextConfig = {
       {
         hostname: "www.google.com",
       },
+      {
+        hostname: "static.startuptalky.com",
+      },
     ],
-    // domains: ["images.pexels.com, "]
+    // domains: ["images.pexels.com, "] static.startuptalky.com
   },
 };
 

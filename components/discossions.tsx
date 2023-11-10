@@ -21,6 +21,8 @@ import {
   ReceiverMessages,
   SenderMessages,
 } from "./mainLayoutPage/Message";
+import ContactInfoPage from "./RightSideBar/ContactInfoPage";
+import { useWhatSappContactContext } from "./context/Context";
 
 const Discossions = () => {
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
@@ -30,6 +32,7 @@ const Discossions = () => {
     useState<boolean>(false);
 
   const { setOpenSideNav, openSideNav } = useWhatSappContext();
+  const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -48,14 +51,16 @@ const Discossions = () => {
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
 
+  const openProfileInfo = () => {};
+
   return (
     <div className="flex w-full">
       <div className="bg-white w-[25vw] h-screen">
         <div>
           <div className="flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r">
             <Avatar
-              onClick={() => alert("clicked")}
-              profilePicture="logo.png"
+              onClick={() => openProfileInfo()}
+              profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
               size={10}
             />
 
@@ -81,21 +86,24 @@ const Discossions = () => {
       <div
         ref={ref}
         className={
-          openSideNav
-            ? "relative w-[50vw] bg-whatsappimg border-r border-r-gray-300 z-0"
-            : "relative w-[75vw] bg-whatsappimg z-0  "
+          openSideNav || openContactInfo
+            ? "relative w-[50vw] bg-whatsappimg border-r border-r-gray-300 z-0 cursor-pointer"
+            : "relative w-[75vw] bg-whatsappimg z-0 cursor-pointer "
         }
       >
         <div className="flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 ">
-          <div className="flex gap-3">
+          <div
+            className="flex gap-3 w-full cursor-pointer"
+            onClick={() => setOpenContactInfo(true)}
+          >
             <Avatar
-              onClick={() => alert("clicked")}
-              profilePicture="/alexander-shatov-_whatsapp-unsplash.jpg"
+              onClick={() => setOpenContactInfo(true)}
+              profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
               size={10}
             />
             <div>
-              <h3 className="text-gray-700">add name here</h3>
-              <p className="text-gray-500 text-xs">email or phone number</p>
+              <h3 className="text-gray-700">David Beckamp</h3>
+              <p className="text-gray-500 text-xs">(+801) 365 145 269</p>
             </div>
           </div>
 
@@ -171,9 +179,15 @@ const Discossions = () => {
           </button>
         </div>
       </div>
-      <SideNavRight>
-        <SearchField />
-      </SideNavRight>
+      {openContactInfo ? (
+        <SideNavRight title="Contact Infos">
+          <ContactInfoPage />
+        </SideNavRight>
+      ) : (
+        <SideNavRight title="Search for messages">
+          <SearchField />
+        </SideNavRight>
+      )}
     </div>
   );
 };

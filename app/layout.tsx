@@ -2,6 +2,7 @@ import { GeistSans } from "geist/font";
 import "./globals.css";
 import type { Metadata } from "next";
 import { WhatSappContextProvider } from "../components/context";
+import { WhatSappContactContextProvider } from "@/components/context/Context";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -24,7 +25,11 @@ export default function RootLayout({
         <div className="flex flex-col h-screen absolute w-[100vw] items-center">
           <div className=" h-[32vh] w-full bg-themecolor absolute top-0"></div>
           <div className=" flex flex-col items-center w-full mx-auto relative">
-            <WhatSappContextProvider> {children}</WhatSappContextProvider>
+            <WhatSappContextProvider>
+              <WhatSappContactContextProvider>
+                {children}
+              </WhatSappContactContextProvider>{" "}
+            </WhatSappContextProvider>
           </div>
         </div>
       </body>
