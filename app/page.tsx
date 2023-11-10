@@ -7,6 +7,8 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import Signup from "@/components/signup";
 import Discossions from "@/components/discossions";
+import SideNavRight from "@/components/RightSideBar/SideNavRight";
+import SearchField from "@/components/RightSideBar/SearchField";
 
 export default async function Index() {
   const cookieStore = cookies();
@@ -23,11 +25,13 @@ export default async function Index() {
   };
 
   const isSupabaseConnected = canInitSupabaseClient();
+  if (isSupabaseConnected) console.log("supabase is connected successfully");
 
   return (
-    <div className="flex-1 h-[80vh] w-[100%] flex flex-col items-center mx-auto rounded-sm">
-      <Signup />
-      {/* <Discossions /> */}
+    <div className="flex-1 h-[80vh] w-[100%] flex flex-col items-center mx-auto rounded-sm ">
+      {/* <Signup /> */}
+
+      <Discossions />
     </div>
   );
 }
