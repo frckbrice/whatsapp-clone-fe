@@ -10,7 +10,7 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
   return (
     <ul
       ref={ref}
-      className="absolute mt-8 py-2 w-[250px] bg-white rounded-md shadow-xl  delay-7000 transform transition-duration-10000   -translate-x-48 -scale-30  ease-in-out"
+      className="absolute mt-8 py-2 w-[250px] bg-white rounded-md shadow-xl  delay-7000 transform transition-duration-10000   -translate-x-48 -scale-30  ease-in-out z-10"
     >
       {props.dropdownList.map((value, index) => (
         <li

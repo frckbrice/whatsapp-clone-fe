@@ -17,6 +17,11 @@ import DropDownR from "./mainLayoutPage/DropdownR";
 import { useWhatSappContext } from "@/components/context";
 import SideNavRight from "./RightSideBar/SideNavRight";
 import SearchField from "./RightSideBar/SearchField";
+import {
+  FollowingMessagesSimple,
+  ReceiverMessages,
+  SenderMessages,
+} from "./mainLayoutPage/Message";
 
 const Discossions = () => {
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
@@ -78,8 +83,8 @@ const Discossions = () => {
         ref={ref}
         className={
           openSideNav
-            ? "relative w-[50vw] bg-[url('https://w0.peakpx.com/wallpaper/557/521/HD-wallpaper-whatsapp-v-background-doodle-pattern-patterns-whatsapp-thumbnail.jpg')] border-r border-r-gray-300"
-            : "relative w-[75vw] bg-[url('https://w0.peakpx.com/wallpaper/557/521/HD-wallpaper-whatsapp-v-background-doodle-pattern-patterns-whatsapp-thumbnail.jpg')]"
+            ? "relative w-[50vw] bg-whatsappimg border-r border-r-gray-300 z-0"
+            : "relative w-[75vw] bg-whatsappimg z-0  "
         }
       >
         <div className="flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 ">
@@ -114,16 +119,14 @@ const Discossions = () => {
           </div>
         </div>
 
-        <div className=" flex flex-col justify-center items-center m-20 ">
-          {" "}
-          <div className="box arrow-right">
-            This is a box with some content and an arrow at the top right.
+        <div className="relative flex flex-col justify-between mt-3 px-10">
+          <div className="flex flex-col items-start w-[50%]">
+            <ReceiverMessages />
+            <FollowingMessagesSimple />
           </div>
-          <div className="box arrow-left">
-            This is a box with some content and an arrow at the top left.
-          </div>
-          <div className="box">
-            This is a box with some content without arrow.
+
+          <div className="absolute right-0 flex-1 pr-10">
+            <SenderMessages />
           </div>
         </div>
 

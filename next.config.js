@@ -21,7 +21,7 @@ const nextConfig = {
         hostname: "www.google.com",
       },
     ],
-    // domains: ["images.pexels.com, "],
+    // domains: ["images.pexels.com, "]
   },
 };
 
