@@ -12,7 +12,11 @@ const Avatar = ({ onClick, profilePicture, size }: AvatarProps) => {
   return (
     <button
       onClick={onClick}
-      style={{ backgroundImage: `url(${profilePicture})` }}
+      style={{
+        backgroundImage: `url(${profilePicture})`,
+        width: `${size * 5}px`,
+        height: `${size * 5}px`,
+      }}
       className={`bg-cover bg-center object-fill rounded-[50%] h-${size} w-${size}`}
     >
       {/* <Image
