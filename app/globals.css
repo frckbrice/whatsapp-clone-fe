@@ -1,3 +1,77 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* .tooltip { */
+/* position: relative;
+  width: 200px;
+  margin-left: 20px;
+  padding: 5px 14px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  background: red;
+}
+.tooltip:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  left: -10px;
+  top: 0px;
+
+  width: 14px;
+  height: 14px;
+  background-color: #00ff00;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(0deg); */
+/* transform: rotateZ(-5deg) translateY(-4rem) translateX(-1rem);
+   */
+/* } */
+
+.box {
+  width: fit-content;
+  height: auto;
+  background-color: black;
+  color: #fff;
+  padding: 8px;
+  position: relative;
+  float: left;
+  margin: 10px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.box.arrow-right {
+  margin-top: 10px;
+  border-top-left-radius: 12px;
+}
+
+.box.arrow-left {
+  margin-top: 10px;
+  border-top-right-radius: 12px;
+}
+
+.box.arrow-right:after {
+  content: " ";
+  position: absolute;
+  right: -10px;
+  top: -3px;
+  border-top: none;
+  border-right: 15px solid transparent;
+  border-left: 12px solid transparent;
+  border-bottom: 15px solid black;
+  transform: rotate(-48deg);
+}
+
+.box.arrow-left:after {
+  content: " ";
+  position: absolute;
+  left: -2px;
+  top: -10.5px;
+  border-top: 17px solid transparent;
+  border-right: 14px solid black;
+  border-left: none;
+  border-bottom: 15px solid transparent;
+  transform: rotate(132deg);
+}
