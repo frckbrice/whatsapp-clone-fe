@@ -2,54 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-/* .tooltip { */
-/* position: relative;
-  width: 200px;
-  margin-left: 20px;
-  padding: 5px 14px;
-  border-radius: 4px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  background: red;
-}
-.tooltip:before {
-  content: " ";
-  display: block;
-  position: absolute;
-  left: -10px;
-  top: 0px;
-
-  width: 14px;
-  height: 14px;
-  background-color: #00ff00;
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(0deg); */
-/* transform: rotateZ(-5deg) translateY(-4rem) translateX(-1rem);
-   */
-/* } */
-
 .box {
   width: fit-content;
   height: auto;
-  background-color: black;
-  color: #fff;
+  background-color: white;
+  color: #111b11;
   padding: 8px;
   position: relative;
   float: left;
-  margin: 10px;
   border-radius: 12px;
   font-size: 12px;
+  border: 1px solid rgb(226, 218, 218);
 }
 
 .box.arrow-right {
   margin-top: 10px;
   border-top-left-radius: 12px;
+  background-color: rgb(142, 253, 142);
 }
 
 .box.arrow-left {
   margin-top: 10px;
   border-top-right-radius: 12px;
+  background-color: white;
 }
 
 .box.arrow-right:after {
@@ -59,19 +34,27 @@
   top: -3px;
   border-top: none;
   border-right: 15px solid transparent;
-  border-left: 12px solid transparent;
-  border-bottom: 15px solid black;
+  border-left: 15px solid transparent;
+  border-bottom: 15px solid rgb(142, 253, 142);
   transform: rotate(-48deg);
 }
 
 .box.arrow-left:after {
-  content: " ";
+  content: "";
   position: absolute;
-  left: -2px;
-  top: -10.5px;
-  border-top: 17px solid transparent;
-  border-right: 14px solid black;
+  left: -3px;
+  top: -10px;
+  border-top: 15px solid transparent;
+  border-right: 14px solid white;
   border-left: none;
   border-bottom: 15px solid transparent;
-  transform: rotate(132deg);
+  transform: rotate(136deg);
 }
+
+/* @media only screen and (min-width: 240px) and (max-width: 768px) {
+  .box {
+    display: block;
+    float: none;
+    margin: 40px auto;
+  }
+} */
