@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'whatsappimg': "url('/whatsappbg1.jpeg')",
+        whatsappimg: "url('/whatsappbg1.jpeg')",
       },
       colors: {
         background: "hsl(var(--background))",

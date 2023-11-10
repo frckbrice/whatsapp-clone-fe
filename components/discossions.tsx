@@ -55,7 +55,7 @@ const Discossions = () => {
           <div className="flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r">
             <Avatar
               onClick={() => alert("clicked")}
-              profilePicture="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600"
+              profilePicture="logo.png"
               size={10}
             />
 
@@ -118,13 +118,13 @@ const Discossions = () => {
           </div>
         </div>
 
-        <div className="relative flex flex-col justify-between mt-3 px-10">
-          <div className="flex flex-col items-start w-[50%]">
+        <div className=" w-full flex flex-col mt-3 px-10">
+          <div className=" max-w-[70%] flex flex-col items-start justify-start">
             <ReceiverMessages />
             <FollowingMessagesSimple />
           </div>
 
-          <div className="absolute right-0 flex-1 pr-10">
+          <div className=" w-full flex flex-col items-end justify-end ">
             <SenderMessages />
           </div>
         </div>
