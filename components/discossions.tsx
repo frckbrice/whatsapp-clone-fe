@@ -8,7 +8,6 @@ import { BsEmojiSmile } from "react-icons/bs";
 import { IoSendSharp } from "react-icons/io5";
 import { IoMdAdd } from "react-icons/io";
 import DropDown from "./mainLayoutPage/DropDown";
-import HeaderMainPageL from "./mainLayoutPage/HeaderPage";
 import {
   dropdownRight,
   dropdownLeft,
