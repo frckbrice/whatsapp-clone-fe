@@ -25,8 +25,8 @@ const SideNavRight = (props: Props) => {
     <div
       className={
         openSideNav || openContactInfo
-          ? "w-[25vw] inline-block text-[#3b4a54] bg-white transition duration-1000 ease-in-out py-0"
-          : "hidden w-0"
+          ? " w-[25vw] inline-block text-[#3b4a54] bg-white transition duration-1000 ease-in-out py-0"
+          : " hidden w-0"
       }
     >
       <div className=" flex items-center bg-bgGray h-16  gap-10 w-full py-2  px-10">

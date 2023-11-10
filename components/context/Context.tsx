@@ -26,11 +26,6 @@ export const WhatSappContactContextProvider = ({ children }: any) => {
 
   const values = { openContactInfo, setOpenContactInfo };
 
-  console.log(
-    " in the open contact info context. openContactInfo: ",
-    openContactInfo
-  );
-
   return (
     <WhatSappContactContext.Provider value={values}>
       {children}

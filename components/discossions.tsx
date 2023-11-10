@@ -23,6 +23,9 @@ import {
 } from "./mainLayoutPage/Message";
 import ContactInfoPage from "./RightSideBar/ContactInfoPage";
 import { useWhatSappContactContext } from "./context/Context";
+import ProfilePage from "./profilPage/ProfilePage";
+import ProfilePageContent from "./profilPage/ProfilePageContent";
+import { useProfileContext } from "./context/profileContext";
 
 const Discossions = () => {
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
@@ -33,6 +36,7 @@ const Discossions = () => {
 
   const { setOpenSideNav, openSideNav } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
+  const { openProfile, setOpenProfile } = useProfileContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -51,36 +55,40 @@ const Discossions = () => {
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
 
-  const openProfileInfo = () => {};
-
   return (
     <div className="flex w-full">
       <div className="bg-white w-[25vw] h-screen">
-        <div>
-          <div className="flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r">
-            <Avatar
-              onClick={() => openProfileInfo()}
-              profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
-              size={10}
-            />
+        <ProfilePage title="Profil">
+          <ProfilePageContent />
+        </ProfilePage>
+        <div
+          className={
+            openProfile
+              ? "hidden"
+              : "flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r z-0"
+          }
+        >
+          <Avatar
+            onClick={() => setOpenProfile(true)}
+            profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+            size={10}
+          />
 
-            <div className="flex gap-5">
-              <button className="text-2xl text-gray-600">
-                <MdGroups2 />
-              </button>
-              <button
-                className="text-2xl text-gray-600 relative rounded-full"
-                onClick={() => setShowDropdownleft((prev) => !prev)}
-              >
-                <HiDotsVertical />
-              </button>
+          <div className="flex gap-5">
+            <button className="text-2xl text-gray-600">
+              <MdGroups2 />
+            </button>
+            <button
+              className="text-2xl text-gray-600 relative rounded-full"
+              onClick={() => setShowDropdownleft((prev) => !prev)}
+            >
+              <HiDotsVertical />
+            </button>
 
-              {showDropdrownleft && (
-                <DropDown dropdownList={dropdownLeft} ref={dropdownRef} />
-              )}
-            </div>
+            {showDropdrownleft && (
+              <DropDown dropdownList={dropdownLeft} ref={dropdownRef} />
+            )}
           </div>
-          <div></div>
         </div>
       </div>
       <div

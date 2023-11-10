@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { WhatSappContextProvider } from "../components/context";
 import { WhatSappContactContextProvider } from "@/components/context/Context";
+import { ProfileContextProvider } from "@/components/context/profileContext";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -27,7 +28,7 @@ export default function RootLayout({
           <div className=" flex flex-col items-center w-full mx-auto relative">
             <WhatSappContextProvider>
               <WhatSappContactContextProvider>
-                {children}
+                <ProfileContextProvider>{children}</ProfileContextProvider>
               </WhatSappContactContextProvider>{" "}
             </WhatSappContextProvider>
           </div>

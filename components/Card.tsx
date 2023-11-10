@@ -3,13 +3,13 @@ import Image from "next/image";
 
 type Props = {
   image: string;
-  usernames: string;
-  phoneNumber: string;
+  usernames?: string;
+  phoneNumber?: string;
 };
 
 const Card = (props: Props) => {
   return (
-    <div className="w-full flex flex-col gap-2   justify-center items-center py-8 mx-auto border-b border-b-gray-200 bg-white">
+    <div className="card cardprofile w-full flex flex-col gap-2   justify-center items-center py-8 mx-auto border-b border-b-gray-200 bg-white">
       <Image
         src={props.image}
         alt="Avatar image"

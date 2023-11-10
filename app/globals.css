@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* * css for message box arrows */
+
 .box {
   width: fit-content;
   height: auto;
@@ -53,6 +55,8 @@
   transform: rotate(136deg);
 }
 
+/* * css for switch button on the contact info page */
+
 .switch-button {
   position: relative;
   display: inline-block;
@@ -98,4 +102,94 @@
 
 .switch-button input:checked + .slider:before {
   transform: translateX(20px);
+}
+
+/* *css for contact info page appearing animations */
+
+.card {
+  max-width: 100%;
+  height: fit-content;
+  animation: card-appear 0.7s ease-out forwards;
+  top: 18vw;
+  left: 0;
+}
+
+@keyframes card-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-3rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profil {
+  height: fit-content;
+  animation: sideNav-appear 0.2s ease-out forwards;
+}
+
+@keyframes sideNav-appear {
+  from {
+    opacity: 0;
+    transform: translateX(25vw);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.profil {
+  height: fit-content;
+  animation: profil-appear 0.3s ease-out forwards;
+}
+
+@keyframes profil-appear {
+  from {
+    opacity: 0;
+    transform: translateX(-25vw);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.cardprofile {
+  height: fit-content;
+  animation: cardprofile-appear 0.3s ease-out forwards;
+}
+
+@keyframes cardprofile-appear {
+  from {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
+.profiloff {
+  height: fit-content;
+  animation: profiloff-appear 0.3s ease-in forwards;
+}
+
+@keyframes profiloff-appear {
+  from {
+    opacity: 0;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-25vw);
+  }
 }
