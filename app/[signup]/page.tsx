@@ -17,8 +17,12 @@ const Signupb = () => {
 
   const handleInputChange = () => {
     const random = one + two + three + four + five + six
-    console.log(random)
-    console.log(params)
+    let code = JSON.stringify(params.signup)
+    let sentCode =  code.slice(10, 16)
+    if (random == sentCode) {
+      console.log('conform')
+    } else console.log("invalid")
+    
   };
 
 
