@@ -17,8 +17,8 @@ const Signupb = () => {
 
   return (
     <div>
-      <div className="flex flex-col justify-center w-[75vw] mobile:max-sm:w-[95%]">
-        <div className="flex items-center gap-4 text-white">
+      <div className="flex flex-col justify-center mt-2 xl:mt-5  w-[75vw] mobile:max-sm:w-[95%]">
+        <div className="flex items-center gap-4 text-white p-2">
           <Image src={"/logo.png"} width={50} height={50} alt={""}></Image>
           <p>WHATSAPP WEB</p>
         </div>
