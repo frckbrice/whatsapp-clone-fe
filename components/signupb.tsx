@@ -90,6 +90,7 @@ const Signupb = () => {
                     id="inputField"
                     className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
                   />
+                  <p className="font-bold px-1">-</p>
                   <input
                     onChange={handleInputChange}
                     type="text"
