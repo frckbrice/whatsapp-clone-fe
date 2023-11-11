@@ -14,30 +14,7 @@ const Signup = () => {
     if (!email) {
       return
     }
-    // const { data, error } = await supabase.auth.signInWithOtp({
-    //   email: email,
-
-    //   options: {
-    //     // set this to false if you do not want the user to be automatically signed up
-    //     shouldCreateUser: false,
-    //     emailRedirectTo: 'http://localhost:3000/welcome',
-    //   },
-    // })
-    // if (error) {
-    //   console.log(error)
-    // }
-    // if (data) {
-    //   console.log(data)
-    //   setSubmitted(true)
-    // }
-    // if (submitted) {
-    //   console.log("check email")
-    //   return (
-    //     <div>
-    //       <p>check your mails</p>
-    //     </div>
-    //   )
-    // }
+    
     
 
     const { error, data } = await supabase.auth.signInWithOtp({ email })
@@ -50,8 +27,8 @@ const Signup = () => {
     if (submitted) {
       console.log("check your email address")
       return (
-        <div className="text-center">
-          <h1>Please check your email to signup</h1>
+        <div>
+          <h1 className="text-center">Please check your email to signup</h1>
         </div>
       )
     }

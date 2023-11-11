@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { GrSettingsOption } from "react-icons/gr";
 import { useParams } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 
 const Signupb = () => {
@@ -14,17 +15,22 @@ const Signupb = () => {
   const [four, setFour] = useState('')
   const [five, setFive] = useState('')
   const [six, setSix] = useState('')
+  const [error, setError] = useState(false)
+  const router = useRouter()
 
   const handleInputChange = () => {
     const random = one + two + three + four + five + six
     let code = JSON.stringify(params.signup)
-    let sentCode =  code.slice(10, 16)
+    let sentCode = code.slice(10, 16)
     if (random == sentCode) {
+      router.push('/discossions')
       console.log('conform')
-    } else console.log("invalid")
-    
-  };
+    } else {
+      setError((prev) => !prev)
+      console.log("invalid")
+    }
 
+  };
 
   return (
     <div>
@@ -82,52 +88,58 @@ const Signupb = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-3 py-[150px]">
-                  <input
-                    onChange={(e) => setOne(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
-                  <input
-                    onChange={(e) => setTwo(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
-                  <input
-                    onChange={(e) => setThree(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
-                  <input
-                    onChange={(e) => setFour(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
-                  <input
-                    onChange={(e) => setFive(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
-                  <input
-                    onChange={(e) => setSix(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
+                <div className="flex flex-col gap-6 justify-center">
+                  <div className="flex gap-3 mt-[50px]">
+                    <input
+                      onChange={(e) => setOne(e.target.value)}
+                      type="text"
+                      id="inputField"
+                      className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
+                    />
+                    <input
+                      onChange={(e) => setTwo(e.target.value)}
+                      type="text"
+                      id="inputField"
+                      className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
+                    />
+                    <input
+                      onChange={(e) => setThree(e.target.value)}
+                      type="text"
+                      id="inputField"
+                      className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
+                    />
+                    <input
+                      onChange={(e) => setFour(e.target.value)}
+                      type="text"
+                      id="inputField"
+                      className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
+                    />
+                    <input
+                      onChange={(e) => setFive(e.target.value)}
+                      type="text"
+                      id="inputField"
+                      className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
+                    />
+                    <input
+                      onChange={(e) => setSix(e.target.value)}
+                      type="text"
+                      id="inputField"
+                      className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
+                    />
+
+                  </div>
+                  {error ? <p className="text-center text-red-600">Code Invalid</p> : ""}
+                  <button
+                    onClick={() => handleInputChange()}
+                    type="button"
+                    className="bg-secondry flex justify-center mx-auto w-20 py-2 text-sm text-white rounded">
+                    Confirm
+                  </button>
                 </div>
 
+
               </div>
-              <button
-                onClick={() => handleInputChange()}
-                type="button"
-                className="bg-secondry w-20 py-2 text-sm text-white rounded">
-                NEXT
-              </button>
+
               <hr className="leading-[.1] bg-gray-200 my-10" />
 
               <a
