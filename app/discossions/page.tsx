@@ -20,12 +20,12 @@ import {
   FollowingMessagesSimple,
   ReceiverMessages,
   SenderMessages,
-} from "./mainLayoutPage/Message";
-import ContactInfoPage from "./RightSideBar/ContactInfoPage";
-import { useWhatSappContactContext } from "./context/Context";
-import ProfilePage from "./profilPage/ProfilePage";
-import ProfilePageContent from "./profilPage/ProfilePageContent";
-import { useProfileContext } from "./context/profileContext";
+} from "../../components/mainLayoutPage/Message";
+import ContactInfoPage from "../../components/RightSideBar/ContactInfoPage";
+import { useWhatSappContactContext } from "../../components/context/Context";
+import ProfilePage from "../../components/profilPage/ProfilePage";
+import ProfilePageContent from "../../components/profilPage/ProfilePageContent";
+import { useProfileContext } from "../../components/context/profileContext";
 
 const Discossions = () => {
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
