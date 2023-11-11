@@ -5,6 +5,7 @@ import { CiMenuKebab } from "react-icons/ci";
 import { GrSettingsOption } from "react-icons/gr";
 import { useParams } from 'next/navigation'
 import { useRouter } from "next/navigation";
+import { supabase } from "@/utils/supabase/client";
 
 
 const Signupb = () => {
@@ -18,10 +19,16 @@ const Signupb = () => {
   const [error, setError] = useState(false)
   const router = useRouter()
 
-  const handleInputChange = () => {
+  const handleInputChange = async () => {
+    const email = localStorage.getItem('email')
     const random = one + two + three + four + five + six
     let code = JSON.stringify(params.signup)
     let sentCode = code.slice(10, 16)
+
+    // const { data, error } = await supabase.auth.setSession({
+    //   email 
+    // })
+
     if (random == sentCode) {
       router.push('/discossions')
       console.log('conform')

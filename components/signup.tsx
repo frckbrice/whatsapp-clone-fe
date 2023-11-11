@@ -14,21 +14,23 @@ const Signup = () => {
     if (!email) {
       return
     }
-    
-    
-
+    // const { data, error } = supabase.auth.setSession({
+    //   access_token,
+    //   refresh_token
+    // })
     const { error, data } = await supabase.auth.signInWithOtp({ email })
 
     if (error) console.log(error)
     if (data) {
       console.log(data)
+      localStorage.setItem('email', email)
       setSubmitted(true)
     }
     if (submitted) {
       console.log("check your email address")
       return (
         <div>
-          <h1 className="text-center">Please check your email to signup</h1>
+          <h1 className="text-center bg-red-600">Please check your email to signup</h1>
         </div>
       )
     }
@@ -65,7 +67,7 @@ const Signup = () => {
               NEXT
             </button>
           </form>
-          {submitted ? <p>Please check out your email</p> : ""}
+          {submitted ? <p className="text-center">Please check out your email</p> : ""}
 
         </div>
       </div>
