@@ -20,7 +20,12 @@ import {
   FollowingMessagesSimple,
   ReceiverMessages,
   SenderMessages,
-} from "../../components/mainLayoutPage/Message";
+} from "./mainLayoutPage/Message";
+import ContactInfoPage from "./RightSideBar/ContactInfoPage";
+import { useWhatSappContactContext } from "./context/Context";
+import ProfilePage from "./profilPage/ProfilePage";
+import ProfilePageContent from "./profilPage/ProfilePageContent";
+import { useProfileContext } from "./context/profileContext";
 
 const Discossions = () => {
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
@@ -30,6 +35,8 @@ const Discossions = () => {
     useState<boolean>(false);
 
   const { setOpenSideNav, openSideNav } = useWhatSappContext();
+  const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
+  const { openProfile, setOpenProfile } = useProfileContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -51,51 +58,60 @@ const Discossions = () => {
   return (
     <div className="flex w-full">
       <div className="bg-white w-[25vw] h-screen">
-        <div>
-          <div className="flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r">
-            <Avatar
-              onClick={() => alert("clicked")}
-              profilePicture="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600"
-              size={10}
-            />
+        <ProfilePage title="Profil">
+          <ProfilePageContent />
+        </ProfilePage>
+        <div
+          className={
+            openProfile
+              ? "hidden"
+              : "flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r z-0"
+          }
+        >
+          <Avatar
+            onClick={() => setOpenProfile(true)}
+            profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+            size={10}
+          />
 
-            <div className="flex gap-5">
-              <button className="text-2xl text-gray-600">
-                <MdGroups2 />
-              </button>
-              <button
-                className="text-2xl text-gray-600 relative rounded-full"
-                onClick={() => setShowDropdownleft((prev) => !prev)}
-              >
-                <HiDotsVertical />
-              </button>
+          <div className="flex gap-5">
+            <button className="text-2xl text-gray-600">
+              <MdGroups2 />
+            </button>
+            <button
+              className="text-2xl text-gray-600 relative rounded-full"
+              onClick={() => setShowDropdownleft((prev) => !prev)}
+            >
+              <HiDotsVertical />
+            </button>
 
-              {showDropdrownleft && (
-                <DropDown dropdownList={dropdownLeft} ref={dropdownRef} />
-              )}
-            </div>
+            {showDropdrownleft && (
+              <DropDown dropdownList={dropdownLeft} ref={dropdownRef} />
+            )}
           </div>
-          <div></div>
         </div>
       </div>
       <div
         ref={ref}
         className={
-          openSideNav
-            ? "relative w-[50vw] bg-whatsappimg border-r border-r-gray-300 z-0"
-            : "relative w-[75vw] bg-whatsappimg z-0  "
+          openSideNav || openContactInfo
+            ? "relative w-[50vw] bg-whatsappimg border-r border-r-gray-300 z-0 cursor-pointer"
+            : "relative w-[75vw] bg-whatsappimg z-0 cursor-pointer "
         }
       >
         <div className="flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 ">
-          <div className="flex gap-3">
+          <div
+            className="flex gap-3 w-full cursor-pointer"
+            onClick={() => setOpenContactInfo(true)}
+          >
             <Avatar
-              onClick={() => alert("clicked")}
-              profilePicture="/alexander-shatov-_whatsapp-unsplash.jpg"
+              onClick={() => setOpenContactInfo(true)}
+              profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
               size={10}
             />
             <div>
-              <h3 className="text-gray-700">add name here</h3>
-              <p className="text-gray-500 text-xs">email or phone number</p>
+              <h3 className="text-gray-700">David Beckamp</h3>
+              <p className="text-gray-500 text-xs">(+801) 365 145 269</p>
             </div>
           </div>
 
@@ -118,20 +134,20 @@ const Discossions = () => {
           </div>
         </div>
 
-        <div className="relative flex flex-col justify-between mt-3 px-10">
-          <div className="flex flex-col items-start w-[50%]">
+        <div className=" w-full flex flex-col mt-3 px-10">
+          <div className=" max-w-[70%] flex flex-col items-start justify-start">
             <ReceiverMessages />
             <FollowingMessagesSimple />
           </div>
 
-          <div className="absolute right-0 flex-1 pr-10">
+          <div className=" w-full flex flex-col items-end justify-end ">
             <SenderMessages />
           </div>
         </div>
 
         <div
           className={
-            openSideNav
+            openSideNav || openContactInfo
               ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5"
               : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5"
           }
@@ -171,9 +187,15 @@ const Discossions = () => {
           </button>
         </div>
       </div>
-      <SideNavRight>
-        <SearchField />
-      </SideNavRight>
+      {openContactInfo ? (
+        <SideNavRight title="Contact Infos">
+          <ContactInfoPage />
+        </SideNavRight>
+      ) : (
+        <SideNavRight title="Search for messages">
+          <SearchField />
+        </SideNavRight>
+      )}
     </div>
   );
 };

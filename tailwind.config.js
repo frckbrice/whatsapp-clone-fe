@@ -7,7 +7,9 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'whatsappimg': "url('/whatsappbg1.jpeg')",
+        whatsappimg: "url('/whatsappbg1.jpeg')",
+        beckamp:
+          "url('/https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg')",
       },
       colors: {
         background: "hsl(var(--background))",
