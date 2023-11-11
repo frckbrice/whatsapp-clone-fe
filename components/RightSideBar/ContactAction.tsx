@@ -7,7 +7,7 @@ type Props = {};
 
 const ContactAction = (props: Props) => {
   return (
-    <div className=" flex flex-col gap-6 my-6 mb-5 text-[#ff2e74]">
+    <div className=" flex flex-col gap-6 mt-6 text-[#ff2e74]">
       <div className=" text-md flex gap-5 item-center justify-start">
         {" "}
         <span>

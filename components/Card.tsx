@@ -9,7 +9,9 @@ type Props = {
 
 const Card = (props: Props) => {
   return (
-    <div className="card cardprofile w-full flex flex-col gap-2   justify-center items-center py-8 mx-auto border-b border-b-gray-200 bg-white">
+    <div
+      className={`card w-full flex flex-col gap-2   justify-center items-center py-8 mx-auto border-b border-b-gray-200 bg-white`}
+    >
       <Image
         src={props.image}
         alt="Avatar image"

@@ -14,7 +14,7 @@ const ProfilePage = ({ title, children }: Props) => {
     <div
       className={
         openProfile
-          ? "profil w-[25vw] inline-block text-[#3b4a54] bg-[#e7e8e9] transition duration-1000 ease-in-out py-0 z-20"
+          ? "profil w-[25vw] inline-block text-[#3b4a54] bg-bgGray transition duration-1000 ease-in-out py-0 z-20"
           : " profiloff hidden"
       }
     >

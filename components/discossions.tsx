@@ -147,7 +147,7 @@ const Discossions = () => {
 
         <div
           className={
-            openSideNav
+            openSideNav || openContactInfo
               ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5"
               : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5"
           }

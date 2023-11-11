@@ -19,7 +19,7 @@ type Props = {
 
 const ContactInfoPage = (props: Props) => {
   return (
-    <div className=" flex flex-col space-y-2 pb-10 bg-bgGray">
+    <div className=" flex flex-col space-y-2 bg-bgGray">
       <Card
         image="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
         phoneNumber="(+327 6 964 854 325)"
@@ -117,7 +117,7 @@ const ContactInfoPage = (props: Props) => {
           </span>
         </div>
       </div>
-      <div className=" w-full px-7 py-5 mb-5 bg-white border-y border-y-gray-200">
+      <div className=" w-full px-7 py-5 bg-white border-y border-y-gray-200">
         <ContactAction />
       </div>
     </div>
