@@ -16,8 +16,14 @@ const Signupb = () => {
   const [four, setFour] = useState('')
   const [five, setFive] = useState('')
   const [six, setSix] = useState('')
-  const [error, setError] = useState(false)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState('')
   const router = useRouter()
+
+  // const generateToken = async (id: any) => {
+  //   const token = await supabase.auth.setSession({id})
+  //   return token
+  // }
 
   const handleInputChange = async () => {
     const email = localStorage.getItem('email')
@@ -25,16 +31,23 @@ const Signupb = () => {
     let code = JSON.stringify(params.signup)
     let sentCode = code.slice(10, 16)
 
-    // const { data, error } = await supabase.auth.setSession({
-    //   email 
-    // })
-
     if (random == sentCode) {
-      router.push('/discossions')
+      const { data, error } = await supabase
+        .from('user')
+        .insert({ email: email })
+      if (data) console.log(data)
+      if (error) {
+        console.log(error)
+        setError("Something went wrong")
+        return
+      }
+      setSuccess("Successfully loggedin ✅")
+      router.push('/discussions')
       console.log('conform')
     } else {
-      setError((prev) => !prev)
+      setError('Invalid code')
       console.log("invalid")
+      return
     }
 
   };
@@ -135,7 +148,8 @@ const Signupb = () => {
                     />
 
                   </div>
-                  {error ? <p className="text-center text-red-600">Code Invalid</p> : ""}
+                  <p className="text-center text-red-600">{error} </p>
+                  <p className="text-center">{success} </p>
                   <button
                     onClick={() => handleInputChange()}
                     type="button"

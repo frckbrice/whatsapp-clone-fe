@@ -7,7 +7,7 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import Signup from "@/components/signup";
 import Signupb from "@/components/signupb";
-import Discossions from "@/app/discossions/page";
+import Discossions from "@/app/discussions/page";
 import SideNavRight from "@/components/RightSideBar/SideNavRight";
 import SearchField from "@/components/RightSideBar/SearchField";
 

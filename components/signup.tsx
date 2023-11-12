@@ -30,7 +30,7 @@ const Signup = () => {
       console.log("check your email address")
       return (
         <div>
-          <h1 className="text-center bg-red-600">Please check your email to signup</h1>
+          <h1 className="text-center">Please check your email to signup</h1>
         </div>
       )
     }
@@ -67,7 +67,7 @@ const Signup = () => {
               NEXT
             </button>
           </form>
-          {submitted ? <p className="text-center">Please check out your email</p> : ""}
+          {submitted ? <p className="text-center py-4">Please check out your email</p> : ""}
 
         </div>
       </div>
