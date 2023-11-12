@@ -6,9 +6,28 @@ import { FaRegLaugh } from "react-icons/fa";
 // import "./EmojiPickerReact.css";
 import { PlacementType } from "rsuite/esm/toaster/ToastContainer";
 
+type Placement =
+  | "top"
+  | "bottom"
+  | "right"
+  | "left"
+  | "bottomStart"
+  | "bottomEnd"
+  | "topStart"
+  | "topEnd"
+  | "leftStart"
+  | "leftEnd"
+  | "rightStart"
+  | "rightEnd"
+  | "auto"
+  | "autoVerticalStart"
+  | "autoVerticalEnd"
+  | "autoHorizontalStart"
+  | "autoHorizontalEnd";
+
 type Props = {
   getShosenEmojie: (shosenEmojie: any) => void;
-  placement: PlacementType | "right" | "rightEnd" | undefined;
+  placement: Placement;
 };
 
 const EmojiePicker = ({ getShosenEmojie, placement }: Props) => {
@@ -28,7 +47,6 @@ const EmojiePicker = ({ getShosenEmojie, placement }: Props) => {
               <Picker onEmojiClick={onEmojiClick} />
             </Popover>
           }
-          // placement="autoHorizontal"
           placement={placement}
           enterable
           controlId="control-id-hover-enterable"

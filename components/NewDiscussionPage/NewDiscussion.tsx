@@ -24,7 +24,7 @@ const NewDiscussion = (props: Props) => {
         >
           <AiOutlineArrowLeft size={25} className=" text-[#e7e8e9] " />
         </button>
-        <p className=" text-[#e7e8e9] text-[20px]">{title}</p>
+        <p className=" text-[#e7e8e9] text-[20px]">{props.title}</p>
       </div>
 
       {props.children}
