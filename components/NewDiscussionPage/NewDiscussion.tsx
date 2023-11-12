@@ -7,9 +7,8 @@ type Props = {
   children: React.ReactElement;
 };
 
-const ProfilePage = ({ title, children }: Props) => {
+const NewDiscussion = (props: Props) => {
   const { openProfile, setOpenProfile } = useProfileContext();
-
   return (
     <div
       className={
@@ -27,9 +26,10 @@ const ProfilePage = ({ title, children }: Props) => {
         </button>
         <p className=" text-[#e7e8e9] text-[20px]">{title}</p>
       </div>
-      {children}
+
+      {props.children}
     </div>
   );
 };
 
-export default ProfilePage;
+export default NewDiscussion;

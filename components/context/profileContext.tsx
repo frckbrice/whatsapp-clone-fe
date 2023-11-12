@@ -28,8 +28,6 @@ export const ProfileContextProvider = ({ children }: any) => {
     setOpenProfile,
   };
 
-  console.log(" in the context: openProfile, ", openProfile);
-
   return (
     <ProfileContext.Provider value={values}>{children}</ProfileContext.Provider>
   );
