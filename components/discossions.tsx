@@ -56,7 +56,7 @@ const Discossions = () => {
   }, []);
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full ">
       <div className="bg-white w-[25vw] h-screen">
         <ProfilePage title="Profil">
           <ProfilePageContent />
@@ -148,8 +148,8 @@ const Discossions = () => {
         <div
           className={
             openSideNav || openContactInfo
-              ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5"
-              : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5"
+              ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 -z-10"
+              : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 -z-10"
           }
         >
           {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}
