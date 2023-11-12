@@ -17,7 +17,7 @@ const Card = (props: Props) => {
         alt="Avatar image"
         width={300}
         height={200}
-        className="w-40 h-40 rounded-full "
+        className="bg-cover bg-center object-cover w-44 h-44 rounded-full "
       />
       <div className=" flex flex-col gap-2">
         <span className=" text-[27px] text-[#111b11]">{props.usernames}</span>

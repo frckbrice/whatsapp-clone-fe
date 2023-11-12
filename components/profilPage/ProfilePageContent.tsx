@@ -44,18 +44,21 @@ const ProfilePageContent = (props: Props) => {
 
       <div className=" rest">
         <div className=" flex flex-col gap-2 w-full pl-7 px-7  py-3  shadow shadow-zinc-200 bg-white">
-          <span className=" text-[#33a033]">Your name</span>
-          <div className=" inline-flex items-center">
-            {shosenEmojiesup?.map((emoji, index) => (
-              <Image
-                src={emoji}
-                alt="emojie"
-                width={20}
-                height={20}
-                key={index}
-              />
-            ))}
+          <div className=" flex items-center gap-3">
+            <span className=" text-[#33a033]">Your name</span>
+            <span className=" inline-flex items-center">
+              {shosenEmojiesup?.map((emoji, index) => (
+                <Image
+                  src={emoji}
+                  alt="emojie"
+                  width={20}
+                  height={20}
+                  key={index}
+                />
+              ))}
+            </span>
           </div>
+
           {!showInput1 ? (
             <div className=" flex justify-between items-center mt-5">
               <span className=" text-[#444e54]">David Beckamp</span>
@@ -97,18 +100,21 @@ const ProfilePageContent = (props: Props) => {
           </p>
         </div>
         <div className=" flex flex-col gap-4 w-full px-7 py-3 shadow shadow-zinc-200 bg-white">
-          <span className=" text-[#33a033]">Infos</span>
-          <div className=" inline-flex items-center">
-            {shosenEmojiesdow?.map((emoji, index) => (
-              <Image
-                src={emoji}
-                alt="emojie"
-                width={20}
-                height={20}
-                key={index}
-              />
-            ))}
+          <div className=" flex items-center gap-3">
+            <span className=" text-[#33a033]">Infos</span>
+            <span className=" inline-flex items-center">
+              {shosenEmojiesdow?.map((emoji, index) => (
+                <Image
+                  src={emoji}
+                  alt="emojie"
+                  width={20}
+                  height={20}
+                  key={index}
+                />
+              ))}
+            </span>
           </div>
+
           {!showInput ? (
             <span
               className=" italic text-[10px] font-thin text-black cursor-pointer"
