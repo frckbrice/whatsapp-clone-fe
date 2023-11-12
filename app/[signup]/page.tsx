@@ -158,7 +158,6 @@ const Signupb = () => {
                   </button>
                 </div>
 
-
               </div>
 
               <hr className="leading-[.1] bg-gray-200 my-10" />

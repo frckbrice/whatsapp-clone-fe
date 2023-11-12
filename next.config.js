@@ -23,8 +23,11 @@ const nextConfig = {
       {
         hostname: "static.startuptalky.com",
       },
+      {
+        hostname: "cdn.jsdelivr.net",
+      },
     ],
-    // domains: ["images.pexels.com, "] static.startuptalky.com
+    // domains: ["images.pexels.com, "]
   },
 };
 
