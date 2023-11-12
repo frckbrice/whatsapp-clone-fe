@@ -1,31 +1,31 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import Avatar from "./Avatar";
+import Avatar from "../../components/Avatar";
 import { MdGroups2 } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { GoSearch } from "react-icons/go";
 import { BsEmojiSmile } from "react-icons/bs";
 import { IoSendSharp } from "react-icons/io5";
 import { IoMdAdd } from "react-icons/io";
-import DropDown from "./mainLayoutPage/DropDown";
+import DropDown from "../../components/mainLayoutPage/DropDown";
 import {
   dropdownRight,
   dropdownLeft,
-} from "../utils/data/mainpageDropdownLists";
-import DropDownR from "./mainLayoutPage/DropdownR";
+} from "../../utils/data/mainpageDropdownLists";
+import DropDownR from "../../components/mainLayoutPage/DropdownR";
 import { useWhatSappContext } from "@/components/context";
-import SideNavRight from "./RightSideBar/SideNavRight";
-import SearchField from "./RightSideBar/SearchField";
+import SideNavRight from "../../components/RightSideBar/SideNavRight";
+import SearchField from "../../components/RightSideBar/SearchField";
 import {
   FollowingMessagesSimple,
   ReceiverMessages,
   SenderMessages,
-} from "./mainLayoutPage/Message";
-import ContactInfoPage from "./RightSideBar/ContactInfoPage";
-import { useWhatSappContactContext } from "./context/Context";
-import ProfilePage from "./profilPage/ProfilePage";
-import ProfilePageContent from "./profilPage/ProfilePageContent";
-import { useProfileContext } from "./context/profileContext";
+} from "../../components/mainLayoutPage/Message";
+import ContactInfoPage from "../../components/RightSideBar/ContactInfoPage";
+import { useWhatSappContactContext } from "../../components/context/Context";
+import ProfilePage from "../../components/profilPage/ProfilePage";
+import ProfilePageContent from "../../components/profilPage/ProfilePageContent";
+import { useProfileContext } from "../../components/context/profileContext";
 
 const Discossions = () => {
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
@@ -56,7 +56,7 @@ const Discossions = () => {
   }, []);
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full ">
       <div className="bg-white w-[25vw] h-screen">
         <ProfilePage title="Profil">
           <ProfilePageContent />
@@ -148,8 +148,8 @@ const Discossions = () => {
         <div
           className={
             openSideNav || openContactInfo
-              ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5"
-              : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5"
+              ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 -z-10"
+              : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 -z-10"
           }
         >
           {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}
