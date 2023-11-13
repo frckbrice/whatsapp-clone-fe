@@ -38,7 +38,7 @@ const Signupb = () => {
       if (data) console.log(data)
       if (error) {
         console.log(error)
-        setError("Something went wrong")
+        setError("Email address already exist")
         return
       }
       setSuccess("Successfully loggedin ✅")
