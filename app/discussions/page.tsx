@@ -26,8 +26,23 @@ import { useWhatSappContactContext } from "../../components/context/Context";
 import ProfilePage from "../../components/profilPage/ProfilePage";
 import ProfilePageContent from "../../components/profilPage/ProfilePageContent";
 import { useProfileContext } from "../../components/context/profileContext";
+import { supabase } from "@/utils/supabase/client";
+import { RiContactsBookLine } from "react-icons/ri";
+import DirectMessage from "@/components/directMessage";
+import fetchUsers from "@/utils/fetchUsers";
 
-const Discossions = () => {
+
+type Users = {
+  email: string,
+  name: string,
+  image: string,
+  phone: number,
+  id: string,
+  onClick?: () => void
+}
+
+const Discossions = async () => {
+  const [users, setUsers] = useState({})
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
   // const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
@@ -49,11 +64,24 @@ const Discossions = () => {
     }
   };
 
+  let fetchedUsers
+
   useEffect(() => {
+    const userFetched = async () => {
+      fetchedUsers = await fetchUsers()
+      console.log(fetchedUsers)
+      console.log(typeof fetchedUsers)
+    }
+    userFetched()
+
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
+
+  function handleClick(): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <div className="flex w-full ">
@@ -90,6 +118,25 @@ const Discossions = () => {
             )}
           </div>
         </div>
+        {users && (
+          <div>
+            {fetchedUsers?.map((item) => (
+              <div className="flex pl-4 pr-2 gap-4">
+                <Avatar
+                  onClick={() => handleClick()}
+                  profilePicture="https://files.123freevectors.com/wp-content/original/503847-beautiful-south-african-girl-portrait.jpg"
+                  size={10}
+                />
+                <div className="border-b-2">
+                  <p>{item.email}</p>
+                  {/* <span>{}</span> */}
+                </div>
+
+              </div>
+
+            ))}
+          </div>
+        )}
       </div>
       <div
         ref={ref}
