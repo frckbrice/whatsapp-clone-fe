@@ -27,6 +27,7 @@ const ProfilePage = ({ title, children }: Props) => {
         </button>
         <p className=" text-[#e7e8e9] text-[20px]">{title}</p>
       </div>
+
       {children}
     </div>
   );
