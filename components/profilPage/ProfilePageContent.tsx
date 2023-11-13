@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { RiPencilFill } from "react-icons/ri";
 import CardWithoutTitle from "../CardWithoutTitle";
 import { AiOutlineCheck } from "react-icons/ai";
@@ -8,16 +8,19 @@ import Image from "next/image";
 
 type Props = {};
 
-const ProfilePageContent = (props: Props) => {
+const ProfilePageContent = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
   const [showInput1, setShowInput1] = useState<boolean>(false);
-  const [showEmojie, setShowEmojie] = useState<boolean>(false);
   const [shosenEmojiesup, setShosenEmojiesup] = useState<string[]>([]);
   const [shosenEmojiesdow, setShosenEmojiesdow] = useState<string[]>([]);
 
   // * change the name david beckamp by the user name
   const [profileName, setProfileName] = useState<string>("David Beckamp");
   const [profileDescription, setProfileDescription] = useState<string>("");
+  const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
+
+  const dropdownRef = useRef<HTMLUListElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const getShosenEmojieup = (emojie: any) => {
     if (emojie?.explicitOriginalTarget?.src)
@@ -35,12 +38,29 @@ const ProfilePageContent = (props: Props) => {
       ]);
   };
 
-  console.log("shosenEmojies: ", shosenEmojiesup);
+  const handleClickonEmpty = (event: any): void => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowDropdownProfile(false);
+    }
+  };
+
+  useEffect(() => {
+    if (ref.current !== null)
+      ref.current.addEventListener("click", handleClickonEmpty);
+
+    return () => ref.current?.removeEventListener("click", handleClickonEmpty);
+  }, []);
 
   return (
-    <div className="relative p-0 bg-bgGray text-[14px] h-full border-r border-r-[[#444e54]] ">
+    <div
+      ref={ref}
+      className="relative p-0 bg-bgGray text-[14px] h-full border-r border-r-[[#444e54]] "
+    >
       {/* //** add profile image and profile name here  */}
-      <CardWithoutTitle image="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg" />
+      <CardWithoutTitle
+        image="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+        ref={dropdownRef}
+      />
 
       <div className=" rest">
         <div className=" flex flex-col gap-2 w-full pl-7 px-7  py-3  shadow shadow-zinc-200 bg-white">

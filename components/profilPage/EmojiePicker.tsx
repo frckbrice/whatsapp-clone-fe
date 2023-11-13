@@ -1,41 +1,19 @@
 import React, { useState } from "react";
 import Picker from "emoji-picker-react";
 import "rsuite/dist/rsuite.min.css";
-import { Button, Popover, Whisper } from "rsuite";
 import { FaRegLaugh } from "react-icons/fa";
-// import "./EmojiPickerReact.css";
-import { PlacementType } from "rsuite/esm/toaster/ToastContainer";
-
-type Placement =
-  | "top"
-  | "bottom"
-  | "right"
-  | "left"
-  | "bottomStart"
-  | "bottomEnd"
-  | "topStart"
-  | "topEnd"
-  | "leftStart"
-  | "leftEnd"
-  | "rightStart"
-  | "rightEnd"
-  | "auto"
-  | "autoVerticalStart"
-  | "autoVerticalEnd"
-  | "autoHorizontalStart"
-  | "autoHorizontalEnd";
+import { Button, Popover, Whisper } from "rsuite";
+import { Placement } from "@/type";
 
 type Props = {
   getShosenEmojie: (shosenEmojie: any) => void;
-  placement: Placement;
+  placement: Placement; // placement position came fron the caller component.
 };
 
 const EmojiePicker = ({ getShosenEmojie, placement }: Props) => {
   const onEmojiClick = (event: any, emojiObject: any) => {
     getShosenEmojie(emojiObject);
   };
-
-  if (placement === undefined) return;
 
   return (
     <>

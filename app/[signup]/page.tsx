@@ -3,22 +3,23 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { GrSettingsOption } from "react-icons/gr";
-import { useParams } from 'next/navigation'
+import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
-
+import Pulsation from "./component/PulseLoader";
 
 const Signupb = () => {
-  const params = useParams()
-  const [one, setOne] = useState('')
-  const [two, setTwo] = useState('')
-  const [three, setThree] = useState('')
-  const [four, setFour] = useState('')
-  const [five, setFive] = useState('')
-  const [six, setSix] = useState('')
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState('')
-  const router = useRouter()
+  const params = useParams();
+  const [one, setOne] = useState("");
+  const [two, setTwo] = useState("");
+  const [three, setThree] = useState("");
+  const [four, setFour] = useState("");
+  const [five, setFive] = useState("");
+  const [six, setSix] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const router = useRouter();
+  const [isloading, setIsloading] = useState(false);
 
   // const generateToken = async (id: any) => {
   //   const token = await supabase.auth.setSession({id})
@@ -26,30 +27,32 @@ const Signupb = () => {
   // }
 
   const handleInputChange = async () => {
-    const email = localStorage.getItem('email')
-    const random = one + two + three + four + five + six
-    let code = JSON.stringify(params.signup)
-    let sentCode = code.slice(10, 16)
+    setIsloading(true);
+    const email = localStorage.getItem("email");
+    const random = one + two + three + four + five + six;
+    let code = JSON.stringify(params.signup);
+    let sentCode = code.slice(10, 16);
 
     if (random == sentCode) {
-      const { data, error } = await supabase
-        .from('user')
-        .insert({ email: email })
-      if (data) console.log(data)
-      if (error) {
-        console.log(error)
-        setError("Something went wrong")
-        return
+      try {
+        const { data } = await supabase.from("user").insert({ email: email });
+        if (data) {
+          console.log(data);
+          setSuccess("Successfully loggedin ✅");
+          router.push("/discussions");
+          console.log("conform");
+        }
+      } catch (error) {
+        console.log(error);
+        setError("Something went wrong");
+        setIsloading(false);
+        return;
       }
-      setSuccess("Successfully loggedin ✅")
-      router.push('/discussions')
-      console.log('conform')
     } else {
-      setError('Invalid code')
-      console.log("invalid")
-      return
+      setError("Invalid code");
+      console.log("invalid");
+      return;
     }
-
   };
 
   return (
@@ -146,18 +149,17 @@ const Signupb = () => {
                       id="inputField"
                       className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
                     />
-
                   </div>
                   <p className="text-center text-red-600">{error} </p>
                   <p className="text-center">{success} </p>
                   <button
                     onClick={() => handleInputChange()}
                     type="button"
-                    className="bg-secondry flex justify-center mx-auto w-20 py-2 text-sm text-white rounded">
-                    Confirm
+                    className="bg-secondry flex justify-center mx-auto w-20 py-2 text-sm text-white rounded"
+                  >
+                    {isloading ? <Pulsation /> : "Confirm"}
                   </button>
                 </div>
-
               </div>
 
               <hr className="leading-[.1] bg-gray-200 my-10" />
