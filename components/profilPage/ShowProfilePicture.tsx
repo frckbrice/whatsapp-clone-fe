@@ -13,21 +13,11 @@ type Props = {
 const ShowProfilePicture = (props: Props) => {
   const { setShowPPicture } = useWhatSappContext();
 
-  // const handleClose = () => {
-  //   setOpenSideNav(false);
-  //   setOpenContactInfo(false);
-  // };
-
   return (
-    // <div className="flex w-full ">
     <div className="relative w-[100vw] h-screen bg-whatsappimg border-r border-r-gray-300 z-0 cursor-pointer overflow-hidden">
       <div className="flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-5 pr-10 py-2 ">
-        <div
-          className="flex gap-3 w-full cursor-pointer"
-          // onClick={() => setOpenContactInfo(true)}
-        >
+        <div className="flex gap-3 w-full cursor-pointer">
           <Avatar
-            // onClick={() => setOpenContactInfo(true)}
             onClick={() => {}}
             profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
             size={10}
@@ -47,12 +37,8 @@ const ShowProfilePicture = (props: Props) => {
           </button>
         </div>
       </div>
-
-      {/* <div className=" w-full h-full bg-white/50 flex flex-col mt-3 px-10"> */}
       {props.children}
-      {/* </div> */}
     </div>
-    // </div>
   );
 };
 
