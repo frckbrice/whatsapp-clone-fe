@@ -5,22 +5,16 @@ import { CiMenuKebab } from "react-icons/ci";
 import { GrSettingsOption } from "react-icons/gr";
 import { useParams } from 'next/navigation'
 
+import OTPField from "./otpInput";
+
 
 const Signupb = () => {
-  const params = useParams()
-  const [inputValue, setInputValue] = useState('');
 
+  const [otp, setOtp] = useState('');
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
+  const handleNext = () => {
 
-  const handleSubmit = () => {
-    const value = inputValue;
-    // call api...
-    setInputValue('');
   }
-
 
 
   return (
@@ -80,18 +74,12 @@ const Signupb = () => {
                 </div>
 
                 <div className="flex gap-3 py-[150px]">
-                  <input
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    className="w-32 px-4"
-                  />
-
-
+                  <OTPField />
                 </div>
 
               </div>
               <button
-                onClick={() => handleInputChange()}
+                onClick={handleNext}
                 type="button"
                 className="bg-secondry w-20 py-2 text-sm text-white rounded">
                 NEXT
