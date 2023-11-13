@@ -143,20 +143,38 @@
   }
 }
 
-.cardprofile {
-  height: fit-content;
-  animation: cardprofile-appear 0.4s ease-in-out forwards;
+.cardprofil {
+  animation: cardprofil 800ms ease-out;
 }
 
-@keyframes cardprofile-appear {
+@keyframes cardprofil {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.rest {
+  max-width: 100%;
+  height: fit-content;
+  animation: rest-appear 0.7s ease-out forwards;
+  top: 18vw;
+  left: 0;
+}
+
+@keyframes rest-appear {
   from {
     opacity: 0;
-    transform: scale(1.1);
+    transform: translateY(-3rem);
   }
 
   to {
     opacity: 1;
-    transform: scale(0);
+    transform: translateY(0);
   }
 }
 
@@ -167,7 +185,6 @@
 
 @keyframes profiloff-appear {
   from {
-    opacity: 0;
     transform: translateX(-25vw);
   }
 

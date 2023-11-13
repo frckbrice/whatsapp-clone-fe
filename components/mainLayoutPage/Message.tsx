@@ -20,7 +20,9 @@ export function SenderMessages() {
     </div>
   );
 }
-
+{
+  /* {showEmojie && <EmojiPicker />} */
+}
 export function ReceiverMessages() {
   return (
     <div className="box arrow-left">
