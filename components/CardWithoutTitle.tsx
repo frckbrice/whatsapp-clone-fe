@@ -27,7 +27,7 @@ const CardWithoutTitle = forwardRef<HTMLUListElement, Props>((props, ref) =>
                 <DropDown dropdownList={dropdownProfilePict} />
               </Popover>
             }
-            placement={"auto"}
+            placement={"autoHorizontalEnd"}
           >
             <div>
               <Image
