@@ -9,12 +9,7 @@ import { useParams } from 'next/navigation'
 const Signupb = () => {
   const params = useParams()
   const [one, setOne] = useState('')
-  const [two, setTwo] = useState('')
-  const [three, setThree] = useState('')
-  const [four, setFour] = useState('')
-  const [five, setFive] = useState('')
-  const [six, setSix] = useState('')
-
+ 
   const handleInputChange = () => {
     const random = one + two + three + four + five + six
     console.log(random)
@@ -103,18 +98,7 @@ const Signupb = () => {
                     id="inputField"
                     className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
                   />
-                  <input
-                    onChange={(e) => setFive(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
-                  <input
-                    onChange={(e) => setSix(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
+                  
                 </div>
 
               </div>
