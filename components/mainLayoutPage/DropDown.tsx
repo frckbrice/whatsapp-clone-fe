@@ -1,4 +1,5 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
+import { useWhatSappContext } from "../context";
 
 export interface IAppProps {
   dropdownList: string[];
@@ -6,6 +7,14 @@ export interface IAppProps {
 
 const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
   console.log("in the drop d");
+  const [profil, setProfil] = useState<string>("Show the picture");
+
+  const { showPPicture, setShowPPicture } = useWhatSappContext();
+
+  const handleLink = (value: string) => {
+    value === profil ? setShowPPicture(true) : "";
+    // you can use switch case or if else statements
+  };
 
   return (
     <ul
@@ -16,6 +25,7 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
         <li
           key={index}
           className="w-64  text-sm capitalize text-gray-700 hover:bg-bgGray hover:text-black py-[10px] px-[24px] hover:w-full cursor-pointer  nowrap"
+          onClick={() => handleLink(value)}
         >
           {value}
         </li>
