@@ -14,6 +14,7 @@ type WhatSappContextType = {
 
 const initContextState: WhatSappContextType = {
   openSideNav: false,
+
   setOpenSideNav: (openSideNav) => !openSideNav,
 };
 
@@ -23,7 +24,10 @@ export const WhatSappContext =
 export const WhatSappContextProvider = ({ children }: any) => {
   const [openSideNav, setOpenSideNav] = useState<boolean>(false);
 
-  const values = { openSideNav, setOpenSideNav };
+  const values = {
+    openSideNav,
+    setOpenSideNav,
+  };
 
   return (
     <WhatSappContext.Provider value={values}>
