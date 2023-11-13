@@ -34,18 +34,13 @@ const Signupb = () => {
     let sentCode = code.slice(10, 16);
 
     if (random == sentCode) {
-      try {
-        const { data } = await supabase.from("user").insert({ email: email });
-        if (data) {
-          console.log(data);
-          setSuccess("Successfully loggedin ✅");
-          router.push("/discussions");
-          console.log("conform");
-        }
-      } catch (error) {
+      const { data, error } = await supabase
+        .from("user")
+        .insert({ email: email });
+      if (data) console.log(data);
+      if (error) {
         console.log(error);
-        setError("Something went wrong");
-        setIsloading(false);
+        setError("Email address already exist");
         return;
       }
     } else {
