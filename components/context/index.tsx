@@ -9,15 +9,15 @@ import {
 
 type WhatSappContextType = {
   openSideNav: boolean;
-  showEmojie: boolean;
-  setShowEmojie: Dispatch<SetStateAction<boolean>>;
+  showPPicture: boolean;
+  setShowPPicture: Dispatch<SetStateAction<boolean>>;
   setOpenSideNav: Dispatch<SetStateAction<boolean>>;
 };
 
 const initContextState: WhatSappContextType = {
   openSideNav: false,
-  showEmojie: false,
-  setShowEmojie: (showEmojie) => !showEmojie,
+  showPPicture: false,
+  setShowPPicture: (showPPicture) => !showPPicture,
   setOpenSideNav: (openSideNav) => !openSideNav,
 };
 
@@ -26,13 +26,13 @@ export const WhatSappContext =
 
 export const WhatSappContextProvider = ({ children }: any) => {
   const [openSideNav, setOpenSideNav] = useState<boolean>(false);
-  const [showEmojie, setShowEmojie] = useState<boolean>(false);
+  const [showPPicture, setShowPPicture] = useState<boolean>(false);
 
   const values = {
     openSideNav,
     setOpenSideNav,
-    showEmojie,
-    setShowEmojie,
+    showPPicture,
+    setShowPPicture,
   };
 
   return (
@@ -43,7 +43,7 @@ export const WhatSappContextProvider = ({ children }: any) => {
 };
 
 export const useWhatSappContext = () => {
-  const { openSideNav, setOpenSideNav, showEmojie, setShowEmojie } =
+  const { openSideNav, setOpenSideNav, showPPicture, setShowPPicture } =
     useContext(WhatSappContext);
-  return { openSideNav, setOpenSideNav, showEmojie, setShowEmojie };
+  return { openSideNav, setOpenSideNav, showPPicture, setShowPPicture };
 };
