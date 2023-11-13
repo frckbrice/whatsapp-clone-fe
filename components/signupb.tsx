@@ -8,13 +8,19 @@ import { useParams } from 'next/navigation'
 
 const Signupb = () => {
   const params = useParams()
-  const [one, setOne] = useState('')
- 
-  const handleInputChange = () => {
-    const random = one + two + three + four + five + six
-    console.log(random)
-    console.log(params)
+  const [inputValue, setInputValue] = useState('');
+
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
   };
+
+  const handleSubmit = () => {
+    const value = inputValue;
+    // call api...
+    setInputValue('');
+  }
+
 
 
   return (
@@ -75,30 +81,12 @@ const Signupb = () => {
 
                 <div className="flex gap-3 py-[150px]">
                   <input
-                    onChange={(e) => setOne(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    className="w-32 px-4"
                   />
-                  <input
-                    onChange={(e) => setTwo(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
-                  <input
-                    onChange={(e) => setThree(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
-                  <input
-                    onChange={(e) => setFour(e.target.value)}
-                    type="text"
-                    id="inputField"
-                    className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
-                  />
-                  
+
+
                 </div>
 
               </div>
