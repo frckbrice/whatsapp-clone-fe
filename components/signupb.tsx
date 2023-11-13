@@ -3,24 +3,23 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { GrSettingsOption } from "react-icons/gr";
-import { useParams } from 'next/navigation'
-
+import { useParams } from "next/navigation";
+import InputField from "./profilPage/inputField";
 
 const Signupb = () => {
-  const params = useParams()
-  const [one, setOne] = useState('')
-  const [two, setTwo] = useState('')
-  const [three, setThree] = useState('')
-  const [four, setFour] = useState('')
-  const [five, setFive] = useState('')
-  const [six, setSix] = useState('')
+  const params = useParams();
+  const [one, setOne] = useState("");
+  const [two, setTwo] = useState("");
+  const [three, setThree] = useState("");
+  const [four, setFour] = useState("");
+  const [five, setFive] = useState("");
+  const [six, setSix] = useState("");
 
   const handleInputChange = () => {
-    const random = one + two + three + four + five + six
-    console.log(random)
-    console.log(params)
+    const random = one + two + three + four + five + six;
+    console.log(random);
+    console.log(params);
   };
-
 
   return (
     <div>
@@ -80,12 +79,14 @@ const Signupb = () => {
 
                 <div className="flex gap-3 py-[150px]">
                   <input
+                    maxLength={1}
                     onChange={(e) => setOne(e.target.value)}
                     type="text"
                     id="inputField"
                     className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
                   />
                   <input
+                    maxLength={1}
                     onChange={(e) => setTwo(e.target.value)}
                     type="text"
                     id="inputField"
@@ -98,30 +99,33 @@ const Signupb = () => {
                     className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
                   />
                   <input
+                    maxLength={1}
                     onChange={(e) => setFour(e.target.value)}
                     type="text"
                     id="inputField"
                     className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
                   />
                   <input
+                    maxLength={1}
                     onChange={(e) => setFive(e.target.value)}
                     type="text"
                     id="inputField"
                     className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
                   />
                   <input
+                    maxLength={1}
                     onChange={(e) => setSix(e.target.value)}
                     type="text"
                     id="inputField"
                     className="w-[45px] h-[55px] border border-black  rounded-[10px] px-4"
                   />
                 </div>
-
               </div>
               <button
                 onClick={() => handleInputChange()}
                 type="button"
-                className="bg-secondry w-20 py-2 text-sm text-white rounded">
+                className="bg-secondry w-20 py-2 text-sm text-white rounded"
+              >
                 NEXT
               </button>
               <hr className="leading-[.1] bg-gray-200 my-10" />

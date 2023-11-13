@@ -1,4 +1,5 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
+import Mainpopup from "../popups/mainpopup";
 
 export interface IAppProps {
   dropdownList: string[];
@@ -6,6 +7,11 @@ export interface IAppProps {
 
 const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
   console.log("in the drop d");
+
+  const [showModal, setShowModal] = useState(false);
+  const handleListItemClick = () => {
+    setShowModal(true);
+  };
 
   return (
     <ul
@@ -16,8 +22,10 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
         <li
           key={index}
           className="w-64  text-sm capitalize text-gray-700 hover:bg-bgGray hover:text-black py-[10px] px-[24px] hover:w-full cursor-pointer  nowrap"
+          onClick={handleListItemClick}
         >
-          {value}
+          {/* {value} */}
+          <p>to block</p>
         </li>
       ))}
     </ul>
