@@ -13,7 +13,17 @@ const Signup = () => {
     e.preventDefault()
     if (!email) {
       return
+    } else {
+      const { data, error } = await supabase
+        .from('user')
+        .select("email")
+      let res = data?.filter(i => i.email === (email))
+      console.log(res)
+      if (res?.length === 1) {
+        return setError('Email address already exist')
+      }
     }
+
     // const { data, error } = supabase.auth.setSession({
     //   access_token,
     //   refresh_token
@@ -23,6 +33,7 @@ const Signup = () => {
     if (error) console.log(error)
     if (data) {
       console.log(data)
+      setError('')
       localStorage.setItem('email', email)
       setSubmitted(true)
     }
@@ -67,7 +78,7 @@ const Signup = () => {
               NEXT
             </button>
           </form>
-          {submitted ? <p className="text-center py-4">Please check out your email</p> : ""}
+          {submitted ? <p className="text-center py-4">Please check out your mail</p> : ""}
 
         </div>
       </div>
