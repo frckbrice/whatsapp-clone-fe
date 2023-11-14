@@ -35,22 +35,28 @@ const DirectMessage = () => {
   return (
     <div>
       {users && (
-        <div>
+        <div className="flex gap-2 flex-col">
           {users?.map((item: any, index: number) => (
-            <div key={index}>
-              <p>{item.email}</p>
-              <span>{item.id} </span>
+            <div key={index} className="flex leading-4 gap-5 hover:bg-gray-100 hover:cursor-pointer">
+              <Avatar
+                onClick={() => handleClick()}
+                profilePicture="https://files.123freevectors.com/wp-content/original/503847-beautiful-south-african-girl-portrait.jpg"
+                size={10}
+                className="my-auto"
+              />
+              <div className="border-b border-slate-100 py-4 leading-2">
+                <p className="py-1 font-semibold">{item.email}</p>
+                <span className="py-8">Lorem, ipsum dolor sit amet .</span>
+                {/* <hr/> */}
+              </div>
+              <span className="mt-5">11:30</span>
             </div>
           ))}
         </div>
       )}
       <div
         className="flex pl-4 pr-2 gap-4">
-        <Avatar
-          onClick={() => handleClick()}
-          profilePicture="https://files.123freevectors.com/wp-content/original/503847-beautiful-south-african-girl-portrait.jpg"
-          size={10}
-        />
+
         <div className="border-b-2">
           <p></p>
           <span></span>
