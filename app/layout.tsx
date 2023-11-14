@@ -32,7 +32,15 @@ export default function RootLayout({
               <WhatSappContactContextProvider>
                 <ProfileContextProvider>
                   {" "}
-                  <Suspense fallback={<Pulsation />}>{children}</Suspense>
+                  <Suspense
+                    fallback={
+                      <div className=" flex flex-col justify-center items-center m-28">
+                        <Pulsation />
+                      </div>
+                    }
+                  >
+                    {children}
+                  </Suspense>
                 </ProfileContextProvider>
               </WhatSappContactContextProvider>{" "}
             </WhatSappContextProvider>
