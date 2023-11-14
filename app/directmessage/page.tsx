@@ -1,26 +1,42 @@
 "use client"
 import Image from "next/image"
-import React, { useEffect } from "react"
-import Avatar from "./Avatar"
+import React, { useEffect, useState } from "react"
+import Avatar from "@/components/Avatar"
 import { supabase } from "@/utils/supabase/client"
 import fetchUsers from "@/utils/fetchUsers"
 
 const DirectMessage = () => {
+  const [users, setUsers] = useState<Array<{}>>([])
 
-  let fetchedUsers: any
-
+  // let users: any
   useEffect(() => {
-    fetchedUsers = fetchUsers()
+    const fetchUsers = async () => {
+      const { data, error } = await supabase
+        .from('user')
+        .select()
+      // console.log(data)
+      console.log(typeof data)
+      if (error) console.log(error)
+      if (data) {
+        setUsers(data)
+        // users = data
+        console.log(data)
+      }
+    }
+    fetchUsers()
+    console.log(users)
   }, [])
 
 
-  const handleClick = () => { }
+  const handleClick = () => {
+    fetchUsers()
+  }
 
   return (
     <div>
-      {fetchedUsers && (
+      {users && (
         <div>
-          {fetchedUsers?.map((index: number, item: any) => (
+          {users?.map((item: any, index: number) => (
             <div key={index}>
               <p>{item.email}</p>
               <span>{item.id} </span>

@@ -64,24 +64,15 @@ const Discossions = async () => {
     }
   };
 
-  let fetchedUsers
+  let fetchedUsers: any
 
   useEffect(() => {
-    const userFetched = async () => {
-      fetchedUsers = await fetchUsers()
-      console.log(fetchedUsers)
-      console.log(typeof fetchedUsers)
-    }
-    userFetched()
-
+    
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
 
-  function handleClick(): void {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     <div className="flex w-full ">
@@ -118,25 +109,13 @@ const Discossions = async () => {
             )}
           </div>
         </div>
-        {users && (
+        {/* {fetchedUsers && (
           <div>
-            {fetchedUsers?.map((item) => (
-              <div className="flex pl-4 pr-2 gap-4">
-                <Avatar
-                  onClick={() => handleClick()}
-                  profilePicture="https://files.123freevectors.com/wp-content/original/503847-beautiful-south-african-girl-portrait.jpg"
-                  size={10}
-                />
-                <div className="border-b-2">
-                  <p>{item.email}</p>
-                  {/* <span>{}</span> */}
-                </div>
-
-              </div>
-
+            {fetchedUsers?.map((index: number, item: Users) => (
+              <DirectMessage key={index} fetchedUsers = {item} />
             ))}
           </div>
-        )}
+        )} */}
       </div>
       <div
         ref={ref}
