@@ -3,6 +3,8 @@ import Mainpopup from "../popups/mainpopup";
 import { useWhatSappContext } from "../context";
 import ShowmodalToBlock from "../popups/showmodalToBlock";
 import Reportpopup from "../popups/reportpopup";
+import Deletepopup from "../popups/deletepopup";
+import CancelPopup from "../popups/cancelPopup";
 
 export interface IAppProps {
   dropdownList: string[];
@@ -13,6 +15,8 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
   const [profil, setProfil] = useState<string>("Show the picture");
   const [popupMod, setPopupMod] = useState<boolean>(false);
   const [reportPopup, setReportPopup] = useState<boolean>(false);
+  const [delPopup, setDelPopup] = useState<boolean>(false);
+  const [cancelPopup, setCancelPopup] = useState<boolean>(false);
 
   const { showPPicture, setShowPPicture } = useWhatSappContext();
   const handleLink = (value: string) => {
@@ -20,12 +24,11 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
     if (value === "Show the picture") setShowPPicture(true);
     else if (value === "to block") setPopupMod(true);
     else if (value === "report") setReportPopup(true);
+    else if (value === "remove the discussion") setDelPopup(true);
+    else if (value === "cancel this discussion") setCancelPopup(true);
   };
 
   const { showModal, setShowModal } = useWhatSappContext();
-  const handleListItemClick = (value: string) => {
-    setShowModal(true);
-  };
 
   return (
     <>
@@ -33,7 +36,11 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
 
       {reportPopup && <Reportpopup visible={reportPopup} />}
 
-      {!(popupMod && reportPopup) && (
+      {delPopup && <Deletepopup visible={delPopup} />}
+
+      {cancelPopup && <CancelPopup visible={cancelPopup} />}
+
+      {!(popupMod && reportPopup && delPopup && cancelPopup) && (
         <ul
           ref={ref}
           className="absolute mt-8 py-2 w-[250px] bg-white rounded-md shadow-xl transition-transform delay-5000 ease-in-out -translate-x-48 z-100"

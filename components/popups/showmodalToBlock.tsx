@@ -12,7 +12,7 @@ const ShowmodalToBlock = ({ visible }: any, { onClose }: any) => {
     <div
       id="container"
       onClick={handleOnclose}
-      className="fixed inset-0 bg-white bg-opacity-40 backdrop-blur-sm flex justify-center items-center shadow-2xl"
+      className="fixed z-10 inset-0 bg-white bg-opacity-40 backdrop-blur-sm flex justify-center items-center shadow-2xl"
     >
       <div className="relative w-[500px] h-[50vh] bg-white p-8 rounded ">
         <h1 className="text-[22px] text-gray-600">Block Mustapha</h1>

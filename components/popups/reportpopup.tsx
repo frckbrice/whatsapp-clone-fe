@@ -13,7 +13,7 @@ const Reportpopup = ({ visible }: any, { onClose }: any) => {
     <div
       id="container"
       onClick={handleOnclose}
-      className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center"
+      className="fixed z-10 inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center"
     >
       <div className="relative w-[500px] h-[45vh] bg-white p-5 rounded px-4">
         <h1 className="text-[22px] text-gray-600">

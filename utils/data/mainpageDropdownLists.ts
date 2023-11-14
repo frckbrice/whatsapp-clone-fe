@@ -6,6 +6,7 @@ export const dropdownRight = [
   "close discussions",
   "mute notifications",
   "ephemeral messages",
+  "cancel this discussion",
   "remove the discussion",
   "report",
   "to block",
