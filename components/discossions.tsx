@@ -33,7 +33,6 @@ const Discossions = () => {
   // const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
-  const [showModal, setShowModal] = useState(false);
 
   const { setOpenSideNav, openSideNav } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();

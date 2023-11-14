@@ -10,6 +10,8 @@ import {
 type WhatSappContextType = {
   openSideNav: boolean;
   showPPicture: boolean;
+  showModal: boolean;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
   setShowPPicture: Dispatch<SetStateAction<boolean>>;
   setOpenSideNav: Dispatch<SetStateAction<boolean>>;
 };
@@ -17,6 +19,8 @@ type WhatSappContextType = {
 const initContextState: WhatSappContextType = {
   openSideNav: false,
   showPPicture: false,
+  showModal: false,
+  setShowModal: (showModal) => !showModal,
   setShowPPicture: (showPPicture) => !showPPicture,
   setOpenSideNav: (openSideNav) => !openSideNav,
 };
@@ -25,6 +29,7 @@ export const WhatSappContext =
   createContext<WhatSappContextType>(initContextState);
 
 export const WhatSappContextProvider = ({ children }: any) => {
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [openSideNav, setOpenSideNav] = useState<boolean>(false);
   const [showPPicture, setShowPPicture] = useState<boolean>(false);
 
@@ -33,6 +38,8 @@ export const WhatSappContextProvider = ({ children }: any) => {
     setOpenSideNav,
     showPPicture,
     setShowPPicture,
+    showModal,
+    setShowModal,
   };
 
   return (
@@ -43,7 +50,20 @@ export const WhatSappContextProvider = ({ children }: any) => {
 };
 
 export const useWhatSappContext = () => {
-  const { openSideNav, setOpenSideNav, showPPicture, setShowPPicture } =
-    useContext(WhatSappContext);
-  return { openSideNav, setOpenSideNav, showPPicture, setShowPPicture };
+  const {
+    openSideNav,
+    setOpenSideNav,
+    showPPicture,
+    setShowPPicture,
+    showModal,
+    setShowModal,
+  } = useContext(WhatSappContext);
+  return {
+    openSideNav,
+    setOpenSideNav,
+    showPPicture,
+    setShowPPicture,
+    showModal,
+    setShowModal,
+  };
 };
