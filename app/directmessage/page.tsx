@@ -3,7 +3,7 @@ import Image from "next/image"
 import React, { useEffect, useState } from "react"
 import Avatar from "@/components/Avatar"
 import { supabase } from "@/utils/supabase/client"
-import fetchUsers from "@/utils/fetchUsers"
+import fetchUsers from "@/utils/functions/fetchUsers"
 
 const DirectMessage = () => {
   const [users, setUsers] = useState<Array<{}>>([])
@@ -36,8 +36,11 @@ const DirectMessage = () => {
     <div>
       {users && (
         <div className="flex gap-2 flex-col">
-          {users?.map((item: any, index: number) => (
-            <div key={index} className="flex leading-4 gap-5 hover:bg-gray-100 hover:cursor-pointer">
+          {users?.map((item: any) => (
+            <div
+              onClick={() => console.log(item.id)}
+              key={item.id}
+              className="flex leading-4 gap-5 hover:bg-gray-100 hover:cursor-pointer">
               <Avatar
                 onClick={() => handleClick()}
                 profilePicture="https://files.123freevectors.com/wp-content/original/503847-beautiful-south-african-girl-portrait.jpg"

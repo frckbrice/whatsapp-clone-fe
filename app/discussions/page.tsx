@@ -29,7 +29,7 @@ import { useProfileContext } from "../../components/context/profileContext";
 import { supabase } from "@/utils/supabase/client";
 import { RiContactsBookLine } from "react-icons/ri";
 import DirectMessage from "@/components/directMessage";
-import fetchUsers from "@/utils/fetchUsers";
+import fetchUsers from "@/utils/functions/fetchUsers";
 
 
 type Users = {
@@ -109,13 +109,7 @@ const Discossions = async () => {
             )}
           </div>
         </div>
-        {/* {fetchedUsers && (
-          <div>
-            {fetchedUsers?.map((index: number, item: Users) => (
-              <DirectMessage key={index} fetchedUsers = {item} />
-            ))}
-          </div>
-        )} */}
+        <DirectMessage className="w-full"/>
       </div>
       <div
         ref={ref}
