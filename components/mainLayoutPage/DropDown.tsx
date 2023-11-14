@@ -5,6 +5,7 @@ import ShowmodalToBlock from "../popups/showmodalToBlock";
 import Reportpopup from "../popups/reportpopup";
 import Deletepopup from "../popups/deletepopup";
 import CancelPopup from "../popups/cancelPopup";
+import DisconnectPopup from "../popups/disconnectPopup";
 
 export interface IAppProps {
   dropdownList: string[];
@@ -17,6 +18,7 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
   const [reportPopup, setReportPopup] = useState<boolean>(false);
   const [delPopup, setDelPopup] = useState<boolean>(false);
   const [cancelPopup, setCancelPopup] = useState<boolean>(false);
+  const [disconPopup, SetDisconPopup] = useState<boolean>(false);
 
   const { showPPicture, setShowPPicture } = useWhatSappContext();
   const handleLink = (value: string) => {
@@ -26,6 +28,7 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
     else if (value === "report") setReportPopup(true);
     else if (value === "remove the discussion") setDelPopup(true);
     else if (value === "cancel this discussion") setCancelPopup(true);
+    else if (value === "disconnect") SetDisconPopup(true);
   };
 
   const { showModal, setShowModal } = useWhatSappContext();
@@ -40,7 +43,9 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
 
       {cancelPopup && <CancelPopup visible={cancelPopup} />}
 
-      {!(popupMod && reportPopup && delPopup && cancelPopup) && (
+      {disconPopup && <DisconnectPopup visible={disconPopup} />}
+
+      {!(popupMod && reportPopup && delPopup && cancelPopup && disconPopup) && (
         <ul
           ref={ref}
           className="absolute mt-8 py-2 w-[250px] bg-white rounded-md shadow-xl transition-transform delay-5000 ease-in-out -translate-x-48 z-100"
