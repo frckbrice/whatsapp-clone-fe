@@ -3,19 +3,14 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { GrSettingsOption } from "react-icons/gr";
-import { useParams } from 'next/navigation'
+import { useParams } from "next/navigation";
 
 import OTPField from "./otpInput";
 
-
 const Signupb = () => {
+  const [otp, setOtp] = useState("");
 
-  const [otp, setOtp] = useState('');
-
-  const handleNext = () => {
-
-  }
-
+  const handleNext = () => {};
 
   return (
     <div>
@@ -73,17 +68,18 @@ const Signupb = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-3 py-[150px]">
+                <div className=" gap-3 py-[150px]">
                   <OTPField />
+                  <button
+                    onClick={handleNext}
+                    type="button"
+                    className="bg-secondry w-20 py-2 text-sm text-white rounded"
+                  >
+                    NEXT
+                  </button>
                 </div>
-
               </div>
-              <button
-                onClick={handleNext}
-                type="button"
-                className="bg-secondry w-20 py-2 text-sm text-white rounded">
-                NEXT
-              </button>
+
               <hr className="leading-[.1] bg-gray-200 my-10" />
 
               <a
