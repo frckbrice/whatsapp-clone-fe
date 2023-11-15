@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Avatar";
 import { MdGroups2 } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
@@ -34,6 +34,7 @@ import { RiContactsBookLine } from "react-icons/ri";
 import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
+import { error } from "console";
 
 type Users = {
   email: string;
@@ -44,11 +45,13 @@ type Users = {
   onClick?: () => void;
 };
 
-const Discossions = async () => {
-  const [currentUser, setCurrentUser] = useState({}); // state containing the user info
+const Discossions = () => {
+  const [currentUser, setCurrentUser] = useState<Users>(
+    JSON.parse(localStorage.getItem("sender") || "{}")
+  ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
-
+  // const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
 
@@ -57,8 +60,6 @@ const Discossions = async () => {
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile, setOpenProfile } = useProfileContext();
   // const { reciever } = useRecieverInfoContext()
-  // const reciever: any = JSON.parse(localStorage.getItem("reciever") || '{}')
-  // console.log(reciever)
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -71,21 +72,36 @@ const Discossions = async () => {
     }
   };
 
-  const showUser = async () => {
-    const curUser = await fetchSignupUser();
-    setCurrentUser(curUser);
-  };
+  // useEffect(() => {
+  //   const showUser = async () => {
+  //     const curUser = await fetchSignupUser();
+  //     setCurrentUser(curUser);
+  //   };
+  //   showUser();
+  // }, []);
 
   useEffect(() => {
-    showUser();
+    // const showUser = async () => {
+    //   const curUser = await fetchSignupUser();
+    //   setCurrentUser(curUser);
+    // };
+    // showUser();
+    const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
+    console.log("reciever msg from localstorage", reciever);
+    fetchSignupUser()
+      .then((data) => setCurrentUser(data))
+      .catch((err) => {
+        if (error instanceof Error) console.error(err);
+      });
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
 
   // useEffect(() => {
-
-  // }, [])
+  //   const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
+  //   console.log("reciever msg from localstorage", reciever);
+  // }, []);
 
   return (
     <>
