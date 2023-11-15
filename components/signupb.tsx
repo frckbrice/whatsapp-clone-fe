@@ -68,7 +68,7 @@ const Signupb = () => {
                   </div>
                 </div>
 
-                <div className="gap-3 py-[150px]">
+                <div className="gap-3 py-[150px] text-end">
                   <OTPField />
                   <button
                     onClick={handleNext}
