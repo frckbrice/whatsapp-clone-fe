@@ -16,11 +16,9 @@ import DropDownR from "../../components/mainLayoutPage/DropdownR";
 import { useWhatSappContext } from "@/components/context";
 import SideNavRight from "../../components/RightSideBar/SideNavRight";
 import SearchField from "../../components/RightSideBar/SearchField";
-import {
-  FollowingMessagesSimple,
-  ReceiverMessages,
-  SenderMessages,
-} from "../../components/mainLayoutPage/Message";
+import SenderMessages from "@/components/mainLayoutPage/Messages/SenderMessage";
+import ReceiverMessages from "@/components/mainLayoutPage/Messages/ReceiverMessage";
+import FollowingMessagesSimple from "@/components/mainLayoutPage/Messages/SimpleMessage";
 import ContactInfoPage from "../../components/RightSideBar/ContactInfoPage";
 import { useWhatSappContactContext } from "../../components/context/Context";
 import ProfilePage from "../../components/profilPage/ProfilePage";
@@ -35,8 +33,8 @@ import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import { User } from "@/type";
-// import { error } from "console";
+import { Message, User } from "@/type";
+import { getReceiveMessage } from "@/utils/queries/getMessage";
 
 type Users = {
   email: string;
@@ -49,20 +47,18 @@ type Users = {
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
-  // const [hasMounted, setHasMounted] = useState(false);
-  // useEffect(() => {
-  //   setHasMounted(true);
-  // }, []);
-  // if (!hasMounted) return null;
+
   const [users, setUsers] = useState<User[]>([]);
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<any>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
-  const [currentUser, setCurrentUser] = useState<Users>(
+  const [currentUser, setCurrentUser] = useState<Users>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
+  const [sendingMessage, setSendingMessage] = useState<string[]>([]);
+  const [receivingMessage, setReceivingMessage] = useState<string[]>([]);
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
-  // const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
+  const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
 
@@ -88,17 +84,7 @@ const Discossions = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const showUser = async () => {
-  //     const curUser = await fetchSignupUser();
-  //     setCurrentUser(curUser);
-  //   };
-  //   showUser();
-  // }, []);
-
   useEffect(() => {
-    const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
-    console.log("reciever msg from localstorage", reciever);
     fetchSignupUser()
       .then((data) => setCurrentUser(data))
       .catch((err) => {
@@ -123,23 +109,48 @@ const Discossions = () => {
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
 
-  // useEffect(() => {
-  //   const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
-  //   console.log("reciever msg from localstorage", reciever);
-  // }, []);
+  const sendMessageToDB = async () => {
+    const sendingMessage: Message = {
+      sender_id: currentUser.id,
+      receiver_id: receiver?.id as string,
+      content: message,
+    };
 
-  const sendMessageToDB = () => {
-    const messages = supabase
-      .channel("custom-all-channel")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "messages" },
-        (message) => {
-          console.log("Change received!", message);
-        }
-      )
-      .subscribe();
+    console.log("message to send: ", sendingMessage);
+
+    const { error } = await supabase.from("messages").insert(sendingMessage);
+    if (error) console.log("error inserting messages: ", error);
+    setMessage("");
   };
+
+  const messages = supabase
+    .channel("custom-all-channel")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "messages" },
+      (payload) => {
+        console.log("Change received!", payload);
+        if (
+          payload.new.receiver_id === currentUser?.id &&
+          payload.new.sender_id !== currentUser?.id
+        )
+          setReceivingMessage((prev) => [...prev, payload.new.content]);
+        if (
+          payload.new.receiver_id !== currentUser?.id &&
+          payload.new.sender_id === currentUser?.id
+        )
+          setSendingMessage((prev) => [...prev, payload.new.content]);
+        if (
+          payload.new.sender_id === payload.new.receiver_id &&
+          payload.new.receiver_id === currentUser?.id
+        )
+          setSendingMessage((prev) => [...prev, payload.new.content]);
+      }
+    )
+    .subscribe();
+
+  console.log("sent messages: ", sendingMessage);
+  console.log("received messages: ", receivingMessage);
 
   return (
     <>
@@ -196,7 +207,7 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
-              <DirectMessage users={users} />
+              <DirectMessage users={users} setReceiver={setReceiver} />
             </div>
             <div
               ref={ref}
@@ -243,15 +254,43 @@ const Discossions = () => {
 
               <div className=" w-full flex flex-col mt-3 px-10">
                 <div className=" max-w-[70%] flex flex-col items-start justify-start">
-                  <ReceiverMessages
-                    content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis doloribus aut sapiente expedita voluptatibus molestias consectetur culpa asperiores nostrum consequuntur cum illo, ipsum, hic, rerum sequi commodi quisquam. Quos, perspiciatis!
-Sint alias aperiam saepe ducimus cumque quam itaque nemo voluptatibus nam sunt necessitatibus suscipit, architecto autem dolorum repellendus vel ullam totam quasi ad velit hic provident iusto accusamus! Architecto, doloremque!"
-                  />
-                  <FollowingMessagesSimple content="This is a box with some content and an arrow at the top right." />
+                  {receivingMessage[0] ? (
+                    <ReceiverMessages content={receivingMessage[0]} />
+                  ) : (
+                    ""
+                  )}
+                  {receivingMessage.slice(1).length
+                    ? receivingMessage
+                        .slice(1)
+                        ?.map((message, i) => (
+                          <FollowingMessagesSimple
+                            content={message}
+                            styleS=" box align-left"
+                            key={i}
+                          />
+                        ))
+                    : ""}
+                  {/* <FollowingMessagesSimple content={} /> */}
                 </div>
 
                 <div className=" w-full flex flex-col items-end justify-end ">
-                  <SenderMessages content="This is a box with some content and an arrow at the top right." />
+                  {sendingMessage[0] ? (
+                    <SenderMessages content={sendingMessage[0]} />
+                  ) : (
+                    ""
+                  )}
+                  {/*  align-left */}
+                  {sendingMessage.slice(1).length
+                    ? sendingMessage
+                        .slice(1)
+                        ?.map((message, i) => (
+                          <FollowingMessagesSimple
+                            content={message}
+                            styleS="box box-row align-right"
+                            key={i}
+                          />
+                        ))
+                    : ""}
                 </div>
               </div>
 
@@ -290,11 +329,11 @@ Sint alias aperiam saepe ducimus cumque quam itaque nemo voluptatibus nam sunt n
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3 "
                     value={message}
-                    onChange={() => setMessage(e.target.value)}
+                    onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type a message"
                   />
                 </div>
-                <button className="text-2xl " onChange={sendMessageToDB}>
+                <button className="text-2xl " onClick={sendMessageToDB}>
                   <IoSendSharp />
                 </button>
               </div>

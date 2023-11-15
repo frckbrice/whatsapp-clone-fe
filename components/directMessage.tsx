@@ -5,47 +5,22 @@ import Avatar from "@/components/Avatar";
 import { supabase } from "@/utils/supabase/client";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
+import { User } from "@/type";
 
 type Props = {
   className?: string;
-  users: {}[];
+  users: User[];
+  setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
 };
 
-const DirectMessage = React.memo(({ className, users }: Props) => {
-  // const [users, setUsers] = useState<Array<{}>>([]);
-
-  // // let users: any
-  // useEffect(() => {
-  //   const fetchUsers = async () => {
-  //     const { data, error } = await supabase.from("user").select();
-  //     // console.log(data)
-  //     console.log(typeof data);
-  //     if (error) console.log(error);
-  //     if (data) {
-  //       setUsers(data);
-  //       // users = data
-  //       console.log(data);
-  //     }
-  //   };
-  //   fetchUsers();
-  // }, []);
-
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-  if (!hasMounted) return null;
-
+const DirectMessage = React.memo(({ className, users, setReceiver }: Props) => {
   console.log("these are all users", users);
-
-  const insertUsersInRooms = async () => {
-    const { data, error } = await supabase.from("rooms").insert([{}]);
-  };
 
   const handleDirectMessage = async (id: string) => {
     console.log(id);
-    let data: Object = await fetchSingleUser(id);
+    let data: User = await fetchSingleUser(id);
     console.log(data);
+    setReceiver(data);
   };
 
   const handleClick = () => {

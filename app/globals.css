@@ -19,6 +19,10 @@
   box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
 }
 
+.box-row {
+  background-color: #8efd8e;
+}
+
 .box.arrow-right {
   margin-top: 10px;
   border-top-left-radius: 12px;
