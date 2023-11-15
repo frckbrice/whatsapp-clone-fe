@@ -32,18 +32,17 @@ import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 
-
 type Users = {
-  email: string,
-  name: string,
-  image: string,
-  phone: number,
-  id: string,
-  onClick?: () => void
-}
+  email: string;
+  name: string;
+  image: string;
+  phone: number;
+  id: string;
+  onClick?: () => void;
+};
 
-const Discossions = async () => {
-  const [currentUser, setCurrentUser] = useState({}) // state containing the user info
+const Discossions = () => {
+  const [currentUser, setCurrentUser] = useState({}); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
   // const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
@@ -68,13 +67,11 @@ const Discossions = async () => {
     }
   };
 
-
   const showUser = async () => {
-    const curUser = await fetchSignupUser()
-    setCurrentUser(curUser)
-  }
+    const curUser = await fetchSignupUser();
+    setCurrentUser(curUser);
+  };
   useEffect(() => {
-    
     // showUser()
 
     if (ref.current !== null)
@@ -85,7 +82,6 @@ const Discossions = async () => {
   // useEffect(() => {
 
   // }, [])
-
 
   return (
     <div className="flex w-full ">
