@@ -13,6 +13,7 @@ type Props = {
 const DirectMessage = ({ className }: Props) => {
   const [users, setUsers] = useState<Array<{}>>([])
 
+
   // let users: any
   useEffect(() => {
     const fetchUsers = async () => {
@@ -29,8 +30,18 @@ const DirectMessage = ({ className }: Props) => {
       }
     }
     fetchUsers()
-    console.log(users)
+    
   }, [])
+
+  console.log("these are all users", users)
+  
+  const insertUsersInRooms = async () => {
+    const {data, error} = await supabase
+    .from("rooms")
+    .insert([{}])
+    
+  
+  }
 
   const handleDirectMessage = (id: string) => {
     console.log(id)
