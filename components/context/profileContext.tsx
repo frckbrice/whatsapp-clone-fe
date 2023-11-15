@@ -37,3 +37,8 @@ export const useProfileContext = () => {
   const { openProfile, setOpenProfile } = useContext(ProfileContext);
   return { openProfile, setOpenProfile };
 };
+
+// export const useRecieverInfoContext = () => {
+//   const reciever: any = JSON.parse(localStorage.getItem('reciever') || '{}')
+//   return reciever
+// }

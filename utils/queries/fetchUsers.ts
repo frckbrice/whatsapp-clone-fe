@@ -1,6 +1,4 @@
-import { useState } from "react"
 import { supabase } from "../supabase/client"
-
 
 const fetchUsers = async () => {
   const { data, error } = await supabase

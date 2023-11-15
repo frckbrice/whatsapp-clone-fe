@@ -3,8 +3,8 @@ import Image from "next/image"
 import React, { useEffect, useState } from "react"
 import Avatar from "@/components/Avatar"
 import { supabase } from "@/utils/supabase/client"
-import fetchUsers from "@/utils/functions/fetchUsers"
-import fetchSingleUser from "@/utils/functions/fetchSingleUser"
+import fetchUsers from "@/utils/queries/fetchUsers"
+import fetchSingleUser from "@/utils/queries/fetchSingleUser"
 
 type Props = {
   className?: string
@@ -36,6 +36,7 @@ const DirectMessage = ({ className }: Props) => {
     console.log(id)
     let data: Object = fetchSingleUser(id)
     console.log(data)
+    
   }
 
   const handleClick = () => {
@@ -54,7 +55,7 @@ const DirectMessage = ({ className }: Props) => {
               <div className="flex items-center gap-5">
                 <Avatar
                   onClick={() => handleClick()}
-                  profilePicture="https://files.123freevectors.com/wp-content/original/503847-beautiful-south-african-girl-portrait.jpg"
+                  profilePicture="https://hips.hearstapps.com/hmg-prod/images/african-baby-girl-holding-flower-royalty-free-image-1676500153.jpg?crop=1.00xw:0.344xh;0,0.189xh&resize=1200:*"
                   size={10}
                   className="my-auto"
                 />

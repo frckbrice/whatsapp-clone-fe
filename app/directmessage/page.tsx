@@ -3,7 +3,7 @@ import Image from "next/image"
 import React, { useEffect, useState } from "react"
 import Avatar from "@/components/Avatar"
 import { supabase } from "@/utils/supabase/client"
-import fetchUsers from "@/utils/functions/fetchUsers"
+import fetchUsers from "@/utils/queries/fetchUsers"
 
 const DirectMessage = () => {
   const [users, setUsers] = useState<Array<{}>>([])
