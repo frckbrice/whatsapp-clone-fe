@@ -12,7 +12,6 @@ const OTPField: FC<Props> = (props): JSX.Element => {
 
     setOtp(newOtp);
 
-    // Move to the next input field
     if (value !== "" && index < otp.length - 1) {
       inputRefs.current[index + 1]?.focus();
     }
