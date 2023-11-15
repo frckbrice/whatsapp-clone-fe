@@ -68,12 +68,12 @@ const Signupb = () => {
                   </div>
                 </div>
 
-                <div className=" gap-3 py-[150px]">
+                <div className="gap-3 py-[150px]">
                   <OTPField />
                   <button
                     onClick={handleNext}
                     type="button"
-                    className="bg-secondry w-20 py-2 text-sm text-white rounded"
+                    className="bg-secondry w-20 py-2 text-sm text-white rounded mt-8"
                   >
                     NEXT
                   </button>
