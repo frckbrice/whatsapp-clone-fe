@@ -10,7 +10,7 @@ import OTPField from "./otpInput";
 const Signupb = () => {
   const [otp, setOtp] = useState("");
 
-  const handleNext = () => {};
+  const handleInputChange = () => {};
 
   return (
     <div>
@@ -70,8 +70,9 @@ const Signupb = () => {
 
                 <div className="gap-3 py-[150px] text-end">
                   <OTPField />
+
                   <button
-                    onClick={handleNext}
+                    onClick={handleInputChange}
                     type="button"
                     className="bg-secondry w-20 py-2 text-sm text-white rounded mt-8"
                   >
