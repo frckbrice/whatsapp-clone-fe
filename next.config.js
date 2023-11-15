@@ -26,8 +26,10 @@ const nextConfig = {
       {
         hostname: "cdn.jsdelivr.net",
       },
+      {
+        hostname: "xkwspfurbsmpwwazlkmu.supabase.co",
+      },
     ],
-    // domains: ["images.pexels.com, "]
   },
 };
 

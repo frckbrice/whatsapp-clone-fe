@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { WhatSappContextProvider } from "../components/context";
 import { WhatSappContactContextProvider } from "@/components/context/Context";
 import { ProfileContextProvider } from "@/components/context/profileContext";
+import Pulsation from "./[signup]/component/PulseLoader";
+import { Suspense } from "react";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -28,7 +30,18 @@ export default function RootLayout({
           <div className=" flex flex-col items-center w-full mx-auto relative">
             <WhatSappContextProvider>
               <WhatSappContactContextProvider>
-                <ProfileContextProvider>{children}</ProfileContextProvider>
+                <ProfileContextProvider>
+                  {" "}
+                  <Suspense
+                    fallback={
+                      <div className=" flex flex-col justify-center items-center m-28">
+                        <Pulsation />
+                      </div>
+                    }
+                  >
+                    {children}
+                  </Suspense>
+                </ProfileContextProvider>
               </WhatSappContactContextProvider>{" "}
             </WhatSappContextProvider>
           </div>

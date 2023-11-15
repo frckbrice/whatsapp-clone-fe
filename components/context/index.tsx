@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import {
   Dispatch,
   SetStateAction,
@@ -9,16 +10,32 @@ import {
 
 type WhatSappContextType = {
   openSideNav: boolean;
-  showEmojie: boolean;
-  setShowEmojie: Dispatch<SetStateAction<boolean>>;
+  showPPicture: boolean;
+  importPict: boolean;
+  profilepict: string;
+  profileImage: string;
+  sendingFile: any;
+  setSendingFile: Dispatch<SetStateAction<any>>;
+  setProfileImage: Dispatch<SetStateAction<string>>;
+  setProfilPict: Dispatch<SetStateAction<string>>;
+  setImportPict: Dispatch<SetStateAction<boolean>>;
+  setShowPPicture: Dispatch<SetStateAction<boolean>>;
   setOpenSideNav: Dispatch<SetStateAction<boolean>>;
 };
 
 const initContextState: WhatSappContextType = {
   openSideNav: false,
-  showEmojie: false,
-  setShowEmojie: (showEmojie) => !showEmojie,
+  showPPicture: false,
+  importPict: false,
+  profilepict: "",
+  profileImage: "",
+  sendingFile: "",
+  setSendingFile: () => "",
+  setProfileImage: () => "",
+  setProfilPict: () => "",
+  setShowPPicture: (showPPicture) => !showPPicture,
   setOpenSideNav: (openSideNav) => !openSideNav,
+  setImportPict: (importPict) => !importPict,
 };
 
 export const WhatSappContext =
@@ -26,14 +43,30 @@ export const WhatSappContext =
 
 export const WhatSappContextProvider = ({ children }: any) => {
   const [openSideNav, setOpenSideNav] = useState<boolean>(false);
-  const [showEmojie, setShowEmojie] = useState<boolean>(false);
+  const [showPPicture, setShowPPicture] = useState<boolean>(false);
+  const [importPict, setImportPict] = useState<boolean>(false);
+  const [profilepict, setProfilPict] = useState<string>(
+    "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+  );
+  const [profileImage, setProfileImage] = useState<string>("");
+  const [sendingFile, setSendingFile] = useState<any>();
 
   const values = {
     openSideNav,
     setOpenSideNav,
-    showEmojie,
-    setShowEmojie,
+    showPPicture,
+    setShowPPicture,
+    importPict,
+    setImportPict,
+    profilepict,
+    setProfilPict,
+    profileImage,
+    setProfileImage,
+    sendingFile,
+    setSendingFile,
   };
+
+  if (importPict) console.log("importPict: ", importPict);
 
   return (
     <WhatSappContext.Provider value={values}>
@@ -43,7 +76,32 @@ export const WhatSappContextProvider = ({ children }: any) => {
 };
 
 export const useWhatSappContext = () => {
-  const { openSideNav, setOpenSideNav, showEmojie, setShowEmojie } =
-    useContext(WhatSappContext);
-  return { openSideNav, setOpenSideNav, showEmojie, setShowEmojie };
+  const {
+    openSideNav,
+    setOpenSideNav,
+    showPPicture,
+    setShowPPicture,
+    importPict,
+    setImportPict,
+    profilepict,
+    setProfilPict,
+    profileImage,
+    setProfileImage,
+    sendingFile,
+    setSendingFile,
+  } = useContext(WhatSappContext);
+  return {
+    openSideNav,
+    setOpenSideNav,
+    showPPicture,
+    setShowPPicture,
+    importPict,
+    setImportPict,
+    profilepict,
+    setProfilPict,
+    profileImage,
+    setProfileImage,
+    sendingFile,
+    setSendingFile,
+  };
 };

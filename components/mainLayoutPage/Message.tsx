@@ -1,7 +1,11 @@
 import Image from "next/image";
 import React from "react";
 
-export function SenderMessages() {
+type Props = {
+  content: string;
+};
+
+export function SenderMessages({ content }: Props) {
   return (
     <div className="box arrow-right ">
       <div className=" py-0 text-[#111b21]">
@@ -15,7 +19,7 @@ export function SenderMessages() {
           </span>{" "}
         </div>
 
-        <p> This is a box with some content and an arrow at the top right.</p>
+        <p> {content}</p>
       </div>
     </div>
   );
@@ -23,7 +27,7 @@ export function SenderMessages() {
 {
   /* {showEmojie && <EmojiPicker />} */
 }
-export function ReceiverMessages() {
+export function ReceiverMessages({ content }: Props) {
   return (
     <div className="box arrow-left">
       <div className=" py-0 text-[#111b21]">
@@ -37,22 +41,16 @@ export function ReceiverMessages() {
           </span>{" "}
         </div>
 
-        <p> This is a box with some content and an arrow at the top left.</p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Et corrupti
-          exercitationem quidem voluptas nulla inventore consequuntur illo autem
-          odio atque reiciendis incidunt quos impedit suscipit, sapiente
-          aspernatur placeat laboriosam. Fugiat! Maxime tempora rem ducimus non.
-        </p>
+        <p>{content}</p>
       </div>
     </div>
   );
 }
 
-export function FollowingMessagesSimple() {
+export function FollowingMessagesSimple({ content }: Props) {
   return (
     <div className="box align-left">
-      <p> This is a box with some content and an arrow at the top left.</p>
+      <p> {content}</p>
     </div>
   );
 }

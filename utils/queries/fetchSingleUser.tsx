@@ -1,5 +1,6 @@
 import { supabase } from "../supabase/client"
 
+// this function query a signed up user on clicking on the user on the side bar
 const fetchSingleUser = async (id: string) => {
   const { data, error } = await supabase
     .from('user')
