@@ -45,8 +45,6 @@ const Signup = () => {
         </div>
       )
     }
-
-
   }
 
   return (

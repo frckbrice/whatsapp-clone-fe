@@ -26,8 +26,24 @@ import { useWhatSappContactContext } from "../../components/context/Context";
 import ProfilePage from "../../components/profilPage/ProfilePage";
 import ProfilePageContent from "../../components/profilPage/ProfilePageContent";
 import { useProfileContext } from "../../components/context/profileContext";
+import { supabase } from "@/utils/supabase/client";
+import { RiContactsBookLine } from "react-icons/ri";
+import DirectMessage from "@/components/directMessage";
+import fetchUsers from "@/utils/queries/fetchUsers";
+import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 
-const Discossions = () => {
+
+type Users = {
+  email: string,
+  name: string,
+  image: string,
+  phone: number,
+  id: string,
+  onClick?: () => void
+}
+
+const Discossions = async () => {
+  const [currentUser, setCurrentUser] = useState({}) // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
   // const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
@@ -37,6 +53,9 @@ const Discossions = () => {
   const { setOpenSideNav, openSideNav } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile, setOpenProfile } = useProfileContext();
+  // const { reciever } = useRecieverInfoContext()
+  // const reciever: any = JSON.parse(localStorage.getItem("reciever") || '{}')
+  // console.log(reciever)
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -49,15 +68,28 @@ const Discossions = () => {
     }
   };
 
+
+  const showUser = async () => {
+    const curUser = await fetchSignupUser()
+    setCurrentUser(curUser)
+  }
   useEffect(() => {
+    
+    // showUser()
+
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
 
+  // useEffect(() => {
+
+  // }, [])
+
+
   return (
     <div className="flex w-full ">
-      <div className="bg-white w-[25vw] h-screen">
+      <div className="bg-white w-[25vw] h-screen overflow-y-auto">
         <ProfilePage title="Profil">
           <ProfilePageContent />
         </ProfilePage>
@@ -90,6 +122,7 @@ const Discossions = () => {
             )}
           </div>
         </div>
+        <DirectMessage className="w-full px-3" />
       </div>
       <div
         ref={ref}
@@ -102,7 +135,7 @@ const Discossions = () => {
         <div className="flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 ">
           <div
             className="flex gap-3 w-full cursor-pointer"
-            onClick={() => setOpenContactInfo(true)}
+            onClick={() => showUser()}
           >
             <Avatar
               onClick={() => setOpenContactInfo(true)}

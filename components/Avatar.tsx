@@ -5,11 +5,13 @@ type AvatarProps = {
   onClick: () => void;
   profilePicture: string;
   size: number;
+  className?: string
 };
 
-const Avatar = ({ onClick, profilePicture, size }: AvatarProps) => {
+const Avatar = ({ onClick, profilePicture, size, className }: AvatarProps) => {
   return (
-    <button
+    <div className={className}>
+      <button
       onClick={onClick}
       style={{
         backgroundImage: `url(${profilePicture})`,
@@ -26,6 +28,7 @@ const Avatar = ({ onClick, profilePicture, size }: AvatarProps) => {
         className="rounded-full object-"
       /> */}
     </button>
+    </div>
   );
 };
 
