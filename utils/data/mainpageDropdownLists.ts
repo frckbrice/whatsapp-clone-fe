@@ -20,11 +20,9 @@ export const dropdownLeft = [
   "disconnect",
 ];
 
-// export const dropdownBottomLeft = [
-//   `${(<TbFileDescription />)}``<span className="mr-3">Document<span>`,
-//   "Photos and videos",
-//   "Camera",
-//   "Contact",
-//   "Survey",
-//   "New sticker",
-// ];
+export const dropdownProfilePict = [
+  "Show the picture",
+  "Take a picture",
+  "Import a picture",
+  "Delete a picture",
+];
