@@ -3,7 +3,6 @@ import React, { useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Avatar from "../Avatar";
 import { useWhatSappContext } from "@/components/context";
-import { useWhatSappContactContext } from "../context/Context";
 
 type Props = {
   children: React.ReactElement;
@@ -14,7 +13,7 @@ const ShowProfilePicture = (props: Props) => {
   const { setShowPPicture } = useWhatSappContext();
 
   return (
-    <div className="relative w-[100vw] h-screen bg-whatsappimg border-r border-r-gray-300 z-0 cursor-pointer overflow-hidden">
+    <div className="relative w-[100vw] h-screen bg-whatsappimg z-0 cursor-pointer overflow-hidden">
       <div className="flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-5 pr-10 py-2 ">
         <div className="flex gap-3 w-full cursor-pointer">
           <Avatar

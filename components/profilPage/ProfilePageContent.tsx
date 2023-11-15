@@ -5,8 +5,7 @@ import { AiOutlineCheck } from "react-icons/ai";
 import { FaRegLaugh } from "react-icons/fa";
 import EmojiePicker from "./EmojiePicker";
 import Image from "next/image";
-
-type Props = {};
+import { useWhatSappContext } from "../context";
 
 const ProfilePageContent = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
@@ -18,6 +17,8 @@ const ProfilePageContent = () => {
   const [profileName, setProfileName] = useState<string>("David Beckamp");
   const [profileDescription, setProfileDescription] = useState<string>("");
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
+
+  const { profileImage } = useWhatSappContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -58,7 +59,10 @@ const ProfilePageContent = () => {
     >
       {/* //** add profile image and profile name here  */}
       <CardWithoutTitle
-        image="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+        image={
+          profileImage ||
+          "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+        }
         ref={dropdownRef}
       />
 

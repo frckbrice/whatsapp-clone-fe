@@ -3,7 +3,8 @@ import Whitebtn from "../atoms/whitebtn";
 import Greenbtn from "../atoms/greenbtn";
 
 const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
-  const [isChecked, setIsChecked] = useState(false);
+  const [selectedRadio, setSelectedRadio] = useState("");
+  const [confirmButtonColor, setConfirmButtonColor] = useState("#ccc");
   const handleOnclose = (e: any) => {
     if (e.target.id === "container") onClose();
   };
@@ -11,14 +12,13 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
   if (!visible) return null;
 
   const handleRadioChange = (event: any) => {
-    const radioButtons = document.getElementsByName("option");
-    for (const radioButton of radioButtons) {
-      if (radioButton !== event.target) {
-        radioButton.checked = false;
-      }
-    }
+    setSelectedRadio(event.target.value);
 
-    setIsChecked(true);
+    if (event.target.value) {
+      setConfirmButtonColor("#0f9d58");
+    } else {
+      setConfirmButtonColor("#ccc");
+    }
   };
 
   return (
@@ -39,8 +39,10 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
           <div className="flex gap-4">
             <input
               type="radio"
-              name="option"
               id="option1"
+              name="radioOptions"
+              value="option1"
+              checked={selectedRadio === "option1"}
               onChange={handleRadioChange}
               className="text-teal-80 border-gray-600 w-[22px]"
             />
@@ -52,8 +54,10 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
           <div className="flex gap-4">
             <input
               type="radio"
-              name="option"
               id="option2"
+              name="radioOptions"
+              value="option2"
+              checked={selectedRadio === "option2"}
               onChange={handleRadioChange}
               className="text-teal-800  border-gray-600 w-[22px]"
             />
@@ -65,8 +69,10 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
           <div className="flex gap-4">
             <input
               type="radio"
-              name="option"
               id="option3"
+              name="radioOptions"
+              value="option3"
+              checked={selectedRadio === "option3"}
               onChange={handleRadioChange}
               className="text-teal-800  border-gray-600 w-[22px]"
             />
@@ -78,8 +84,10 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
           <div className="flex gap-4">
             <input
               type="radio"
-              name="option"
               id="option4"
+              name="radioOptions"
+              value="option4"
+              checked={selectedRadio === "option4"}
               onChange={handleRadioChange}
               className="text-teal-800  border-gray-600 w-[22px]"
             />
@@ -91,8 +99,10 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
           <div className="flex gap-4">
             <input
               type="radio"
-              name="option"
               id="option5"
+              name="radioOptions"
+              value="option5"
+              checked={selectedRadio === "option5"}
               onChange={handleRadioChange}
               className="text-teal-800  border-gray-600 w-[22px]"
             />
@@ -105,7 +115,13 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
 
         <div className="absolute bottom-4 right-6 flex gap-4">
           <Whitebtn label="Cancel" className="" />
-          <Greenbtn label="Block" className={isChecked ? "green-button" : ""} />
+          <button
+            style={{ backgroundColor: confirmButtonColor }}
+            disabled={selectedRadio === ""}
+            className="rounded-full px-8 py-3"
+          >
+            Block
+          </button>
         </div>
       </div>
     </div>
