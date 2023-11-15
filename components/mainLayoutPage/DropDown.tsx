@@ -9,11 +9,11 @@ export interface IAppProps {
 }
 
 const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
-  // const [fileValue, setFileValue] = useState<File>();
   console.log("in the drop d");
   const uldd = document.getElementById("uldropdown") as HTMLUListElement;
 
-  const { setShowPPicture, setImportPict } = useWhatSappContext();
+  const { setShowPPicture, setProfilPict, setImportPict, setSendingFile } =
+    useWhatSappContext();
   const { setOpenProfile } = useProfileContext();
   const { setOpenContactInfo } = useWhatSappContactContext();
 
@@ -24,19 +24,19 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
       inputFile.type = "file";
       inputFile.addEventListener("change", (e: any) => {
         const file = e.target.files[0];
+        setSendingFile(file);
         const reader = new FileReader();
         reader.addEventListener("load", (e: any) => {
           const fileContent = reader.result;
           if (fileContent) {
-            console.log("file to upload: " + fileContent);
-            localStorage.setItem("uploadFile", fileContent as string);
+            setProfilPict(fileContent as string);
           }
         });
         reader.readAsDataURL(file);
       });
 
       setImportPict(true);
-      // inputFile.click();
+      inputFile.click();
     }
     if (value === "contact infos") setOpenContactInfo(true);
     if (uldd !== null) {
