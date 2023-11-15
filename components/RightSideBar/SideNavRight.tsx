@@ -10,7 +10,7 @@ type Props = {
   title: string;
 };
 
-const SideNavRight = (props: Props) => {
+const SideNavRight = React.memo((props: Props) => {
   // const ref = useRef<HTMLDivElement>(null);/
 
   const { openSideNav, setOpenSideNav } = useWhatSappContext();
@@ -41,6 +41,6 @@ const SideNavRight = (props: Props) => {
       {props.children}
     </div>
   );
-};
+});
 
 export default SideNavRight;

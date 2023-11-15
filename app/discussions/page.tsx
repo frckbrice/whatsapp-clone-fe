@@ -34,7 +34,9 @@ import { RiContactsBookLine } from "react-icons/ri";
 import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
-import { error } from "console";
+import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
+import { User } from "@/type";
+// import { error } from "console";
 
 type Users = {
   email: string;
@@ -46,6 +48,15 @@ type Users = {
 };
 
 const Discossions = () => {
+  if (typeof localStorage === "undefined") return;
+  // const [hasMounted, setHasMounted] = useState(false);
+  // useEffect(() => {
+  //   setHasMounted(true);
+  // }, []);
+  // if (!hasMounted) return null;
+  const [users, setUsers] = useState<User[]>([]);
+  const [message, setMessage] = useState<string>("");
+  const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
   const [currentUser, setCurrentUser] = useState<Users>(
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
@@ -55,8 +66,13 @@ const Discossions = () => {
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
 
-  const { setOpenSideNav, openSideNav, showPPicture, importPict } =
-    useWhatSappContext();
+  const {
+    setOpenSideNav,
+    openSideNav,
+    showPPicture,
+    importPict,
+    profileImage,
+  } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile, setOpenProfile } = useProfileContext();
   // const { reciever } = useRecieverInfoContext()
@@ -81,17 +97,26 @@ const Discossions = () => {
   // }, []);
 
   useEffect(() => {
-    // const showUser = async () => {
-    //   const curUser = await fetchSignupUser();
-    //   setCurrentUser(curUser);
-    // };
-    // showUser();
     const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
     console.log("reciever msg from localstorage", reciever);
     fetchSignupUser()
       .then((data) => setCurrentUser(data))
       .catch((err) => {
-        if (error instanceof Error) console.error(err);
+        if (err instanceof Error) console.error(err);
+      });
+    fetchUsers()
+      .then((users) => {
+        if (users) setUsers(users);
+      })
+      .catch((err) => {
+        if (err instanceof Error) console.error(err);
+      });
+    insertUsersInRooms(users)
+      .then((data) => {
+        if (data) setRooms(data);
+      })
+      .catch((err) => {
+        if (err instanceof Error) console.error(err);
       });
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
@@ -102,6 +127,19 @@ const Discossions = () => {
   //   const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
   //   console.log("reciever msg from localstorage", reciever);
   // }, []);
+
+  const sendMessageToDB = () => {
+    const messages = supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "messages" },
+        (message) => {
+          console.log("Change received!", message);
+        }
+      )
+      .subscribe();
+  };
 
   return (
     <>
@@ -135,7 +173,10 @@ const Discossions = () => {
               >
                 <Avatar
                   onClick={() => setOpenProfile(true)}
-                  profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+                  profilePicture={
+                    profileImage ||
+                    "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+                  }
                   size={10}
                 />
 
@@ -155,6 +196,7 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
+              <DirectMessage users={users} />
             </div>
             <div
               ref={ref}
@@ -201,12 +243,15 @@ const Discossions = () => {
 
               <div className=" w-full flex flex-col mt-3 px-10">
                 <div className=" max-w-[70%] flex flex-col items-start justify-start">
-                  <ReceiverMessages />
-                  <FollowingMessagesSimple />
+                  <ReceiverMessages
+                    content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis doloribus aut sapiente expedita voluptatibus molestias consectetur culpa asperiores nostrum consequuntur cum illo, ipsum, hic, rerum sequi commodi quisquam. Quos, perspiciatis!
+Sint alias aperiam saepe ducimus cumque quam itaque nemo voluptatibus nam sunt necessitatibus suscipit, architecto autem dolorum repellendus vel ullam totam quasi ad velit hic provident iusto accusamus! Architecto, doloremque!"
+                  />
+                  <FollowingMessagesSimple content="This is a box with some content and an arrow at the top right." />
                 </div>
 
                 <div className=" w-full flex flex-col items-end justify-end ">
-                  <SenderMessages />
+                  <SenderMessages content="This is a box with some content and an arrow at the top right." />
                 </div>
               </div>
 
@@ -244,10 +289,12 @@ const Discossions = () => {
                   <input
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3 "
+                    value={message}
+                    onChange={() => setMessage(e.target.value)}
                     placeholder="Type a message"
                   />
                 </div>
-                <button className="text-2xl ">
+                <button className="text-2xl " onChange={sendMessageToDB}>
                   <IoSendSharp />
                 </button>
               </div>

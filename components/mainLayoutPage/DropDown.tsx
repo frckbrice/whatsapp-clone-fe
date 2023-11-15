@@ -63,4 +63,4 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
   );
 });
 
-export default DropDown;
+export default React.memo(DropDown);
