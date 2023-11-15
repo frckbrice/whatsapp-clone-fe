@@ -32,8 +32,6 @@ const DirectMessage = ({ className }: Props) => {
     fetchUsers()
     
   }, [])
-
-  console.log("these are all users", users)
   
   const insertUsersInRooms = async () => {
     const {data, error} = await supabase
