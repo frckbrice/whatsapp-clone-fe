@@ -4,8 +4,6 @@ import Image from "next/image";
 import { supabase } from "@/utils/supabase/client";
 import { setDefaultResultOrder } from "dns";
 
-// const re = /\S+@\S+\.\S+/g;
-
 const Signup = () => {
   const [email, setEmail] = React.useState("");
   const [submitted, setSubmitted] = React.useState(false);
