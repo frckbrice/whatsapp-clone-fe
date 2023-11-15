@@ -109,7 +109,7 @@ const Discossions = async () => {
             )}
           </div>
         </div>
-        <DirectMessage className="w-full"/>
+        <DirectMessage className="w-full px-3"/>
       </div>
       <div
         ref={ref}

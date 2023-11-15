@@ -33,14 +33,14 @@ const DirectMessage = () => {
   }
 
   return (
-    <div>
+    <div className="bg-red-400 ">
       {users && (
-        <div className="flex gap-2 flex-col">
+        <div className="flex gap-2 flex-col w-full">
           {users?.map((item: any) => (
             <div
               onClick={() => console.log(item.id)}
               key={item.id}
-              className="flex leading-4 gap-5 hover:bg-gray-100 hover:cursor-pointer">
+              className="flex leading-4 w-full gap-5 px-3 hover:bg-gray-100 hover:cursor-pointer">
               <Avatar
                 onClick={() => handleClick()}
                 profilePicture="https://files.123freevectors.com/wp-content/original/503847-beautiful-south-african-girl-portrait.jpg"

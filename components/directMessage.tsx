@@ -10,7 +10,7 @@ type Props = {
   className?: string
 }
 
-const DirectMessage = ({className}: Props) => {
+const DirectMessage = ({ className }: Props) => {
   const [users, setUsers] = useState<Array<{}>>([])
 
   // let users: any
@@ -45,22 +45,24 @@ const DirectMessage = ({className}: Props) => {
   return (
     <div className={className}>
       {users && (
-        <div className="flex gap-2 flex-col">
+        <div className="flex gap-2 w-full flex-col ">
           {users?.map((item: any) => (
             <div
               onClick={() => handleDirectMessage(item.id)}
               key={item.id}
-              className="flex leading-4 gap-5 hover:bg-gray-100 hover:cursor-pointer">
-              <Avatar
-                onClick={() => handleClick()}
-                profilePicture="https://files.123freevectors.com/wp-content/original/503847-beautiful-south-african-girl-portrait.jpg"
-                size={10}
-                className="my-auto"
-              />
-              <div className="border-b border-slate-100 py-4 leading-2">
-                <p className="py-1 font-semibold">{item.email}</p>
-                <span className="py-8">Lorem, ipsum dolor sit amet .</span>
-                {/* <hr/> */}
+              className="flex w-full justify-between border-b border-slate-100 leading-4 gap-5 hover:bg-gray-100 hover:cursor-pointer">
+              <div className="flex items-center gap-5">
+                <Avatar
+                  onClick={() => handleClick()}
+                  profilePicture="https://files.123freevectors.com/wp-content/original/503847-beautiful-south-african-girl-portrait.jpg"
+                  size={10}
+                  className="my-auto"
+                />
+                <div className=" py-4 leading-2">
+                  <p className="py-1 font-semibold">{item.email}</p>
+                  <span className="py-8">Lorem, ipsum dolor sit amet .</span>
+                  {/* <hr/> */}
+                </div>
               </div>
               <span className="mt-5">11:30</span>
             </div>
