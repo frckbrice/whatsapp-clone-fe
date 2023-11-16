@@ -36,7 +36,7 @@ const DirectMessage = React.memo(({ className, users }: Props) => {
   }, []);
   if (!hasMounted) return null;
 
-  console.log("these are all users", users);
+  // console.log("these are all users", users);
 
   const handleDirectMessage = async (id: string) => {
     console.log(id);
@@ -66,9 +66,12 @@ const DirectMessage = React.memo(({ className, users }: Props) => {
                   className="my-auto"
                 />
                 <div className=" py-4 leading-2">
-                  <p className="py-1 text-[#111011] font-medium">
+                {(item.name !== '') ? <p className="py-1 text-[#111011] font-medium">
+                    {item.name}
+                  </p> : <p className="py-1 text-[#111011] font-medium">
                     {item.email}
-                  </p>
+                  </p>}
+                  
                   <span className="py-8 text-[14px]">
                     Lorem, ipsum dolor sit amet .
                   </span>

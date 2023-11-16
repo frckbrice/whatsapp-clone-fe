@@ -96,9 +96,12 @@ const Discossions = () => {
   //   showUser();
   // }, []);
 
+  let globalUser: User[]
+
   useEffect(() => {
     const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
-    console.log("reciever msg from localstorage", reciever);
+    // console.log("reciever msg from localstorage", reciever);
+    console.log("this is user from discussion", users)
     fetchSignupUser()
       .then((data) => setCurrentUser(data))
       .catch((err) => {
@@ -106,27 +109,31 @@ const Discossions = () => {
       });
     fetchUsers()
       .then((users) => {
+        // globalUser = users
         if (users) setUsers(users);
       })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
-    insertUsersInRooms(users)
-      .then((data) => {
-        if (data) setRooms(data);
-      })
-      .catch((err) => {
-        if (err instanceof Error) console.error(err);
-      });
+
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
 
-  // useEffect(() => {
-  //   const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
-  //   console.log("reciever msg from localstorage", reciever);
-  // }, []);
+  useEffect(() => {
+    console.log('user inside useEffect', users)
+    insertUsersInRooms(users)
+      .then((data) => {
+        console.log('insertdata', data)
+        if (data) setRooms(data);
+      })
+      .catch((err) => {
+        if (err instanceof Error) console.error(err);
+      });
+  }, [users])
+
+  // console.log(globalUser)
 
   const sendMessageToDB = () => {
     const messages = supabase
