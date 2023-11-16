@@ -19,7 +19,7 @@ const CreateGrt = ({ title, children }: Props) => {
     <div
       className={
         showCreateGroup
-          ? "profil w-[25vw] inline-block text-[#3b4a54] bg-bgGray transition duration-1000 ease-in-out py-0 fixed top-0 left-0 z-30"
+          ? "profil w-[25vw] h-[100vh] inline-block text-[#3b4a54] bg-bgGray transition duration-1000 ease-in-out py-0 fixed top-0 left-0 z-20"
           : " profiloff hidden"
       }
     >
