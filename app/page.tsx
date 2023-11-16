@@ -10,6 +10,7 @@ import Signupb from "@/components/signupb";
 import Discossions from "@/app/discussions/page";
 import SideNavRight from "@/components/RightSideBar/SideNavRight";
 import SearchField from "@/components/RightSideBar/SearchField";
+import CreateGroup from "@/components/createGroup/CreateGroup";
 
 export default async function Index() {
   const cookieStore = cookies();
@@ -33,6 +34,7 @@ export default async function Index() {
       {/* <Signupb /> */}
       {/* <Signup /> */}
       <Discossions />
+      {/* <CreateGroup /> */}
     </div>
   );
 }

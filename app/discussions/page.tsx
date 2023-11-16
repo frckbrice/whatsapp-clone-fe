@@ -36,6 +36,8 @@ import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import { User } from "@supabase/supabase-js";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
+import CreateGroup from "@/components/createGroup/CreateGroup";
+import CreateGrt from "@/components/profilPage/CreateGrt";
 
 type Users = {
   email: string;
@@ -64,6 +66,8 @@ const Discossions = () => {
   // const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
+
+  const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
 
   const {
     setOpenSideNav,
@@ -195,7 +199,7 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
-              <DirectMessage users={users} />
+              <DirectMessage className="px-3" users={users} />
             </div>
             <div
               ref={ref}
@@ -242,10 +246,7 @@ const Discossions = () => {
 
               <div className=" w-full flex flex-col mt-3 px-10">
                 <div className=" max-w-[70%] flex flex-col items-start justify-start">
-                  <ReceiverMessages
-                    content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis doloribus aut sapiente expedita voluptatibus molestias consectetur culpa asperiores nostrum consequuntur cum illo, ipsum, hic, rerum sequi commodi quisquam. Quos, perspiciatis!
-Sint alias aperiam saepe ducimus cumque quam itaque nemo voluptatibus nam sunt necessitatibus suscipit, architecto autem dolorum repellendus vel ullam totam quasi ad velit hic provident iusto accusamus! Architecto, doloremque!"
-                  />
+                  <ReceiverMessages content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis doloribus aut sapiente expedita voluptatibus molestias consectetur culpa asperiores nostrum consequuntur cum illo, ipsum, hic, rerum sequi commodi quisquam. Quos, perspiciatis!Sint alias aperiam saepe ducimus cumque quam itaque nemo voluptatibus nam sunt necessitatibus suscipit, architecto autem dolorum repellendus vel ullam totam quasi ad velit hic provident iusto accusamus! Architecto, doloremque!" />
                   <FollowingMessagesSimple content="This is a box with some content and an arrow at the top right." />
                 </div>
 
@@ -289,7 +290,7 @@ Sint alias aperiam saepe ducimus cumque quam itaque nemo voluptatibus nam sunt n
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3 "
                     value={message}
-                    onChange={() => setMessage(e.target.value)}
+                    onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type a message"
                   />
                 </div>
@@ -306,6 +307,11 @@ Sint alias aperiam saepe ducimus cumque quam itaque nemo voluptatibus nam sunt n
               <SideNavRight title="Search for messages">
                 <SearchField />
               </SideNavRight>
+            )}
+            {showCreateGroup && (
+              <CreateGrt title="Create new group">
+                <CreateGroup />
+              </CreateGrt>
             )}
           </div>
         </>

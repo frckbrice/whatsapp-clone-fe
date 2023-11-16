@@ -10,11 +10,16 @@ import {
 type ProfileContextType = {
   openProfile: boolean;
   setOpenProfile: Dispatch<SetStateAction<boolean>>;
+
+  showCreateGroup: boolean;
+  setShowCreateGroupe: Dispatch<SetStateAction<boolean>>;
 };
 
 const initContextState: ProfileContextType = {
   openProfile: false,
   setOpenProfile: (openProfile) => !openProfile,
+  showCreateGroup: false,
+  setShowCreateGroupe: (showCreateGroup) => !showCreateGroup,
 };
 
 export const ProfileContext =
@@ -22,10 +27,13 @@ export const ProfileContext =
 
 export const ProfileContextProvider = ({ children }: any) => {
   const [openProfile, setOpenProfile] = useState<boolean>(false);
+  const [showCreateGroup, setShowCreateGroupe] = useState<boolean>(false);
 
   const values = {
     openProfile,
     setOpenProfile,
+    showCreateGroup,
+    setShowCreateGroupe,
   };
 
   return (
@@ -34,8 +42,9 @@ export const ProfileContextProvider = ({ children }: any) => {
 };
 
 export const useProfileContext = () => {
-  const { openProfile, setOpenProfile } = useContext(ProfileContext);
-  return { openProfile, setOpenProfile };
+  const { openProfile, setOpenProfile, showCreateGroup, setShowCreateGroupe } =
+    useContext(ProfileContext);
+  return { openProfile, setOpenProfile, showCreateGroup, setShowCreateGroupe };
 };
 
 // export const useRecieverInfoContext = () => {

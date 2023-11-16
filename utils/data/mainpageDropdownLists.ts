@@ -12,7 +12,7 @@ export const dropdownRight = [
 ];
 
 export const dropdownLeft = [
-  " new group",
+  "new group",
   "new community",
   "important messages",
   "select dicussion",

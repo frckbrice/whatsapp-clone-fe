@@ -12,13 +12,21 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
   console.log("in the drop d");
   const uldd = document.getElementById("uldropdown") as HTMLUListElement;
 
+  const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
+
   const { setShowPPicture, setProfilPict, setImportPict, setSendingFile } =
     useWhatSappContext();
   const { setOpenProfile } = useProfileContext();
   const { setOpenContactInfo } = useWhatSappContactContext();
 
   const handleLink = (value: string) => {
-    if (value === "Show the picture") setShowPPicture(true);
+    // alert(`you have clicked on: , ${value}`);
+    if (value === "new group") {
+      // alert("ok");
+      setShowCreateGroupe((prev) => !prev);
+      // return;
+    }
+    if (value === "Show the picture") setShowPPicture(!showCreateGroup);
     if (value === "Import a picture") {
       const inputFile = document.createElement("input") as HTMLInputElement;
       inputFile.type = "file";
