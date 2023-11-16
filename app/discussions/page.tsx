@@ -196,7 +196,7 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
-              <DirectMessage users={users} />
+              <DirectMessage users={users} className={openProfile ? 'hidden' : "px-3 overflow-auto h-full"} />
             </div>
             <div
               ref={ref}
@@ -290,7 +290,7 @@ Sint alias aperiam saepe ducimus cumque quam itaque nemo voluptatibus nam sunt n
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3 "
                     value={message}
-                    onChange={() => setMessage(e.target.value)}
+                    onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type a message"
                   />
                 </div>

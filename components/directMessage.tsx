@@ -38,10 +38,6 @@ const DirectMessage = React.memo(({ className, users }: Props) => {
 
   console.log("these are all users", users);
 
-  const insertUsersInRooms = async () => {
-    const { data, error } = await supabase.from("rooms").insert([{}]);
-  };
-
   const handleDirectMessage = async (id: string) => {
     console.log(id);
     let data: Object = await fetchSingleUser(id);
