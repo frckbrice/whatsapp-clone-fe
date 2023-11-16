@@ -34,4 +34,5 @@ type Message = {
   receiver_id: string;
   content: string;
   sent_at?: string;
+  updated_at?: string;
 };

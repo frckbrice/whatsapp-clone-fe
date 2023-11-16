@@ -18,7 +18,7 @@ const ProfilePageContent = () => {
   const [profileDescription, setProfileDescription] = useState<string>("");
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
-  const { profileImage } = useWhatSappContext();
+  const { profileImage, profilepict } = useWhatSappContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -60,7 +60,7 @@ const ProfilePageContent = () => {
       {/* //** add profile image and profile name here  */}
       <CardWithoutTitle
         image={
-          profileImage ||
+          profilepict ||
           "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
         }
         ref={dropdownRef}

@@ -12,6 +12,7 @@ module.exports = {
       },
       backgroundImage: {
         whatsappimg: "url('/whatsappbg1.jpeg')",
+        whatsappdashimg: "url('/whatsappdashbord.png')",
         beckamp:
           "url('/https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg')",
       },

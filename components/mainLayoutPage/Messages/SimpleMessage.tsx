@@ -1,15 +1,11 @@
 import Image from "next/image";
 import React from "react";
 
-type Props = {
+type SimpleProps = {
   content: string;
-  styleS: string;
+  styleStyle: string;
 };
 
-export default function FollowingMessagesSimple(props: Props) {
-  return (
-    <div className={props.styleS}>
-      <p> {props.content}</p>
-    </div>
-  );
-}
+export const SimpleMessage = (props: SimpleProps) => {
+  return <div className={`box ${props.styleStyle}`}>{props.content}</div>;
+};

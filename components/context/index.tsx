@@ -14,6 +14,8 @@ type WhatSappContextType = {
   importPict: boolean;
   profilepict: string;
   profileImage: string;
+  start: boolean;
+  setStart: Dispatch<SetStateAction<boolean>>;
   sendingFile: any;
   setSendingFile: Dispatch<SetStateAction<any>>;
   setProfileImage: Dispatch<SetStateAction<string>>;
@@ -27,12 +29,14 @@ const initContextState: WhatSappContextType = {
   openSideNav: false,
   showPPicture: false,
   importPict: false,
+  start: false,
   profilepict: "",
   profileImage: "",
   sendingFile: "",
   setSendingFile: () => "",
   setProfileImage: () => "",
   setProfilPict: () => "",
+  setStart: (start) => !start,
   setShowPPicture: (showPPicture) => !showPPicture,
   setOpenSideNav: (openSideNav) => !openSideNav,
   setImportPict: (importPict) => !importPict,
@@ -50,6 +54,7 @@ export const WhatSappContextProvider = ({ children }: any) => {
   );
   const [profileImage, setProfileImage] = useState<string>("");
   const [sendingFile, setSendingFile] = useState<any>();
+  const [start, setStart] = useState<boolean>(false);
 
   const values = {
     openSideNav,
@@ -64,6 +69,8 @@ export const WhatSappContextProvider = ({ children }: any) => {
     setProfileImage,
     sendingFile,
     setSendingFile,
+    start,
+    setStart,
   };
 
   if (importPict) console.log("importPict: ", importPict);
@@ -89,6 +96,8 @@ export const useWhatSappContext = () => {
     setProfileImage,
     sendingFile,
     setSendingFile,
+    start,
+    setStart,
   } = useContext(WhatSappContext);
   return {
     openSideNav,
@@ -103,5 +112,7 @@ export const useWhatSappContext = () => {
     setProfileImage,
     sendingFile,
     setSendingFile,
+    start,
+    setStart,
   };
 };

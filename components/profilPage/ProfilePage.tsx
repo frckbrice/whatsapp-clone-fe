@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { useProfileContext } from "../context/profileContext";
 
@@ -8,6 +8,11 @@ type Props = {
 };
 
 const ProfilePage = ({ title, children }: Props) => {
+  // const [hasMounted, setHasMounted] = useState(false);
+  // useEffect(() => {
+  //   setHasMounted(true);
+  // }, []);
+  // if (!hasMounted) return;
   const { openProfile, setOpenProfile } = useProfileContext();
 
   return (

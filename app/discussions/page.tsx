@@ -18,7 +18,7 @@ import SideNavRight from "../../components/RightSideBar/SideNavRight";
 import SearchField from "../../components/RightSideBar/SearchField";
 import SenderMessages from "@/components/mainLayoutPage/Messages/SenderMessage";
 import ReceiverMessages from "@/components/mainLayoutPage/Messages/ReceiverMessage";
-import FollowingMessagesSimple from "@/components/mainLayoutPage/Messages/SimpleMessage";
+import Messages from "@/components/mainLayoutPage/Messages/Message";
 import ContactInfoPage from "../../components/RightSideBar/ContactInfoPage";
 import { useWhatSappContactContext } from "../../components/context/Context";
 import ProfilePage from "../../components/profilPage/ProfilePage";
@@ -34,16 +34,7 @@ import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
 import { Message, User } from "@/type";
-import { getReceiveMessage } from "@/utils/queries/getMessage";
-
-type Users = {
-  email: string;
-  name: string;
-  image: string;
-  phone: number;
-  id: string;
-  onClick?: () => void;
-};
+import { getMessages } from "@/utils/queries/getMessage";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -51,7 +42,7 @@ const Discossions = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [message, setMessage] = useState<any>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
-  const [currentUser, setCurrentUser] = useState<Users>(() =>
+  const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
@@ -61,17 +52,18 @@ const Discossions = () => {
   const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
+  const [discussionsMessages, setDiscussionsMessages] = useState<{}[]>([]);
 
   const {
     setOpenSideNav,
     openSideNav,
     showPPicture,
     importPict,
-    profileImage,
+    profilepict,
+    start,
   } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile, setOpenProfile } = useProfileContext();
-  // const { reciever } = useRecieverInfoContext()
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -104,14 +96,28 @@ const Discossions = () => {
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
+
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
 
+  useEffect(() => {
+    getMessages(currentUser?.id as string, receiver?.id as string)
+      .then((messages: any) => {
+        if (messages.length) {
+          console.log("all messages: ", messages);
+          setDiscussionsMessages(messages);
+        }
+      })
+      .catch((err) => {
+        if (err instanceof Error) console.error(err);
+      });
+  }, [receiver?.id]);
+
   const sendMessageToDB = async () => {
     const sendingMessage: Message = {
-      sender_id: currentUser.id,
+      sender_id: currentUser.id as string,
       receiver_id: receiver?.id as string,
       content: message,
     };
@@ -128,23 +134,10 @@ const Discossions = () => {
     .on(
       "postgres_changes",
       { event: "*", schema: "public", table: "messages" },
-      (payload) => {
+      (payload: any) => {
         console.log("Change received!", payload);
-        if (
-          payload.new.receiver_id === currentUser?.id &&
-          payload.new.sender_id !== currentUser?.id
-        )
-          setReceivingMessage((prev) => [...prev, payload.new.content]);
-        if (
-          payload.new.receiver_id !== currentUser?.id &&
-          payload.new.sender_id === currentUser?.id
-        )
-          setSendingMessage((prev) => [...prev, payload.new.content]);
-        if (
-          payload.new.sender_id === payload.new.receiver_id &&
-          payload.new.receiver_id === currentUser?.id
-        )
-          setSendingMessage((prev) => [...prev, payload.new.content]);
+
+        setDiscussionsMessages((prev) => [...prev, payload.new]);
       }
     )
     .subscribe();
@@ -185,7 +178,7 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    profileImage ||
+                    profilepict ||
                     "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
                   }
                   size={10}
@@ -207,17 +200,31 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
-              <DirectMessage users={users} setReceiver={setReceiver} />
+              <DirectMessage
+                users={users}
+                setReceiver={setReceiver}
+                className="px-4 overflow-auto"
+              />
             </div>
             <div
               ref={ref}
               className={
                 openSideNav || openContactInfo
-                  ? "relative w-[50vw] bg-whatsappimg border-r border-r-gray-300 z-0 cursor-pointer"
-                  : "relative w-[75vw] bg-whatsappimg z-0 cursor-pointer "
+                  ? `relative w-[50vw] ${
+                      !start ? "bg-whatsappdashimg" : "bg-whatsappimg"
+                    }  border-r border-r-gray-300 z-0 cursor-pointer`
+                  : `relative w-[75vw] bg-whatsappdashimg z-0 cursor-pointer ${
+                      !start ? "bg-whatsappdashimg" : "bg-whatsappimg"
+                    }`
               }
             >
-              <div className="flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 ">
+              <div
+                className={
+                  !start
+                    ? "hidden"
+                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 "
+                }
+              >
                 <div
                   className="flex gap-3 w-full cursor-pointer"
                   onClick={() => setOpenContactInfo(true)}
@@ -252,53 +259,24 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col mt-3 px-10">
-                <div className=" max-w-[70%] flex flex-col items-start justify-start">
-                  {receivingMessage[0] ? (
-                    <ReceiverMessages content={receivingMessage[0]} />
-                  ) : (
-                    ""
-                  )}
-                  {receivingMessage.slice(1).length
-                    ? receivingMessage
-                        .slice(1)
-                        ?.map((message, i) => (
-                          <FollowingMessagesSimple
-                            content={message}
-                            styleS=" box align-left"
-                            key={i}
-                          />
-                        ))
-                    : ""}
-                  {/* <FollowingMessagesSimple content={} /> */}
-                </div>
-
-                <div className=" w-full flex flex-col items-end justify-end ">
-                  {sendingMessage[0] ? (
-                    <SenderMessages content={sendingMessage[0]} />
-                  ) : (
-                    ""
-                  )}
-                  {/*  align-left */}
-                  {sendingMessage.slice(1).length
-                    ? sendingMessage
-                        .slice(1)
-                        ?.map((message, i) => (
-                          <FollowingMessagesSimple
-                            content={message}
-                            styleS="box box-row align-right"
-                            key={i}
-                          />
-                        ))
-                    : ""}
-                </div>
+              <div className=" w-full flex flex-col mt-3 px-10 overflow-auto">
+                {discussionsMessages.length ? (
+                  <Messages
+                    messageList={discussionsMessages}
+                    currentUser={currentUser}
+                  />
+                ) : (
+                  ""
+                )}
               </div>
 
               <div
                 className={
-                  openSideNav || openContactInfo
-                    ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 -z-10"
-                    : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 -z-10"
+                  !start
+                    ? "hidden"
+                    : openSideNav || openContactInfo
+                    ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
+                    : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
                 }
               >
                 {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}

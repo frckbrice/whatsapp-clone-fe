@@ -55,7 +55,8 @@ const PictCard = ({ profilepict, setProfilPict, setImportPict }: Props) => {
       .getPublicUrl(fileValue);
     if (data) console.log(data.publicUrl);
     // setProfileImage(publicUrl as unknown as string);
-    setProfileImage(data.publicUrl);
+    // setProfileImage(data.publicUrl);
+    setProfilPict(data.publicUrl);
     setImportPict(false);
   };
 

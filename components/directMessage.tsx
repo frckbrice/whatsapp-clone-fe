@@ -6,6 +6,7 @@ import { supabase } from "@/utils/supabase/client";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
 import { User } from "@/type";
+import { useWhatSappContext } from "./context";
 
 type Props = {
   className?: string;
@@ -14,13 +15,16 @@ type Props = {
 };
 
 const DirectMessage = React.memo(({ className, users, setReceiver }: Props) => {
-  console.log("these are all users", users);
+  // console.log("these are all users", users);
+
+  const { setStart } = useWhatSappContext();
 
   const handleDirectMessage = async (id: string) => {
     console.log(id);
     let data: User = await fetchSingleUser(id);
     console.log(data);
     setReceiver(data);
+    setStart(true);
   };
 
   const handleClick = () => {
@@ -35,26 +39,28 @@ const DirectMessage = React.memo(({ className, users, setReceiver }: Props) => {
             <div
               onClick={() => handleDirectMessage(item.id)}
               key={item.id}
-              className="flex w-full justify-between border-b border-slate-100 leading-4 gap-5 hover:bg-gray-100 hover:cursor-pointer"
+              className="flex w-full justify-between border-b border-slate-100 leading-4 gap-5 hover:bg-gray-100 hover:cursor-pointer py-3"
             >
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-3 ">
                 <Avatar
                   onClick={() => handleClick()}
                   profilePicture="https://hips.hearstapps.com/hmg-prod/images/african-baby-girl-holding-flower-royalty-free-image-1676500153.jpg?crop=1.00xw:0.344xh;0,0.189xh&resize=1200:*"
                   size={10}
                   className="my-auto"
                 />
-                <div className=" py-4 leading-2">
-                  <p className="py-1 text-[#111011] font-medium">
+                <div className="  leading-2 font-serif">
+                  <p className="py-0 text-[#111011] font-medium">
                     {item.email}
                   </p>
-                  <span className="py-8 text-[14px]">
+                  <span className="py-0 text-[14px]">
                     Lorem, ipsum dolor sit amet .
                   </span>
                   {/* <hr/> */}
                 </div>
               </div>
-              <span className="mt-5">11:30</span>
+              <span className="mt-0">
+                {item.updated_at.split("T")[1].split(".")[0]}
+              </span>
             </div>
           ))}
         </div>

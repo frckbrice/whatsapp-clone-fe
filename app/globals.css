@@ -21,6 +21,7 @@
 
 .box-row {
   background-color: #8efd8e;
+  justify-items: flex-end;
 }
 
 .box.arrow-right {
