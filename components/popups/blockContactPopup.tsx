@@ -36,7 +36,7 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
         <div className="text-gray-800">
           <p className="text-[17px] text-gray-400 py-2">Reason for blocking</p>
           <hr className="text-gray-400 " />
-          <div className="flex gap-4">
+          <div className="flex gap-4 pt-0">
             <input
               type="radio"
               id="option1"
@@ -51,7 +51,7 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
             </label>
           </div>
           <hr className="text-gray-400 " />{" "}
-          <div className="flex gap-4">
+          <div className="flex gap-4 mt-0">
             <input
               type="radio"
               id="option2"
