@@ -75,7 +75,6 @@ const GroupSetup = () => {
       <div className=" rest">
         <div className=" flex flex-col gap-2 w-full pl-7 px-7  py-3  shadow shadow-zinc-200 bg-white">
           <div className=" flex items-center gap-3">
-            <span className=" text-[#33a033]">Your name</span>
             <span className=" inline-flex items-center">
               {shosenEmojiesup?.map((emoji, index) => (
                 <Image
