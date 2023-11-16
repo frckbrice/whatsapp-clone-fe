@@ -3,6 +3,7 @@ import fetchUsers from "@/utils/queries/fetchUsers";
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import Avatar from "../Avatar";
+import { IoIosClose } from "react-icons/io";
 
 const CreateGroup = () => {
   const [users, setUsers] = useState<Array<{}>>([]);
@@ -29,6 +30,21 @@ const CreateGroup = () => {
           </div> */}
         </div>
         <div className="px-5 pt-5">
+          <div className="flex bg-gray-200 gap-2 w-fit pr-1 items-center rounded-full text-slate-500">
+            <Avatar
+              onClick={function (): void {
+                throw new Error("Function not implemented.");
+              }}
+              profilePicture={
+                "https://hips.hearstapps.com/hmg-prod/images/african-baby-girl-holding-flower-royalty-free-image-1676500153.jpg?crop=1.00xw:0.344xh;0,0.189xh&resize=1200:*"
+              }
+              size={5}
+            />
+            <p className="text-xs">Joynel</p>
+            <button>
+              <IoIosClose size={20} />
+            </button>
+          </div>
           <input
             className="w-full border-b outline-none p-2"
             type="search"
