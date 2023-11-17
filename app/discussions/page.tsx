@@ -54,6 +54,7 @@ const Discossions = () => {
   //   setHasMounted(true);
   // }, []);
   // if (!hasMounted) return null;
+  const sender: User = JSON.parse(localStorage.getItem("sender") || '{}')
   const [users, setUsers] = useState<User[]>([]);
   const [message, setMessage] = useState<string>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
@@ -155,7 +156,7 @@ const Discossions = () => {
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
             <Image
               src={
-                "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+                "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
               }
               alt=""
               width={400}
@@ -181,8 +182,7 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    profileImage ||
-                    "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+                    (sender.image !== "") ? `${sender.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
                   size={10}
                 />

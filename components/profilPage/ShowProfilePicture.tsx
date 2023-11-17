@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import Avatar from "../Avatar";
 import { useWhatSappContext } from "@/components/context";
+import { User } from "@/type";
 
 type Props = {
   children: React.ReactElement;
@@ -11,6 +12,8 @@ type Props = {
 
 const ShowProfilePicture = (props: Props) => {
   const { setShowPPicture } = useWhatSappContext();
+  const sender: User = JSON.parse(localStorage.getItem("sender") || '{}')
+
 
   return (
     <div className="relative w-[100vw] h-screen bg-whatsappimg z-0 cursor-pointer overflow-hidden">
@@ -18,7 +21,7 @@ const ShowProfilePicture = (props: Props) => {
         <div className="flex gap-3 w-full cursor-pointer">
           <Avatar
             onClick={() => {}}
-            profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+            profilePicture={(sender.image !== '') ? `${sender.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
             size={10}
           />
           <div>
