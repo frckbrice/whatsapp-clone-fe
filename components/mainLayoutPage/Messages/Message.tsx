@@ -1,8 +1,14 @@
 import Image from "next/image";
-import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
+import React, {
+  MouseEventHandler,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import SenderMessages from "./SenderMessage";
 import ReceiverMessages from "./ReceiverMessage";
-import { SimpleMessage } from "./SimpleMessage";
+import SimpleMessage from "./SimpleMessage";
 import { User } from "@/type";
 import { FaFaceGrinWide } from "react-icons/fa6";
 import EmojiMessage from "./EmojiMessage";
@@ -12,53 +18,30 @@ type Props = {
   messageList: any[];
   currentUser: User;
   receiver: User;
+  showMessageEmoji: any;
+  setMessageEmoji: React.Dispatch<React.SetStateAction<boolean>>;
 };
-
-export default function Messages(props: Props) {
-  const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
+const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
+  // const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
   const [target, setTarget] = useState<string>(props.messageList[0].content);
-  const [emojie, setEmojie] = useState<string>("");
+  const [emojie, setEmojie] = useState<string>();
   const [messageId, setMessageId] = useState<string>("");
-  const [shosenEmoji, setShosenEmoji] = useState<string>("");
+  const [oldmessageId, setOldmessageId] = useState<string>("");
   const emojieRef = useRef<HTMLDivElement | null>(null);
 
   const classForMessageReceiver = "align-left";
   const classForMessageSender = "box-row align-right";
 
-  // useEffect(() => {
-  //   window.document.addEventListener("click", (e: any) => {
-  //     if (emojieRef.current && !emojieRef.current.contains(e.target)) {
-  //       setMessageEmoji(false);
-  //     }
-  //   });
-  // }, []);
-
-  // const handleblur = () => {
-  //   setShosenEmoji(emojie);
-  // };
-
-  // const messages = supabase
-  //   .channel("custom-all-channel")
-  //   .on(
-  //     "postgres_changes",
-  //     { event: "*", schema: "public", table: "messages" },
-  //     (payload: any) => {
-  //       console.log("emoji received!", payload.new.emoji);
-
-  //       setEmojie(payload.new.emoji);
-  //     }
-  //   )
-  //   .subscribe();
-
   const handleTargetEmoji = async (targetEmoji: string, id: string) => {
     if (targetEmoji === target) {
-      setMessageEmoji((prev) => !prev);
+      props.setMessageEmoji((prev) => !prev);
     }
     setTarget(targetEmoji);
     setMessageId(id);
   };
 
   const getEmoji = async (emoji: string) => {
+    setEmojie(emoji);
     const { data, error } = await supabase
       .from("messages")
       .update({
@@ -67,10 +50,9 @@ export default function Messages(props: Props) {
         emoji: emoji,
       })
       .eq("id", messageId)
-      .select();
+      .single();
 
     if (data) console.log("message containing emoji: ", data);
-
     if (error) console.log("Error inserting emoji: ", error);
   };
 
@@ -86,9 +68,15 @@ export default function Messages(props: Props) {
     sortMessageList[0].sender_id !== props.currentUser.id
   )
     content = (
-      <div className=" flex ">
+      <>
         <div className="flex justify-start items-center">
-          <ReceiverMessages content={sortMessageList[0].content} />
+          <ReceiverMessages
+            content={sortMessageList[0].content}
+            time={sortMessageList[0].created_at
+              .split("T")[1]
+              .split(".")[0]
+              .slice(0, 5)}
+          />
           <span
             className=" opacity-0 hover:opacity-100 mx-1  hover:block p-[5px] rounded-full bg-[#a3adb3a7] "
             onClick={() =>
@@ -101,14 +89,21 @@ export default function Messages(props: Props) {
             <FaFaceGrinWide className=" text-white" size={20} />
           </span>
         </div>
-        {emojie &&
-          sortMessageList[0].content === target &&
-          sortMessageList[0].id === messageId && (
-            <span className=" w-10 h-10 rounded-full  border border-slate-200  text-[22px] bg-white shadow-sm  flex justify-center items-center p-[5px] transition-transform duration-1000 ease-in-out translate-y-[-20%] translate-x-[30%]">
-              {sortMessageList[0].emoji}
-            </span>
-          )}
-      </div>
+        {props.showMessageEmoji && sortMessageList[0].content === target && (
+          <EmojiMessage
+            setEmojie={getEmoji}
+            classname=" translate-x-[10%]"
+            ref={ref}
+          />
+        )}
+        {sortMessageList[0].emoji ? (
+          <span className=" w-10 h-10 rounded-full  border border-slate-200  text-[22px] bg-white shadow-sm  flex justify-center items-center p-[5px] transition-transform duration-1000 ease-in-out translate-y-[-20%] translate-x-[30%]">
+            {sortMessageList[0].emoji}
+          </span>
+        ) : (
+          ""
+        )}
+      </>
     );
 
   if (
@@ -118,17 +113,17 @@ export default function Messages(props: Props) {
       sortMessageList[0].sender_id === props.currentUser.id)
   ) {
     content = (
-      <div className="flex ">
-        {emojie &&
-          sortMessageList[0].content === target &&
-          sortMessageList[0].id === messageId && (
-            <span className=" w-10 h-10 rounded-full  border border-slate-200  text-[22px] bg-white shadow-sm  flex justify-center items-center p-[5px] transition-transform duration-1000 ease-in-out translate-y-[-20%] translate-x-[30%]">
-              {sortMessageList[0].emoji}
-            </span>
-          )}
+      <>
+        {props.showMessageEmoji && sortMessageList[0].content === target && (
+          <EmojiMessage
+            setEmojie={getEmoji}
+            classname="absolute top-[250px] right-[300px]"
+            ref={ref}
+          />
+        )}
         <div className="flex justify-end">
           <span
-            className=" opacity-0 hover:opacity-100 mx-1  hover:block p-[5px] rounded-full bg-[#a3adb3a7] "
+            className="w-10 h-10 flex justify-center items-center opacity-0 hover:opacity-100 mx-1  hover:block p-[5px] rounded-full bg-[#a3adb3a7] cursor-pointer"
             onClick={() =>
               handleTargetEmoji(
                 sortMessageList[0].content,
@@ -136,11 +131,33 @@ export default function Messages(props: Props) {
               )
             }
           >
-            <FaFaceGrinWide className=" text-white" size={20} />
+            <FaFaceGrinWide
+              className=" text-white  mr-[5px] mb-[5px] ml-[5px] "
+              size={25}
+            />
           </span>
-          <SenderMessages content={sortMessageList[0].content} />
+          <SenderMessages
+            content={sortMessageList[0].content}
+            time={sortMessageList[0].created_at
+              .split("T")[1]
+              .split(".")[0]
+              .slice(0, 5)}
+          />
         </div>
-      </div>
+        <div className=" w-full flex justify-end items-center">
+          {sortMessageList[0].emoji ? (
+            <span
+              className=" w-10 h-10 rounded-full  border border-slate-200  text-[22px] bg-white shadow-sm  flex justify-center items-center p-[5px] transition-transform duration-1000 ease-in-out  translate-y-[-10px] translate-x-[-20px]
+          "
+            >
+              {/*  absolute z-10 top-[265px] right-[100px] */}
+              {sortMessageList[0].emoji}
+            </span>
+          ) : (
+            ""
+          )}
+        </div>
+      </>
     );
   }
 
@@ -149,14 +166,24 @@ export default function Messages(props: Props) {
       messages.receiver_id === props.currentUser.id &&
       messages.sender_id !== props.currentUser.id
     ) {
-      console.log("Messages received emoji: ", messages.emoji);
+      console.log("messages: ", messages.content);
+
       return (
-        <div className=" flex flex-col">
+        <>
           <div className="flex justify-start" key={i}>
-            <SimpleMessage
-              content={messages.content}
-              styleStyle={classForMessageReceiver}
-            />
+            {messages.id !== oldmessageId ? (
+              <SimpleMessage
+                content={messages.content}
+                styleStyle={classForMessageReceiver}
+                time={sortMessageList[0].created_at
+                  .split("T")[1]
+                  .split(".")[0]
+                  .slice(0, 5)}
+              />
+            ) : (
+              ""
+            )}
+
             <span
               className=" opacity-0 hover:opacity-100 mx-1  hover:block  rounded-full bg-[#a3adb3a7] w-8 h-8 flex justify-center items-center place-content-center pl-[6px] pt-[5px] cursor-pointer"
               onClick={() => handleTargetEmoji(messages.content, messages.id)}
@@ -165,36 +192,37 @@ export default function Messages(props: Props) {
             </span>
           </div>
 
-          {showMessageEmoji && messages.content === target && (
-            <EmojiMessage setEmojie={getEmoji} classname=" translate-x-[10%]" />
+          {props.showMessageEmoji && messages.content === target && (
+            <EmojiMessage
+              setEmojie={getEmoji}
+              classname=" translate-x-[10%]"
+              ref={ref}
+            />
           )}
-          {emojie &&
-            messages.content === target &&
-            messages.id === messageId && (
-              <span className=" w-10 h-10 rounded-full  border border-slate-200  text-[22px] bg-white shadow-sm  flex justify-center items-center p-[5px] transition-transform duration-1000 ease-in-out translate-y-[-20%] translate-x-[30%]">
-                {messages.emoji}
-              </span>
-            )}
-        </div>
+          {messages.emoji ? (
+            <span className=" w-10 h-10 rounded-full  border border-slate-200  text-[22px] bg-white shadow-sm  flex justify-center items-center p-[5px] transition-transform duration-1000 ease-in-out translate-y-[-20%] translate-x-[30%]">
+              {messages.emoji}
+            </span>
+          ) : (
+            ""
+          )}
+        </>
       );
-    }
-
-    if (
+    } else if (
       (messages.receiver_id !== props.currentUser.id &&
         messages.sender_id === props.currentUser.id) ||
       (messages.receiver_id === props.currentUser.id &&
         messages.sender_id === props.currentUser.id)
     ) {
-      console.log("Messages sent emojie: ", messages.emoji);
       return (
-        <div className="flex flex-col">
-          {emojie &&
-            messages.content === target &&
-            messages.id === messageId && (
-              <span className=" w-10 h-10 rounded-full  border border-slate-200  text-[22px] bg-white shadow-sm  flex justify-center items-center p-[5px] transition-transform duration-1000 ease-in-out translate-y-[20%] translate-x-[30%]">
-                {messages.emoji}
-              </span>
-            )}
+        <>
+          {props.showMessageEmoji && messages.content === target && (
+            <EmojiMessage
+              setEmojie={getEmoji}
+              classname="absolute top-[250px] right-[300px]"
+              ref={ref}
+            />
+          )}
           <div className="flex justify-end" key={i}>
             <span
               className=" opacity-0 hover:opacity-100 mx-1  hover:block  rounded-full bg-[#a3adb3a7] w-8 h-8 flex justify-center items-center place-content-center pl-[6px] pt-[5px] cursor-pointer"
@@ -202,12 +230,27 @@ export default function Messages(props: Props) {
             >
               <FaFaceGrinWide className=" text-white" size={20} />
             </span>
+
             <SimpleMessage
               content={messages.content}
               styleStyle={classForMessageSender}
+              time={sortMessageList[0].created_at
+                .split("T")[1]
+                .split(".")[0]
+                .slice(0, 5)}
             />
           </div>
-        </div>
+
+          <div className=" w-full flex justify-end items-center">
+            {messages.emoji ? (
+              <span className=" w-10 h-10 rounded-full  border border-slate-200  text-[22px] bg-white shadow-sm  flex justify-center items-center p-[5px] transition-transform duration-1000 ease-in-out translate-y-[-10px] translate-x-[-20px]">
+                {messages.emoji}
+              </span>
+            ) : (
+              ""
+            )}
+          </div>
+        </>
       );
     }
   });
@@ -228,4 +271,6 @@ export default function Messages(props: Props) {
       {listOfMessages}
     </div>
   );
-}
+});
+
+export default Messages;

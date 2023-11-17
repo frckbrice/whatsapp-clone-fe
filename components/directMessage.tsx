@@ -21,16 +21,12 @@ type Props = {
 const DirectMessage = React.memo(
   ({ className, users, setReceiver, setRoomObject }: Props) => {
     const [target, setTarget] = useState("");
-    // console.log("these are all users", users);
+    // to style the select room
 
     const { setStart } = useWhatSappContext();
     const { openProfile } = useProfileContext();
 
     const handleDirectMessage = async (id: string) => {
-      const reciever: User = JSON.parse(
-        localStorage.getItem("reciever") || "{}"
-      );
-      // console.log(reciever.id)
       console.log(id);
       let data: User = await fetchSingleUser(id);
       console.log(data);
@@ -39,10 +35,7 @@ const DirectMessage = React.memo(
       setTarget(id);
       let room: User = await fetchSingleRoom(id);
       setRoomObject(room);
-      // let data: User = await fetchSingleUser(id);
-      // setUserObject(data)
       console.log("single room object", room);
-      // console.log("single user object", data);
     };
 
     const handleClick = () => {
@@ -59,7 +52,7 @@ const DirectMessage = React.memo(
                 key={item.id}
                 className={
                   target === item.id
-                    ? "bg-gray-100 flex w-full justify-between border-b border-slate-100 py-1 gap-5 hover:cursor-pointer px-4 items-center "
+                    ? "bg-gray-300 flex w-full justify-between border-b border-slate-100 py-1 gap-5 hover:cursor-pointer px-4 items-center "
                     : "flex w-full justify-between border-b border-slate-100  gap-5 hover:bg-gray-100 hover:cursor-pointer px-4 py-1 items-center "
                 }
               >
