@@ -55,6 +55,8 @@ const Discossions = () => {
   // }, []);
   // if (!hasMounted) return null;
   const sender: User = JSON.parse(localStorage.getItem("sender") || '{}')
+  const [roomObject, setRoomObject] = useState<User>()
+  const [userObject, setUserObject] = useState<User>()
   const [users, setUsers] = useState<User[]>([]);
   const [message, setMessage] = useState<string>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
@@ -148,7 +150,8 @@ const Discossions = () => {
       )
       .subscribe();
   };
-
+  console.log("this is user object from DM", userObject)
+  console.log("this is room object from DM", roomObject)
   return (
     <>
       {showPPicture ? (
@@ -203,7 +206,7 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
-              <DirectMessage users={users} className={openProfile ? 'hidden' : "px-3 overflow-auto h-full"} />
+              <DirectMessage setUserObject={setUserObject} setRoomObject={setRoomObject} users={users} className={openProfile ? 'hidden' : "px-3 overflow-auto h-full"} />
             </div>
             <div
               ref={ref}
@@ -220,12 +223,13 @@ const Discossions = () => {
                 >
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
-                    profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+                    profilePicture={(userObject?.image !== "") ? `${userObject?.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
                     size={10}
                   />
                   <div>
-                    <h4 className="text-gray-700">David Beckamp</h4>
-                    <p className="text-gray-500 text-xs">(+801) 365 145 269</p>
+                  {(userObject?.name !== '') ? <h4 className="text-gray-700">{userObject?.name}</h4> : <h4 className="text-gray-700">{userObject?.email}</h4>}
+                  {(userObject?.phone !== '') ? <p className="text-gray-500 text-xs">{userObject?.phone}</p> : <p className="text-gray-500 text-xs">{userObject?.email}</p> }
+                    
                   </div>
                 </div>
 

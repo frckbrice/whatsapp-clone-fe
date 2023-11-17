@@ -11,9 +11,12 @@ import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
 type Props = {
   className?: string;
   users: {}[];
+  roomObject?: User
+  setRoomObject: (room: User) => void
+  setUserObject: (user: User) => void
 };
 
-const DirectMessage = React.memo(({ className, users }: Props) => {
+const DirectMessage = React.memo(({ className, users, setRoomObject, setUserObject }: Props) => {
   // const [users, setUsers] = useState<Array<{}>>([]);
 
   // // let users: any
@@ -44,8 +47,10 @@ const DirectMessage = React.memo(({ className, users }: Props) => {
     const reciever: User = JSON.parse(localStorage.getItem('reciever') || '{}')
     // console.log(reciever.id)
     console.log(id);
-    let room: Object = await fetchSingleRoom(id)
-    let data: Object = await fetchSingleUser(id);
+    let room: User = await fetchSingleRoom(id)
+    setRoomObject(room)
+    let data: User = await fetchSingleUser(id);
+    setUserObject(data)
     console.log("single room object", room)
     console.log("single user object", data);
   };
@@ -69,16 +74,16 @@ const DirectMessage = React.memo(({ className, users }: Props) => {
                   onClick={() => handleClick()}
                   profilePicture={(item.image !== '') ? `${item.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
                   size={10}
-                  
+
                   className="my-auto"
                 />
                 <div className=" py-4 leading-2">
-                {(item.name !== '') ? <p className="py-1 text-[#111011] font-medium">
+                  {(item.name !== '') ? <p className="py-1 text-[#111011] font-medium">
                     {item.name}
                   </p> : <p className="py-1 text-[#111011] font-medium">
                     {item.email}
                   </p>}
-                  
+
                   <span className="py-8 text-[14px]">
                     Lorem, ipsum dolor sit amet .
                   </span>
