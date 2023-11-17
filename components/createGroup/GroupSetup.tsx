@@ -74,8 +74,11 @@ const GroupSetup = () => {
   // handle create group
   const handleCreateGroup = () => {
     const groupMembers = LOCAL_STORAGE.get("group_members");
+    const sender = LOCAL_STORAGE.get("sender");
+    const senderId = sender.id;
     const membersID = groupMembers.map((member: User) => member.id);
     console.clear();
+    console.log("senderId: ", senderId);
     console.log("Group Discription: ", profileName);
     console.log("profile image: ", profileImage);
     console.log("Group Members Id: ", membersID);
