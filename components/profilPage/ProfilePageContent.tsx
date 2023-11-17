@@ -19,7 +19,7 @@ const ProfilePageContent = () => {
   // * change the name david beckamp by the user name
   const sender: User = JSON.parse(localStorage.getItem("sender") || '{}')
   const [profileName, setProfileName] = useState<string>(sender.name);
-  const [phone, setPhone] = useState<string>("");
+  const [phone, setPhone] = useState<string>('(+237)');
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
   const { profileImage } = useWhatSappContext();
