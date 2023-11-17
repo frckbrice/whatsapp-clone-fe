@@ -6,13 +6,14 @@ import { FaCamera } from "react-icons/fa";
 import DropDown from "./mainLayoutPage/DropDown";
 import { dropdownProfilePict } from "@/utils/data/mainpageDropdownLists";
 import { Popover, Whisper } from "rsuite";
+import { useWhatSappContext } from "./context";
+import UploadPicture from "./profilPage/UploadPicture";
 
 type Props = {
   image: string;
 };
 
 const CardWithoutTitle = forwardRef<HTMLUListElement, Props>((props, ref) => {
-  const [file, setFile] = useState(props.image);
   return (
     <>
       <div className="relative w-full flex flex-col hover:opacity-100   gap-2   justify-center items-center py-8 mx-auto border-b border-b-gray-200 bg-bgGray z-0 ">

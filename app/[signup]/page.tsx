@@ -37,15 +37,19 @@ const Signupb = () => {
       const { data, error } = await supabase
         .from("user")
         .insert({ email: email });
-      if (data) console.log(data);
+
       if (error) {
         console.log(error);
         setError("Email address already exist");
+        setIsloading(false);
         return;
       }
+      //  if (data) console.log(data);
+      router.push("/discussions");
     } else {
       setError("Invalid code");
       console.log("invalid");
+      setIsloading(false);
       return;
     }
   };
