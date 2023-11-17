@@ -116,7 +116,11 @@ const CreateGroup = () => {
                       <div className="flex items-center gap-5">
                         <Avatar
                           onClick={() => handleDirectMessage}
-                          profilePicture="https://hips.hearstapps.com/hmg-prod/images/african-baby-girl-holding-flower-royalty-free-image-1676500153.jpg?crop=1.00xw:0.344xh;0,0.189xh&resize=1200:*"
+                          profilePicture={
+                            item.image !== ""
+                              ? `${item.image}`
+                              : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
+                          }
                           size={10}
                           className="my-auto"
                         />
