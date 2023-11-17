@@ -1,6 +1,5 @@
 import { supabase } from "../supabase/client"
 import fetchSingleRoom from "./fetchSingleRoom"
-import insertUsersInRooms from "./insertUsersInRooms"
 
 // this function query a signed up user on clicking on the user on the side bar
 const fetchSingleUser = async (id: string) => {

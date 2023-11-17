@@ -25,8 +25,8 @@ const ShowProfilePicture = (props: Props) => {
             size={10}
           />
           <div>
-            <h4 className="text-gray-700">David Beckamp</h4>
-            <p className="text-gray-500 text-xs">(+801) 365 145 269</p>
+          {(sender?.name !== '') ? <h4 className="text-gray-700">{sender?.name}</h4> : <h4 className="text-gray-700">{sender?.email}</h4>}
+            {(sender?.phone !== '') ? <p className="text-gray-500 text-xs">{sender?.phone}</p> : <p className="text-gray-500 text-xs">{sender?.email}</p> }
           </div>
         </div>
 

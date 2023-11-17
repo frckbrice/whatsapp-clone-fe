@@ -36,6 +36,7 @@ import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
 import { User } from "@/type";
+import fetchRooms from "@/utils/queries/fetchAllRooms";
 // import { error } from "console";
 
 type Users = {
@@ -55,6 +56,7 @@ const Discossions = () => {
   // }, []);
   // if (!hasMounted) return null;
   const sender: User = JSON.parse(localStorage.getItem("sender") || '{}')
+  const [allRooms, setAllRooms] = useState<User>()
   const [roomObject, setRoomObject] = useState<User>()
   const [userObject, setUserObject] = useState<User>()
   const [users, setUsers] = useState<User[]>([]);
@@ -119,6 +121,15 @@ const Discossions = () => {
         if (err instanceof Error) console.error(err);
       });
 
+    fetchRooms()
+      .then((rooms) => {
+        // globalUser = rooms
+        if (rooms) setRooms(rooms);
+      })
+      .catch((err) => {
+        if (err instanceof Error) console.error(err);
+      });
+
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
@@ -159,7 +170,7 @@ const Discossions = () => {
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
             <Image
               src={
-                "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
+                (userObject?.image !== '') ? `${userObject?.image}` : ''
               }
               alt=""
               width={400}
@@ -227,9 +238,9 @@ const Discossions = () => {
                     size={10}
                   />
                   <div>
-                  {(userObject?.name !== '') ? <h4 className="text-gray-700">{userObject?.name}</h4> : <h4 className="text-gray-700">{userObject?.email}</h4>}
-                  {(userObject?.phone !== '') ? <p className="text-gray-500 text-xs">{userObject?.phone}</p> : <p className="text-gray-500 text-xs">{userObject?.email}</p> }
-                    
+                    {(userObject?.name !== '') ? <h4 className="text-gray-700">{userObject?.name}</h4> : <h4 className="text-gray-700">{userObject?.email}</h4>}
+                    {(userObject?.phone !== '') ? <p className="text-gray-500 text-xs">{userObject?.phone}</p> : <p className="text-gray-500 text-xs">{userObject?.email}</p>}
+
                   </div>
                 </div>
 

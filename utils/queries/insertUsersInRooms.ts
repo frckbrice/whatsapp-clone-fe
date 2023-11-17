@@ -5,10 +5,10 @@ const insertUsersInRooms = async (users: User[]) => {
   // console.log(typeof users)
   console.log(users)
   const sendUsers = users?.map(async (user) => {
-    if (user.name !== "") {
+    if (user.name !== "" && user.id !== "") {
       const { data, error } = await supabase
         .from("rooms")
-        .insert({ name: `${user.name}` })
+        .insert({ name: `${user.name}`, user_id: `${user.id}` })
         .select();
       if (error) {
         console.log("could not post users in room", error)
