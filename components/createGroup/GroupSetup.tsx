@@ -94,7 +94,12 @@ const GroupSetup = () => {
     const { data, error } = await supabase
       .from("rooms")
       .insert([
-        { name: profileName, user_id: senderId, group_icon: profileImage },
+        {
+          name: profileName,
+          user_id: senderId,
+          group_icon: profileImage,
+          status: true,
+        },
       ])
       .select();
 

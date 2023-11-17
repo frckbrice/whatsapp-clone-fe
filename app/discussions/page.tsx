@@ -229,7 +229,7 @@ const Discossions = () => {
                 </div>
               </div>
               <DirectMessage
-                setUserObject={setUserObject}
+                setReceiver={setUserObject}
                 setRoomObject={setRoomObject}
                 users={users}
                 className={openProfile ? "hidden" : "px-3 overflow-auto h-full"}
