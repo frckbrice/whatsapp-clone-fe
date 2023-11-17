@@ -19,7 +19,7 @@ const CancelPopup = ({ visible }: any, { onClose }: any) => {
         <h1 className="text-[22px] text-gray-600">Clear this discussion ?</h1>
         <div className="flex flex-col gap-4 pt-2">
           <p className="text-gray-500 text-[16px]">
-            This discussion will be void, but will still figure in the <br />{" "}
+            This discussion will be void, but will still figure in the <br />
             discusion list
           </p>
           <div className="flex gap-3">

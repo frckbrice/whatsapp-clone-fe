@@ -20,7 +20,7 @@ const DisconnectPopup = ({ visible }: any, { onClose }: any) => {
         <div>
           <p className="text-[16px]">You really want to logout ?</p>
           <p className="text-[16px]">
-            Otherwise, you can activate{" "}
+            Otherwise, you can activate
             <span className="text-blue-400">Log screen.</span>
           </p>
         </div>

@@ -9,6 +9,7 @@ import DisconnectPopup from "../popups/disconnectPopup";
 import { uploadFile } from "@/utils/service/getFile";
 import { useProfileContext } from "../context/profileContext";
 import { useWhatSappContactContext } from "../context/Context";
+import Searchcontactpage from "../groupcreation/searchcontactpage";
 
 export interface IAppProps {
   dropdownList: string[];
@@ -22,6 +23,7 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
   const [delPopup, setDelPopup] = useState<boolean>(false);
   const [cancelPopup, setCancelPopup] = useState<boolean>(false);
   const [disconPopup, SetDisconPopup] = useState<boolean>(false);
+  const [createGroup, setCreateGroup] = useState<boolean>(false);
 
   // const { showPPicture, setShowPPicture } = useWhatSappContext();
   // const handleLink = (value: string) => {
@@ -40,6 +42,8 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
     else if (value === "remove the discussion") setDelPopup(true);
     else if (value === "cancel this discussion") setCancelPopup(true);
     else if (value === "disconnect") SetDisconPopup(true);
+    else if (value === " new group") setCreateGroup(true);
+
     if (value === "Show the picture") setShowPPicture(true);
     if (value === "Import a picture") {
       const inputFile = document.createElement("input") as HTMLInputElement;
@@ -78,7 +82,16 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
 
       {disconPopup && <DisconnectPopup visible={disconPopup} />}
 
-      {!(popupMod && reportPopup && delPopup && cancelPopup && disconPopup) && (
+      {createGroup && <Searchcontactpage visible={createGroup} />}
+
+      {!(
+        popupMod &&
+        reportPopup &&
+        delPopup &&
+        cancelPopup &&
+        disconPopup &&
+        createGroup
+      ) && (
         <ul
           ref={ref}
           className="absolute mt-8 py-2 w-[250px] bg-white rounded-md shadow-xl transition-transform delay-5000 ease-in-out -translate-x-48 z-100"
