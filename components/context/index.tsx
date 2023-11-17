@@ -14,6 +14,8 @@ type WhatSappContextType = {
   importPict: boolean;
   profilepict: string;
   profileImage: string;
+  start: boolean;
+  setStart: Dispatch<SetStateAction<boolean>>;
   sendingFile: any;
   setSendingFile: Dispatch<SetStateAction<any>>;
   setProfileImage: Dispatch<SetStateAction<string>>;
@@ -27,12 +29,14 @@ const initContextState: WhatSappContextType = {
   openSideNav: false,
   showPPicture: false,
   importPict: false,
+  start: false,
   profilepict: "",
   profileImage: "",
   sendingFile: "",
   setSendingFile: () => "",
   setProfileImage: () => "",
   setProfilPict: () => "",
+  setStart: (start) => !start,
   setShowPPicture: (showPPicture) => !showPPicture,
   setOpenSideNav: (openSideNav) => !openSideNav,
   setImportPict: (importPict) => !importPict,
@@ -45,12 +49,11 @@ export const WhatSappContextProvider = ({ children }: any) => {
   const [openSideNav, setOpenSideNav] = useState<boolean>(false);
   const [showPPicture, setShowPPicture] = useState<boolean>(false);
   const [importPict, setImportPict] = useState<boolean>(false);
-  const [profilepict, setProfilPict] = useState<string>(
-    ""
-  );
+  const [profilepict, setProfilPict] = useState<string>("");
   const [profileImage, setProfileImage] = useState<string>("");
   const [sendingFile, setSendingFile] = useState<any>();
-  
+  const [start, setStart] = useState<boolean>(false);
+
   const values = {
     openSideNav,
     setOpenSideNav,
@@ -64,6 +67,8 @@ export const WhatSappContextProvider = ({ children }: any) => {
     setProfileImage,
     sendingFile,
     setSendingFile,
+    start,
+    setStart,
   };
 
   if (importPict) console.log("importPict: ", importPict);
@@ -89,6 +94,8 @@ export const useWhatSappContext = () => {
     setProfileImage,
     sendingFile,
     setSendingFile,
+    start,
+    setStart,
   } = useContext(WhatSappContext);
   return {
     openSideNav,
@@ -103,5 +110,7 @@ export const useWhatSappContext = () => {
     setProfileImage,
     sendingFile,
     setSendingFile,
+    start,
+    setStart,
   };
 };
