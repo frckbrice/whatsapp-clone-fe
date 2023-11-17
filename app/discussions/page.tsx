@@ -42,9 +42,10 @@ const Discossions = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [message, setMessage] = useState<any>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
-  const [currentUser, setCurrentUser] = useState<User>(() =>
-    JSON.parse(localStorage.getItem("sender") || "{}")
-  ); // state containing the user info
+  // const [currentUser, setCurrentUser] = useState<User>(() =>
+    // JSON.parse(localStorage.getItem("sender") || "{}")
+  // );
+   // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [allRooms, setAllRooms] = useState<User>();
   const [roomObject, setRoomObject] = useState<User>();
@@ -77,10 +78,15 @@ const Discossions = () => {
       setShowDropdrownBottonL(false);
     }
   };
+  const currentUser: User = JSON.parse(localStorage.getItem("sender") || "{}")
+  console.log('this is current User', currentUser)
 
   useEffect(() => {
     fetchSignupUser()
-      .then((data) => setCurrentUser(data))
+      .then((data) => {
+        // setCurrentUser(data)
+        console.log(data)
+      })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
@@ -102,7 +108,7 @@ const Discossions = () => {
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
-  }, [users]);
+  }, []);
 
   useEffect(() => {
     getMessages(currentUser?.id as string, receiver?.id as string)
@@ -243,7 +249,7 @@ const Discossions = () => {
                     size={8}
                   />
                   <div>
-                    {(receiver?.name !== '') ? <h4 className="text-gray-500">{receiver?.name}</h4> : <h4 className="text-gray-700">{receiver?.email}</h4>}
+                    {(receiver?.name !== '') ? <h5 className="text-black">{receiver?.name}</h5> : <h5 className="text-black">{receiver?.email}</h5>}
                     {(receiver?.phone !== '') ? <p className="text-gray-500 text-xs">{receiver?.phone}</p> : <p className="text-gray-500 text-xs">{receiver?.email}</p>}
 
                   </div>
