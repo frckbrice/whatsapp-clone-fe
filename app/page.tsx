@@ -34,7 +34,6 @@ export default async function Index() {
       {/* <Signupb /> */}
       {/* <Signup /> */}
       <Discossions />
-      {/* <CreateGroup /> */}
     </div>
   );
 }

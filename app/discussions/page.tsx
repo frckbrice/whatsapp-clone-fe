@@ -53,9 +53,10 @@ const Discossions = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [message, setMessage] = useState<any>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
-  const [currentUser, setCurrentUser] = useState<User>(() =>
-    JSON.parse(localStorage.getItem("sender") || "{}")
-  ); // state containing the user info
+  // const [currentUser, setCurrentUser] = useState<User>(() =>
+  // JSON.parse(localStorage.getItem("sender") || "{}")
+  // );
+  // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [allRooms, setAllRooms] = useState<User>();
   const [roomObject, setRoomObject] = useState<User>();
@@ -90,23 +91,18 @@ const Discossions = () => {
       setShowDropdrownBottonL(false);
     }
   };
-
-  // useEffect(() => {
-  //   const showUser = async () => {
-  //     const curUser = await fetchSignupUser();
-  //     setCurrentUser(curUser);
-  //   };
-  //   showUser();
-  // }, []);
-
-  let globalUser: User[];
+  const currentUser: User = JSON.parse(localStorage.getItem("sender") || "{}");
+  console.log("this is current User", currentUser);
 
   useEffect(() => {
     const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
     // console.log("reciever msg from localstorage", reciever);
     console.log("this is user from discussion", users);
     fetchSignupUser()
-      .then((data) => setCurrentUser(data))
+      .then((data) => {
+        // setCurrentUser(data)
+        console.log(data);
+      })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
@@ -213,7 +209,7 @@ const Discossions = () => {
                       ? `${sender.image}`
                       : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
-                  size={10}
+                  size={8}
                 />
 
                 <div className="flex gap-5">
@@ -264,24 +260,16 @@ const Discossions = () => {
                 >
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
-                    profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
-                    size={10}
+                    profilePicture={
+                      receiver?.image !== ""
+                        ? `${receiver?.image}`
+                        : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
+                    }
+                    size={8}
                   />
                   <div>
-                    {userObject?.name !== "" ? (
-                      <h4 className="text-gray-700">{userObject?.name}</h4>
-                    ) : (
-                      <h4 className="text-gray-700">{userObject?.email}</h4>
-                    )}
-                    {userObject?.phone !== "" ? (
-                      <p className="text-gray-500 text-xs">
-                        {userObject?.phone}
-                      </p>
-                    ) : (
-                      <p className="text-gray-500 text-xs">
-                        {userObject?.email}
-                      </p>
-                    )}
+                    <h4 className="text-gray-700">David Beckamp</h4>
+                    <p className="text-gray-500 text-xs">(+801) 365 145 269</p>
                   </div>
                 </div>
 

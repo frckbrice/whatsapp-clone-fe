@@ -5,15 +5,24 @@ import { supabase } from "@/utils/supabase/client";
 import { setDefaultResultOrder } from "dns";
 
 const Signup = () => {
-  const [email, setEmail] = React.useState("");
-  const [submitted, setSubmitted] = React.useState(false);
-  const [error, setError] = React.useState("");
+  const [email, setEmail] = React.useState<string>("");
+  const [submitted, setSubmitted] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>("");
 
   const signup = async (e: any) => {
     e.preventDefault();
-    if (!email) {
+    if (email === "") {
       return;
     } else {
+      let expression: any = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+      let regularExp = new RegExp(expression);
+      if (email.match(regularExp)) {
+        console.log("email match")
+        return
+      } else {
+        return console.log('invalid email a')
+      }
+
       const { data, error } = await supabase.from("user").select("email");
       let res = data?.filter((i) => i.email === email);
       console.log(res);
@@ -22,10 +31,6 @@ const Signup = () => {
       }
     }
 
-    // const { data, error } = supabase.auth.setSession({
-    //   access_token,
-    //   refresh_token
-    // })
     const { error, data } = await supabase.auth.signInWithOtp({ email });
 
     if (error) console.log(error);
@@ -46,6 +51,19 @@ const Signup = () => {
       );
     }
   };
+
+  const handleTest = () => {
+    let expression: any = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+    let regularExp = new RegExp(expression);
+    console.log(email)
+    if (!email.match(regularExp)) {
+      console.log("invalid email address")
+
+    } else {
+      console.log('valid email')
+    }
+    console.log('test')
+  }
 
   return (
     <div>
@@ -81,6 +99,9 @@ const Signup = () => {
               NEXT
             </button>
           </form>
+          <button onClick={() => handleTest()}>
+            test
+          </button>
           {submitted ? (
             <p className="text-center py-4">Please check out your mail</p>
           ) : (
