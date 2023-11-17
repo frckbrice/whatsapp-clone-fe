@@ -43,8 +43,8 @@ const ContactInfoPage = (props: Props) => {
       </div>
 
       <div className=" w-full py-5 bg-white border-y border-y-gray-200 text-[15px]">
-        <div className=" flex space-x-4  px-7 py-3 cursor-pointer justify-between">
-          <div className=" flex space-x-4 justify-between">
+        <div className=" flex space-x-4  px-7 py-3 cursor-pointer justify-between items-center">
+          <div className=" flex space-x-4 justify-between items-center">
             <span>
               <AiFillStar size={23} className=" text-[#667781]" />
             </span>{" "}
@@ -55,8 +55,8 @@ const ContactInfoPage = (props: Props) => {
             <IoIosArrowForward />
           </span>
         </div>
-        <hr className="border-[#fcf9f9]" />
-        <div className=" flex space-x-4  px-7 py-3 cursor-pointer justify-between">
+        <hr className="border-[#d7cfcf]" />
+        <div className=" flex space-x-4  px-7 py-3 cursor-pointer justify-between items-center">
           <div className=" flex space-x-4 justify-between">
             <span>
               <BsFillBookmarkFill size={23} className="text-[#667781]" />{" "}
