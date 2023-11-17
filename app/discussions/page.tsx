@@ -16,11 +16,9 @@ import DropDownR from "../../components/mainLayoutPage/DropdownR";
 import { useWhatSappContext } from "@/components/context";
 import SideNavRight from "../../components/RightSideBar/SideNavRight";
 import SearchField from "../../components/RightSideBar/SearchField";
-import {
-  FollowingMessagesSimple,
-  ReceiverMessages,
-  SenderMessages,
-} from "../../components/mainLayoutPage/Message";
+import SenderMessages from "@/components/mainLayoutPage/Messages/SenderMessage";
+import ReceiverMessages from "@/components/mainLayoutPage/Messages/ReceiverMessage";
+import Messages from "@/components/mainLayoutPage/Messages/Message";
 import ContactInfoPage from "../../components/RightSideBar/ContactInfoPage";
 import { useWhatSappContactContext } from "../../components/context/Context";
 import ProfilePage from "../../components/profilPage/ProfilePage";
@@ -38,18 +36,8 @@ import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import CreateGrt from "@/components/profilPage/CreateGrt";
-import { User } from "@/type";
-import fetchRooms from "@/utils/queries/fetchAllRooms";
-// import { error } from "console";
-
-type Users = {
-  email: string;
-  name: string;
-  image: string;
-  phone: number;
-  id: string;
-  onClick?: () => void;
-};
+import { Message, User } from "@/type";
+import { getMessages } from "@/utils/queries/getMessage";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -59,20 +47,25 @@ const Discossions = () => {
   // }, []);
   // if (!hasMounted) return null;
   const sender: User = JSON.parse(localStorage.getItem("sender") || "{}");
-  const [allRooms, setAllRooms] = useState<User>();
-  const [roomObject, setRoomObject] = useState<User>();
+  // const [allRooms, setAllRooms] = useState<User>();
+  // const [roomObject, setRoomObject] = useState<User>();
   const [userObject, setUserObject] = useState<User>();
   const [users, setUsers] = useState<User[]>([]);
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<any>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
-  const [currentUser, setCurrentUser] = useState<Users>(
+  const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
+  const [allRooms, setAllRooms] = useState<User>();
+  const [roomObject, setRoomObject] = useState<User>();
+  const [sendingMessage, setSendingMessage] = useState<string[]>([]);
+  const [receivingMessage, setReceivingMessage] = useState<string[]>([]);
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
-  // const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
+  const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
+  const [discussionsMessages, setDiscussionsMessages] = useState<{}[]>([]);
 
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
 
@@ -81,11 +74,11 @@ const Discossions = () => {
     openSideNav,
     showPPicture,
     importPict,
-    profileImage,
+    profilepict,
+    start,
   } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile, setOpenProfile } = useProfileContext();
-  // const { reciever } = useRecieverInfoContext()
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -119,17 +112,14 @@ const Discossions = () => {
       });
     fetchUsers()
       .then((users) => {
-        // globalUser = users
         if (users) setUsers(users);
       })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
-
-    fetchRooms()
-      .then((rooms) => {
-        // globalUser = rooms
-        if (rooms) setRooms(rooms);
+    insertUsersInRooms(users)
+      .then((data) => {
+        if (data) setRooms(data);
       })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
@@ -150,33 +140,52 @@ const Discossions = () => {
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
-  }, [users]);
+  }, [receiver?.id]);
 
-  // console.log(globalUser)
+  const sendMessageToDB = async () => {
+    const sendingMessage: Message = {
+      sender_id: currentUser.id as string,
+      receiver_id: receiver?.id as string,
+      content: message,
+    };
 
-  const sendMessageToDB = () => {
-    const messages = supabase
-      .channel("custom-all-channel")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "messages" },
-        (message) => {
-          console.log("Change received!", message);
-        }
-      )
-      .subscribe();
+    console.log("message to send: ", sendingMessage);
+
+    const { error } = await supabase.from("messages").insert(sendingMessage);
+    if (error) console.log("error inserting messages: ", error);
+    setMessage("");
   };
-  console.log("this is user object from DM", userObject);
-  console.log("this is room object from DM", roomObject);
+
+  const handlekeydown = async (event: any) => {
+    if (event.key === "Enter") await sendMessageToDB();
+  };
+
+  const messages = supabase
+    .channel("custom-all-channel")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "messages" },
+      (payload: any) => {
+        console.log("Change received!", payload);
+
+        setDiscussionsMessages((prev) => [...prev, payload.new]);
+      }
+    )
+    .subscribe();
+
+  // console.log("sent messages: ", sendingMessage);
+  // console.log("received messages: ", receivingMessage);
+
   return (
     <>
       {showPPicture ? (
         <ShowProfilePicture>
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
             <Image
-              src="https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
+              src={
+                "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+              }
               alt=""
-              // src={sender?.image}
               width={400}
               height={500}
             />
@@ -234,22 +243,28 @@ const Discossions = () => {
               ref={ref}
               className={
                 openSideNav || openContactInfo
-                  ? "relative w-[50vw] bg-whatsappimg border-r border-r-gray-300 z-0 cursor-pointer"
-                  : "relative w-[75vw] bg-whatsappimg z-0 cursor-pointer "
+                  ? `relative w-[50vw] ${
+                      !start ? "bg-whatsappdashimg" : "bg-whatsappimg pb-10"
+                    }  border-r border-r-gray-300 z-0`
+                  : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${
+                      !start ? "bg-whatsappdashimg" : "bg-whatsappimg"
+                    }`
               }
             >
-              <div className="flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 ">
+              <div
+                className={
+                  !start
+                    ? "hidden"
+                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 cursor-pointer"
+                }
+              >
                 <div
                   className="flex gap-3 w-full cursor-pointer"
                   onClick={() => setOpenContactInfo(true)}
                 >
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
-                    profilePicture={
-                      userObject?.image !== ""
-                        ? `${userObject?.image}`
-                        : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
-                    }
+                    profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
                     size={10}
                   />
                   <div>
@@ -289,22 +304,25 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col mt-3 px-10">
-                <div className=" max-w-[70%] flex flex-col items-start justify-start">
-                  <ReceiverMessages content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis doloribus aut sapiente expedita voluptatibus molestias consectetur culpa asperiores nostrum consequuntur cum illo, ipsum, hic, rerum sequi commodi quisquam. Quos, perspiciatis!Sint alias aperiam saepe ducimus cumque quam itaque nemo voluptatibus nam sunt necessitatibus suscipit, architecto autem dolorum repellendus vel ullam totam quasi ad velit hic provident iusto accusamus! Architecto, doloremque!" />
-                  <FollowingMessagesSimple content="This is a box with some content and an arrow at the top right." />
-                </div>
-
-                <div className=" w-full flex flex-col items-end justify-end ">
-                  <SenderMessages content="This is a box with some content and an arrow at the top right." />
-                </div>
+              <div className=" w-full flex flex-col mt-3 px-10 h-full overflow-y-auto ">
+                {discussionsMessages.length ? (
+                  <Messages
+                    messageList={discussionsMessages}
+                    currentUser={currentUser}
+                    receiver={receiver as User}
+                  />
+                ) : (
+                  ""
+                )}
               </div>
 
               <div
                 className={
-                  openSideNav || openContactInfo
-                    ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 -z-10"
-                    : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 -z-10"
+                  !start
+                    ? "hidden"
+                    : openSideNav || openContactInfo
+                    ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
+                    : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
                 }
               >
                 {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}
@@ -337,9 +355,10 @@ const Discossions = () => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type a message"
+                    onKeyDown={handlekeydown}
                   />
                 </div>
-                <button className="text-2xl " onChange={sendMessageToDB}>
+                <button className="text-2xl " onClick={sendMessageToDB}>
                   <IoSendSharp />
                 </button>
               </div>

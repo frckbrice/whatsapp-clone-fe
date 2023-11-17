@@ -15,6 +15,8 @@ type WhatSappContextType = {
   importPict: boolean;
   profilepict: string;
   profileImage: string;
+  start: boolean;
+  setStart: Dispatch<SetStateAction<boolean>>;
   sendingFile: any;
   setSendingFile: Dispatch<SetStateAction<any>>;
   setProfileImage: Dispatch<SetStateAction<string>>;
@@ -31,12 +33,14 @@ const initContextState: WhatSappContextType = {
   showPPicture: false,
   openCreateGroup: false,
   importPict: false,
+  start: false,
   profilepict: "",
   profileImage: "",
   sendingFile: "",
   setSendingFile: () => "",
   setProfileImage: () => "",
   setProfilPict: () => "",
+  setStart: (start) => !start,
   setShowPPicture: (showPPicture) => !showPPicture,
   setOpenCreateGroup: (openCreateGroup) => !openCreateGroup,
   setOpenSideNav: (openSideNav) => !openSideNav,
@@ -51,12 +55,11 @@ export const WhatSappContextProvider = ({ children }: any) => {
   const [showPPicture, setShowPPicture] = useState<boolean>(false);
   const [openCreateGroup, setOpenCreateGroup] = useState<boolean>(false);
   const [importPict, setImportPict] = useState<boolean>(false);
-  const [profilepict, setProfilPict] = useState<string>(
-    ""
-  );
+  const [profilepict, setProfilPict] = useState<string>("");
   const [profileImage, setProfileImage] = useState<string>("");
   const [sendingFile, setSendingFile] = useState<any>();
-  
+  const [start, setStart] = useState<boolean>(false);
+
   const values = {
     openSideNav,
     setOpenSideNav,
@@ -72,6 +75,8 @@ export const WhatSappContextProvider = ({ children }: any) => {
     setProfileImage,
     sendingFile,
     setSendingFile,
+    start,
+    setStart,
   };
 
   if (importPict) console.log("importPict: ", importPict);
@@ -99,6 +104,8 @@ export const useWhatSappContext = () => {
     setProfileImage,
     sendingFile,
     setSendingFile,
+    start,
+    setStart,
   } = useContext(WhatSappContext);
   return {
     openSideNav,
@@ -115,5 +122,7 @@ export const useWhatSappContext = () => {
     setProfileImage,
     sendingFile,
     setSendingFile,
+    start,
+    setStart,
   };
 };

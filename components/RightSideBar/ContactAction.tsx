@@ -8,7 +8,7 @@ type Props = {};
 const ContactAction = (props: Props) => {
   return (
     <div className=" flex flex-col gap-6 mt-6 text-[#ff2e74]">
-      <div className=" text-md flex gap-5 item-center justify-start">
+      <div className=" text-[18px]  text-md flex gap-5 item-center justify-start">
         {" "}
         <span>
           {" "}
@@ -16,13 +16,13 @@ const ContactAction = (props: Props) => {
         </span>{" "}
         <span> To Bloc Verges DKV</span>
       </div>
-      <div className=" text-lg flex item-center  justify-start gap-5">
+      <div className=" text-[18px] flex item-center  justify-start gap-5">
         <span>
           <BiSolidDislike size={25} />{" "}
         </span>{" "}
         <span>Signal Verges DKV</span>{" "}
       </div>
-      <div className=" text-lg flex gap-5  justify-start item-center">
+      <div className=" text-[18px] flex gap-5  justify-start item-center">
         {" "}
         <span>
           <HiOutlineTrash size={25} />{" "}
