@@ -6,7 +6,7 @@ const fetchUsers = async () => {
   // console.log(typeof data)
   if (error) console.log(error);
   if (data) {
-    console.log("users: ", data);
+    // console.log("users: ", data);
   }
 
   return data;

@@ -52,11 +52,11 @@ export const WhatSappContextProvider = ({ children }: any) => {
   const [openCreateGroup, setOpenCreateGroup] = useState<boolean>(false);
   const [importPict, setImportPict] = useState<boolean>(false);
   const [profilepict, setProfilPict] = useState<string>(
-    "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+    ""
   );
   const [profileImage, setProfileImage] = useState<string>("");
   const [sendingFile, setSendingFile] = useState<any>();
-
+  
   const values = {
     openSideNav,
     setOpenSideNav,
