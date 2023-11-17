@@ -46,6 +46,8 @@ const Discossions = () => {
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
+  const [allRooms, setAllRooms] = useState<User>();
+  const [roomObject, setRoomObject] = useState<User>();
   const [sendingMessage, setSendingMessage] = useState<string[]>([]);
   const [receivingMessage, setReceivingMessage] = useState<string[]>([]);
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
@@ -100,7 +102,7 @@ const Discossions = () => {
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
-  }, []);
+  }, [users]);
 
   useEffect(() => {
     getMessages(currentUser?.id as string, receiver?.id as string)
@@ -182,8 +184,9 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    profilepict ||
-                    "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+                    currentUser.image !== ""
+                      ? `${currentUser.image}`
+                      : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
                   size={10}
                 />
@@ -208,6 +211,7 @@ const Discossions = () => {
                 users={users}
                 setReceiver={setReceiver}
                 className="overflow-scroll overscroll-y-contain h-fit "
+                setRoomObject={setR}
               />
             </div>
             <div

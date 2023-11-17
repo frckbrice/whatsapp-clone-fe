@@ -11,7 +11,7 @@ import { supabase } from "@/utils/supabase/client";
 type Props = {
   messageList: any[];
   currentUser: User;
-  sender: User;
+  receiver: User;
 };
 
 export default function Messages(props: Props) {
@@ -63,7 +63,7 @@ export default function Messages(props: Props) {
       .from("messages")
       .update({
         sender_id: props.currentUser.id,
-        receiver_id: props.sender?.id,
+        receiver_id: props.receiver?.id,
         emoji: emoji,
       })
       .eq("id", messageId)
