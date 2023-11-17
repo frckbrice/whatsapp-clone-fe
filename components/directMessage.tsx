@@ -7,6 +7,7 @@ import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
 import { User } from "@/type";
 import { useWhatSappContext } from "./context";
+import { useProfileContext } from "./context/profileContext";
 
 type Props = {
   className?: string;
@@ -15,9 +16,11 @@ type Props = {
 };
 
 const DirectMessage = React.memo(({ className, users, setReceiver }: Props) => {
+  const [target, setTarget] = useState("");
   // console.log("these are all users", users);
 
   const { setStart } = useWhatSappContext();
+  const { openProfile } = useProfileContext();
 
   const handleDirectMessage = async (id: string) => {
     console.log(id);
@@ -25,6 +28,7 @@ const DirectMessage = React.memo(({ className, users, setReceiver }: Props) => {
     console.log(data);
     setReceiver(data);
     setStart(true);
+    setTarget(id);
   };
 
   const handleClick = () => {
@@ -32,14 +36,18 @@ const DirectMessage = React.memo(({ className, users, setReceiver }: Props) => {
   };
 
   return (
-    <div className={className}>
+    <div className={` ${openProfile ? "hidden" : className} `}>
       {users && (
-        <div className="flex gap-2 w-full flex-col ">
+        <div className="flex gap-2 p-0 w-full flex-col">
           {users?.map((item: any) => (
             <div
               onClick={() => handleDirectMessage(item.id)}
               key={item.id}
-              className="flex w-full justify-between border-b border-slate-100 leading-4 gap-5 hover:bg-gray-100 hover:cursor-pointer py-3"
+              className={
+                target === item.id
+                  ? "bg-gray-100 flex w-full justify-between border-b border-slate-100 py-1 gap-5 hover:cursor-pointer px-4 items-center "
+                  : "flex w-full justify-between border-b border-slate-100  gap-5 hover:bg-gray-100 hover:cursor-pointer px-4 py-1 items-center "
+              }
             >
               <div className="flex items-center gap-3 ">
                 <Avatar
@@ -49,28 +57,26 @@ const DirectMessage = React.memo(({ className, users, setReceiver }: Props) => {
                   className="my-auto"
                 />
                 <div className="  leading-2 font-serif">
-                  <p className="py-0 text-[#111011] font-medium">
-                    {item.email}
-                  </p>
-                  <span className="py-0 text-[14px]">
+                  <p className=" text-[#111011] font-medium">{item.email}</p>
+                  <span className=" text-[14px]">
                     Lorem, ipsum dolor sit amet .
                   </span>
                   {/* <hr/> */}
                 </div>
               </div>
-              <span className="mt-0">
+              <span className="">
                 {item.updated_at.split("T")[1].split(".")[0]}
               </span>
             </div>
           ))}
         </div>
       )}
-      <div className="flex pl-4 pr-2 gap-4">
+      {/* <div className="flex pl-4 pr-2 gap-4">
         <div className="border-b-2">
           <p></p>
           <span></span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 });

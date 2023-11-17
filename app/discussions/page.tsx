@@ -129,6 +129,10 @@ const Discossions = () => {
     setMessage("");
   };
 
+  const handlekeydown = async (event: any) => {
+    if (event.key === "Enter") await sendMessageToDB();
+  };
+
   const messages = supabase
     .channel("custom-all-channel")
     .on(
@@ -142,8 +146,8 @@ const Discossions = () => {
     )
     .subscribe();
 
-  console.log("sent messages: ", sendingMessage);
-  console.log("received messages: ", receivingMessage);
+  // console.log("sent messages: ", sendingMessage);
+  // console.log("received messages: ", receivingMessage);
 
   return (
     <>
@@ -203,7 +207,7 @@ const Discossions = () => {
               <DirectMessage
                 users={users}
                 setReceiver={setReceiver}
-                className="px-4 overflow-auto"
+                className="overflow-scroll overscroll-y-contain h-fit "
               />
             </div>
             <div
@@ -211,9 +215,9 @@ const Discossions = () => {
               className={
                 openSideNav || openContactInfo
                   ? `relative w-[50vw] ${
-                      !start ? "bg-whatsappdashimg" : "bg-whatsappimg"
-                    }  border-r border-r-gray-300 z-0 cursor-pointer`
-                  : `relative w-[75vw] bg-whatsappdashimg z-0 cursor-pointer ${
+                      !start ? "bg-whatsappdashimg" : "bg-whatsappimg pb-10"
+                    }  border-r border-r-gray-300 z-0`
+                  : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${
                       !start ? "bg-whatsappdashimg" : "bg-whatsappimg"
                     }`
               }
@@ -222,7 +226,7 @@ const Discossions = () => {
                 className={
                   !start
                     ? "hidden"
-                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 "
+                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 cursor-pointer"
                 }
               >
                 <div
@@ -259,11 +263,12 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col mt-3 px-10 overflow-auto">
+              <div className=" w-full flex flex-col mt-3 px-10 h-full overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
                     currentUser={currentUser}
+                    sender={receiver as User}
                   />
                 ) : (
                   ""
@@ -309,6 +314,7 @@ const Discossions = () => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type a message"
+                    onKeyDown={handlekeydown}
                   />
                 </div>
                 <button className="text-2xl " onClick={sendMessageToDB}>
