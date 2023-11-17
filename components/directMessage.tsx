@@ -13,10 +13,10 @@ type Props = {
   users: {}[];
   roomObject?: User
   setRoomObject: (room: User) => void
-  setUserObject: (user: User) => void
+  setReceiver: (user: User) => void
 };
 
-const DirectMessage = React.memo(({ className, users, setRoomObject, setUserObject }: Props) => {
+const DirectMessage = React.memo(({ className, users, setRoomObject, setReceiver }: Props) => {
   // const [users, setUsers] = useState<Array<{}>>([]);
 
   // // let users: any
@@ -50,7 +50,7 @@ const DirectMessage = React.memo(({ className, users, setRoomObject, setUserObje
     let room: User = await fetchSingleRoom(id)
     setRoomObject(room)
     let data: User = await fetchSingleUser(id);
-    setUserObject(data)
+    setReceiver(data)
     console.log("single room object", room)
     console.log("single user object", data);
   };

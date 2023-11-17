@@ -58,7 +58,7 @@ const Discossions = () => {
   const sender: User = JSON.parse(localStorage.getItem("sender") || '{}')
   const [allRooms, setAllRooms] = useState<User>()
   const [roomObject, setRoomObject] = useState<User>()
-  const [userObject, setUserObject] = useState<User>()
+  const [receiver, setReceiver] = useState<User>()
   const [users, setUsers] = useState<User[]>([]);
   const [message, setMessage] = useState<string>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
@@ -161,7 +161,7 @@ const Discossions = () => {
       )
       .subscribe();
   };
-  console.log("this is user object from DM", userObject)
+  console.log("this is user object from DM", receiver)
   console.log("this is room object from DM", roomObject)
   return (
     <>
@@ -197,7 +197,7 @@ const Discossions = () => {
                   profilePicture={
                     (sender.image !== "") ? `${sender.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
-                  size={10}
+                  size={8}
                 />
 
                 <div className="flex gap-5">
@@ -216,7 +216,7 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
-              <DirectMessage setUserObject={setUserObject} setRoomObject={setRoomObject} users={users} className={openProfile ? 'hidden' : "px-3 overflow-auto h-full"} />
+              <DirectMessage setReceiver={setReceiver} setRoomObject={setRoomObject} users={users} className={openProfile ? 'hidden' : "px-3 overflow-auto h-full"} />
             </div>
             <div
               ref={ref}
@@ -233,12 +233,12 @@ const Discossions = () => {
                 >
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
-                    profilePicture={(userObject?.image !== "") ? `${userObject?.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
-                    size={10}
+                    profilePicture={(receiver?.image !== "") ? `${receiver?.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
+                    size={8}
                   />
                   <div>
-                    {(userObject?.name !== '') ? <h4 className="text-gray-700">{userObject?.name}</h4> : <h4 className="text-gray-700">{userObject?.email}</h4>}
-                    {(userObject?.phone !== '') ? <p className="text-gray-500 text-xs">{userObject?.phone}</p> : <p className="text-gray-500 text-xs">{userObject?.email}</p>}
+                    {(receiver?.name !== '') ? <h4 className="text-gray-500">{receiver?.name}</h4> : <h4 className="text-gray-700">{receiver?.email}</h4>}
+                    {(receiver?.phone !== '') ? <p className="text-gray-500 text-xs">{receiver?.phone}</p> : <p className="text-gray-500 text-xs">{receiver?.email}</p>}
 
                   </div>
                 </div>
