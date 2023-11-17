@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 type AvatarProps = {
   onClick: () => void;
-  profilePicture: string;
+  profilePicture?: string;
   size: number;
   className?: string;
 };

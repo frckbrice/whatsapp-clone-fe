@@ -2,10 +2,13 @@ import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { RiPencilFill } from "react-icons/ri";
 import CardWithoutTitle from "../CardWithoutTitle";
 import { AiOutlineCheck } from "react-icons/ai";
-import { FaRegLaugh } from "react-icons/fa";
+import { FaPhone } from "react-icons/fa6";
 import EmojiePicker from "./EmojiePicker";
 import Image from "next/image";
 import { useWhatSappContext } from "../context";
+import updateUserName from "@/utils/queries/updateUserName";
+import updatePhoneNumber from "@/utils/queries/updatephoneNumber";
+import { User } from "@/type";
 
 const ProfilePageContent = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
@@ -14,8 +17,9 @@ const ProfilePageContent = () => {
   const [shosenEmojiesdow, setShosenEmojiesdow] = useState<string[]>([]);
 
   // * change the name david beckamp by the user name
-  const [profileName, setProfileName] = useState<string>("David Beckamp");
-  const [profileDescription, setProfileDescription] = useState<string>("");
+  const sender: User = JSON.parse(localStorage.getItem("sender") || '{}')
+  const [profileName, setProfileName] = useState<string>(sender.name);
+  const [phone, setPhone] = useState<string>('(+237)');
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
   const { profileImage, profilepict } = useWhatSappContext();
@@ -52,6 +56,18 @@ const ProfilePageContent = () => {
     return () => ref.current?.removeEventListener("click", handleClickonEmpty);
   }, []);
 
+  const handleUpdateName = (name: string) => {
+    updateUserName(name)
+    console.log('profile name', profileName)
+    setShowInput1((prev) => !prev)
+  }
+
+  const handleUpdatePhone = (phone: string) => {
+    setShowInput((prev) => !prev)
+    updatePhoneNumber(phone)
+  }
+
+
   return (
     <div
       ref={ref}
@@ -85,7 +101,7 @@ const ProfilePageContent = () => {
 
           {!showInput1 ? (
             <div className=" flex justify-between items-center mt-5">
-              <span className=" text-[#444e54]">David Beckamp</span>
+              <span className=" text-[#444e54]">{profileName}</span>
 
               <span
                 className=" italic text-[10px] font-thin text-black cursor-pointer"
@@ -110,7 +126,9 @@ const ProfilePageContent = () => {
                     placement="right"
                   />
                 </span>
-                <span className=" mr-0 cursor-pointer">
+                <span
+                  className=" mr-0 cursor-pointer"
+                  onClick={() => handleUpdateName(profileName)}>
                   <AiOutlineCheck size={23} />
                 </span>
               </div>
@@ -125,7 +143,7 @@ const ProfilePageContent = () => {
         </div>
         <div className=" flex flex-col gap-4 w-full px-7 py-3 shadow shadow-zinc-200 bg-white">
           <div className=" flex items-center gap-3">
-            <span className=" text-[#33a033]">Infos</span>
+            <span className=" text-[#33a033]">Phone</span>
             <span className=" inline-flex items-center">
               {shosenEmojiesdow?.map((emoji, index) => (
                 <Image
@@ -140,19 +158,26 @@ const ProfilePageContent = () => {
           </div>
 
           {!showInput ? (
-            <span
-              className=" italic text-[10px] font-thin text-black cursor-pointer"
-              onClick={() => setShowInput((prev) => !prev)}
-            >
-              <RiPencilFill size={25} color="#54656f" />
-            </span>
+            <div className="flex justify-between align-baseline">
+              <div className="flex align-baseline gap-6 ">
+                <FaPhone size={25} />
+                <p className="text-lg">{phone}</p>
+              </div>
+              <span
+                className=" italic text-[10px] font-thin text-black cursor-pointer"
+                onClick={() => setShowInput((prev) => !prev)}
+              >
+
+                <RiPencilFill size={25} color="#54656f" />
+              </span>
+            </div>
           ) : (
             <div className=" flex justify-between items-center pb-[5px] border-solid border-b-2 border-b-[#778086]">
               <input
                 type="text"
                 className="inputprofile w-full pl-0 px-2 py-0 text-[#242f36] text-md focus:outline-none focus:ring-none focus:border-none"
-                onChange={(e) => setProfileDescription(e.target.value)}
-                value={profileDescription}
+                onChange={(e) => setPhone(e.target.value)}
+                value={phone}
               />
               <div className=" flex justify-center items-center text-[#778086]">
                 <span className=" mr-2 cursor-pointer">
@@ -161,7 +186,9 @@ const ProfilePageContent = () => {
                     placement="rightEnd"
                   />
                 </span>
-                <span className=" mr-0 cursor-pointer">
+                <span
+                  className=" mr-0 cursor-pointer"
+                  onClick={() => handleUpdatePhone(phone)}>
                   <AiOutlineCheck size={23} />
                 </span>
               </div>
