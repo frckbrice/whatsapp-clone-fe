@@ -5,13 +5,18 @@ import Avatar from "@/components/Avatar";
 import { supabase } from "@/utils/supabase/client";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
+import { User } from "@/type";
+import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
 
 type Props = {
   className?: string;
   users: {}[];
+  roomObject?: User
+  setRoomObject: (room: User) => void
+  setUserObject: (user: User) => void
 };
 
-const DirectMessage = React.memo(({ className, users }: Props) => {
+const DirectMessage = React.memo(({ className, users, setRoomObject, setUserObject }: Props) => {
   // const [users, setUsers] = useState<Array<{}>>([]);
 
   // // let users: any
@@ -36,16 +41,18 @@ const DirectMessage = React.memo(({ className, users }: Props) => {
   }, []);
   if (!hasMounted) return null;
 
-  console.log("these are all users", users);
-
-  const insertUsersInRooms = async () => {
-    const { data, error } = await supabase.from("rooms").insert([{}]);
-  };
+  // console.log("these are all users", users);
 
   const handleDirectMessage = async (id: string) => {
+    const reciever: User = JSON.parse(localStorage.getItem('reciever') || '{}')
+    // console.log(reciever.id)
     console.log(id);
-    let data: Object = await fetchSingleUser(id);
-    console.log(data);
+    let room: User = await fetchSingleRoom(id)
+    setRoomObject(room)
+    let data: User = await fetchSingleUser(id);
+    setUserObject(data)
+    console.log("single room object", room)
+    console.log("single user object", data);
   };
 
   const handleClick = () => {
@@ -65,14 +72,18 @@ const DirectMessage = React.memo(({ className, users }: Props) => {
               <div className="flex items-center gap-5">
                 <Avatar
                   onClick={() => handleClick()}
-                  profilePicture="https://hips.hearstapps.com/hmg-prod/images/african-baby-girl-holding-flower-royalty-free-image-1676500153.jpg?crop=1.00xw:0.344xh;0,0.189xh&resize=1200:*"
+                  profilePicture={(item.image !== '') ? `${item.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
                   size={10}
+
                   className="my-auto"
                 />
                 <div className=" py-4 leading-2">
-                  <p className="py-1 text-[#111011] font-medium">
+                  {(item.name !== '') ? <p className="py-1 text-[#111011] font-medium">
+                    {item.name}
+                  </p> : <p className="py-1 text-[#111011] font-medium">
                     {item.email}
-                  </p>
+                  </p>}
+
                   <span className="py-8 text-[14px]">
                     Lorem, ipsum dolor sit amet .
                   </span>

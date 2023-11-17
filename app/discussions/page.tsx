@@ -36,6 +36,7 @@ import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
 import { User } from "@/type";
+import fetchRooms from "@/utils/queries/fetchAllRooms";
 // import { error } from "console";
 
 type Users = {
@@ -54,6 +55,10 @@ const Discossions = () => {
   //   setHasMounted(true);
   // }, []);
   // if (!hasMounted) return null;
+  const sender: User = JSON.parse(localStorage.getItem("sender") || '{}')
+  const [allRooms, setAllRooms] = useState<User>()
+  const [roomObject, setRoomObject] = useState<User>()
+  const [userObject, setUserObject] = useState<User>()
   const [users, setUsers] = useState<User[]>([]);
   const [message, setMessage] = useState<string>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
@@ -96,9 +101,12 @@ const Discossions = () => {
   //   showUser();
   // }, []);
 
+  let globalUser: User[]
+
   useEffect(() => {
     const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
-    console.log("reciever msg from localstorage", reciever);
+    // console.log("reciever msg from localstorage", reciever);
+    console.log("this is user from discussion", users)
     fetchSignupUser()
       .then((data) => setCurrentUser(data))
       .catch((err) => {
@@ -106,27 +114,40 @@ const Discossions = () => {
       });
     fetchUsers()
       .then((users) => {
+        // globalUser = users
         if (users) setUsers(users);
       })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
-    insertUsersInRooms(users)
-      .then((data) => {
-        if (data) setRooms(data);
+
+    fetchRooms()
+      .then((rooms) => {
+        // globalUser = rooms
+        if (rooms) setRooms(rooms);
       })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
+
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
 
-  // useEffect(() => {
-  //   const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
-  //   console.log("reciever msg from localstorage", reciever);
-  // }, []);
+  useEffect(() => {
+    console.log('user inside useEffect', users)
+    insertUsersInRooms(users)
+      .then((data) => {
+        console.log('insertdata', data)
+        if (data) setRooms(data);
+      })
+      .catch((err) => {
+        if (err instanceof Error) console.error(err);
+      });
+  }, [users])
+
+  // console.log(globalUser)
 
   const sendMessageToDB = () => {
     const messages = supabase
@@ -140,17 +161,17 @@ const Discossions = () => {
       )
       .subscribe();
   };
-
+  console.log("this is user object from DM", userObject)
+  console.log("this is room object from DM", roomObject)
   return (
     <>
       {showPPicture ? (
         <ShowProfilePicture>
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
             <Image
-              src={
-                "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
-              }
+              src="https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
               alt=""
+              // src={sender?.image}
               width={400}
               height={500}
             />
@@ -174,8 +195,7 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    profileImage ||
-                    "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+                    (sender.image !== "") ? `${sender.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
                   size={10}
                 />
@@ -196,7 +216,7 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
-              <DirectMessage users={users} />
+              <DirectMessage setUserObject={setUserObject} setRoomObject={setRoomObject} users={users} className={openProfile ? 'hidden' : "px-3 overflow-auto h-full"} />
             </div>
             <div
               ref={ref}
@@ -213,12 +233,13 @@ const Discossions = () => {
                 >
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
-                    profilePicture="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+                    profilePicture={(userObject?.image !== "") ? `${userObject?.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
                     size={10}
                   />
                   <div>
-                    <h4 className="text-gray-700">David Beckamp</h4>
-                    <p className="text-gray-500 text-xs">(+801) 365 145 269</p>
+                    {(userObject?.name !== '') ? <h4 className="text-gray-700">{userObject?.name}</h4> : <h4 className="text-gray-700">{userObject?.email}</h4>}
+                    {(userObject?.phone !== '') ? <p className="text-gray-500 text-xs">{userObject?.phone}</p> : <p className="text-gray-500 text-xs">{userObject?.email}</p>}
+
                   </div>
                 </div>
 
@@ -290,7 +311,7 @@ Sint alias aperiam saepe ducimus cumque quam itaque nemo voluptatibus nam sunt n
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3 "
                     value={message}
-                    onChange={() => setMessage(e.target.value)}
+                    onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type a message"
                   />
                 </div>
