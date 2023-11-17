@@ -6,7 +6,7 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
   const [selectedRadio, setSelectedRadio] = useState("");
   const [confirmButtonColor, setConfirmButtonColor] = useState("#ccc");
   const handleOnclose = (e: any) => {
-    if (e.target.id === "container") onClose();
+    if ((e.target.id === "container", onClose)) onClose();
   };
 
   if (!visible) return null;
@@ -50,7 +50,7 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
               I dont have any reason
             </label>
           </div>
-          <hr className="text-gray-400 " />{" "}
+          <hr className="text-gray-400 " />
           <div className="flex gap-4 mt-0">
             <input
               type="radio"
@@ -118,7 +118,7 @@ const BlockContactPopup = ({ visible }: any, { onClose }: any) => {
           <button
             style={{ backgroundColor: confirmButtonColor }}
             disabled={selectedRadio === ""}
-            className="rounded-full px-8 py-3"
+            className="rounded-full px-8 py-2"
           >
             Block
           </button>

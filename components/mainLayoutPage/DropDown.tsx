@@ -70,6 +70,8 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
     }
   };
 
+  const handleOnclose = () => SetDisconPopup(false);
+
   return (
     <>
       {popupMod && <ShowmodalToBlock visible={popupMod} />}
@@ -80,7 +82,9 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
 
       {cancelPopup && <CancelPopup visible={cancelPopup} />}
 
-      {disconPopup && <DisconnectPopup visible={disconPopup} />}
+      {disconPopup && (
+        <DisconnectPopup onClose={handleOnclose} visible={disconPopup} />
+      )}
 
       {createGroup && <Searchcontactpage visible={createGroup} />}
 

@@ -1,13 +1,19 @@
 import React from "react";
 import Whitebtn from "../atoms/whitebtn";
 import Greenbtn from "../atoms/greenbtn";
+import { useRouter } from "next/navigation";
 
-const DisconnectPopup = ({ visible }: any, { onClose }: any) => {
+const DisconnectPopup = ({ visible, onClose }: any) => {
   const handleOnclose = (e: any) => {
-    if (e.target.id === "container") onClose();
+    if (e.target.id === "container" && onClose) onClose();
   };
 
   if (!visible) return null;
+  const router = useRouter();
+  const handleLogout = () => {
+    sessionStorage.clear();
+    router.push("/");
+  };
 
   return (
     <div
@@ -27,7 +33,7 @@ const DisconnectPopup = ({ visible }: any, { onClose }: any) => {
 
         <div className="absolute bottom-8 right-6 flex gap-4">
           <Whitebtn label="Cancel" className="" />
-          <Greenbtn label="Disconnect" className="" />
+          <Greenbtn label="Disconnect" className="" onClick={handleLogout} />
         </div>
       </div>
     </div>

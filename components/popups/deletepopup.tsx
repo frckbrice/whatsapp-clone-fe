@@ -4,7 +4,7 @@ import Greenbtn from "../atoms/greenbtn";
 
 const Deletepopup = ({ visible }: any, { onClose }: any) => {
   const handleOnclose = (e: any) => {
-    if (e.target.id === "container") onClose();
+    if ((e.target.id === "container", onClose)) onClose();
   };
 
   if (!visible) return null;
