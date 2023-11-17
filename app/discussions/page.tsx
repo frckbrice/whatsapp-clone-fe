@@ -211,7 +211,7 @@ const Discossions = () => {
                 users={users}
                 setReceiver={setReceiver}
                 className="overflow-scroll overscroll-y-contain h-fit "
-                setRoomObject={setR}
+                setRoomObject={setRoomObject}
               />
             </div>
             <div
@@ -272,7 +272,7 @@ const Discossions = () => {
                   <Messages
                     messageList={discussionsMessages}
                     currentUser={currentUser}
-                    sender={receiver as User}
+                    receiver={receiver as User}
                   />
                 ) : (
                   ""
