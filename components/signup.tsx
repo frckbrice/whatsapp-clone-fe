@@ -22,10 +22,6 @@ const Signup = () => {
       }
     }
 
-    // const { data, error } = supabase.auth.setSession({
-    //   access_token,
-    //   refresh_token
-    // })
     const { error, data } = await supabase.auth.signInWithOtp({ email });
 
     if (error) console.log(error);
