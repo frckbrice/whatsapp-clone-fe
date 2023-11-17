@@ -16,6 +16,8 @@ import { IoIosArrowForward } from "react-icons/io";
 import { VscPassFilled } from "react-icons/vsc";
 import CreateGroup from "./CreateGroup";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
+import { supabase } from "@/utils/supabase/client";
+import { data } from "autoprefixer";
 
 const GroupSetup = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
@@ -71,17 +73,64 @@ const GroupSetup = () => {
     phone: null;
   }
 
+  type GroupData = [
+    {
+      created_at: string;
+      group_icon: string;
+      id: string;
+      name: string;
+      updated_at: string;
+      user_id: string;
+    }
+  ];
+
   // handle create group
-  const handleCreateGroup = () => {
+  const handleCreateGroup = async () => {
     const groupMembers = LOCAL_STORAGE.get("group_members");
     const sender = LOCAL_STORAGE.get("sender");
     const senderId = sender.id;
     const membersID = groupMembers.map((member: User) => member.id);
-    console.clear();
-    console.log("senderId: ", senderId);
-    console.log("Group Discription: ", profileName);
-    console.log("profile image: ", profileImage);
-    console.log("Group Members Id: ", membersID);
+
+    const { data, error } = await supabase
+      .from("rooms")
+      .insert([
+        { name: profileName, user_id: senderId, group_icon: profileImage },
+      ])
+      .select();
+
+    if (error) {
+      console.log("An error occured", error);
+      return;
+    }
+
+    console.log("data: ", data);
+
+    if (data) {
+      const groupID = data[0].id;
+
+      const groupData = membersID.map(async (ID: string) => {
+        const { data, error } = await supabase
+          .from("roomuser")
+          .insert([{ room_id: groupID, user_id: ID }])
+          .select();
+
+        if (error) {
+          return error;
+        }
+        return data;
+      });
+
+      console.clear();
+      console.log("data: ", data);
+      console.log("data[0].id: ", data[0].id);
+      console.log("groupData: ", groupData);
+    }
+
+    // console.clear();
+    // console.log("senderId: ", senderId);
+    // console.log("Group Discription: ", profileName);
+    // console.log("profile image: ", profileImage);
+    // console.log("Group Members Id: ", membersID);
   };
 
   return (
