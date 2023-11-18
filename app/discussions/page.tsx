@@ -55,7 +55,8 @@ const Discossions = () => {
   const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
-  const [discussionsMessages, setDiscussionsMessages] = useState<{}[]>([]);
+  const [discussionsMessages, setDiscussionsMessages] = useState<any[]>([]);
+  const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
 
   const {
     setOpenSideNav,
@@ -69,6 +70,7 @@ const Discossions = () => {
   const { openProfile, setOpenProfile } = useProfileContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
+  const emojiRef = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLDivElement>(null);
 
   const handleClickOutSide = (event: any) => {
@@ -76,6 +78,11 @@ const Discossions = () => {
       setShowDropdownleft(false);
       setShowDropdownright(false);
       setShowDropdrownBottonL(false);
+      setMessageEmoji(false);
+    }
+    if (emojiRef.current && !emojiRef.current.contains(event.target)) {
+      console.log("emoji component is clicked");
+      setMessageEmoji(false);
     }
   };
   const currentUser: User = JSON.parse(localStorage.getItem("sender") || "{}")
@@ -111,11 +118,14 @@ const Discossions = () => {
   }, []);
 
   useEffect(() => {
+    setDiscussionsMessages([]);
     getMessages(currentUser?.id as string, receiver?.id as string)
       .then((messages: any) => {
         if (messages.length) {
           console.log("all messages: ", messages);
           setDiscussionsMessages(messages);
+        } else {
+          setDiscussionsMessages([]);
         }
       })
       .catch((err) => {
@@ -148,14 +158,28 @@ const Discossions = () => {
       { event: "*", schema: "public", table: "messages" },
       (payload: any) => {
         console.log("Change received!", payload);
-
-        setDiscussionsMessages((prev) => [...prev, payload.new]);
+        if (payload.eventType === "UPDATE") {
+          const newIndex: number = discussionsMessages?.findIndex(
+            (message: any) => message.id === payload.new.id
+          );
+          discussionsMessages[newIndex].emoji = payload.new.emoji;
+          setDiscussionsMessages(discussionsMessages);
+        }
+        if (payload.eventType === "INSERT") {
+          setDiscussionsMessages((prev) => [...prev, payload.new]);
+        }
       }
     )
     .subscribe();
 
   // console.log("sent messages: ", sendingMessage);
   // console.log("received messages: ", receivingMessage);
+  //  if (payload.eventType === "UPDATE") {
+  //    setDiscussionsMessages(discussionsMessages);
+  //  }
+  //  if (payload.eventType === "INSERT") {
+  //    setDiscussionsMessages((prev) => [...prev, payload.new]);
+  //  }
 
   return (
     <>
@@ -164,7 +188,8 @@ const Discossions = () => {
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
             <Image
               src={
-                "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+                currentUser.image ||
+                "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
               }
               alt=""
               width={400}
@@ -225,10 +250,14 @@ const Discossions = () => {
               className={
                 openSideNav || openContactInfo
                   ? `relative w-[50vw] ${
-                      !start ? "bg-whatsappdashimg" : "bg-whatsappimg pb-10"
+                      !start
+                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
+                        : "bg-whatsappimg pb-10"
                     }  border-r border-r-gray-300 z-0`
                   : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${
-                      !start ? "bg-whatsappdashimg" : "bg-whatsappimg"
+                      !start
+                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
+                        : "bg-whatsappimg"
                     }`
               }
             >
@@ -245,13 +274,17 @@ const Discossions = () => {
                 >
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
-                    profilePicture={(receiver?.image !== "") ? `${receiver?.image}` : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
-                    size={8}
+                    profilePicture={
+                      receiver?.image ||
+                      "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
+                    }
+                    size={10}
                   />
                   <div>
-                    {(receiver?.name !== '') ? <h5 className="text-black">{receiver?.name}</h5> : <h5 className="text-black">{receiver?.email}</h5>}
-                    {(receiver?.phone !== '') ? <p className="text-gray-500 text-xs">{receiver?.phone}</p> : <p className="text-gray-500 text-xs">{receiver?.email}</p>}
-
+                    <h4 className="text-gray-700">{receiver?.name}</h4>
+                    <p className="text-gray-500 text-xs">
+                      {receiver?.phone || receiver?.email}
+                    </p>
                   </div>
                 </div>
 
@@ -280,6 +313,9 @@ const Discossions = () => {
                     messageList={discussionsMessages}
                     currentUser={currentUser}
                     receiver={receiver as User}
+                    ref={emojiRef}
+                    showMessageEmoji={showMessageEmoji}
+                    setMessageEmoji={setMessageEmoji}
                   />
                 ) : (
                   ""
