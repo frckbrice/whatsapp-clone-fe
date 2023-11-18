@@ -29,6 +29,7 @@ const DirectMessage = React.memo(
     const handleDirectMessage = async (id: string) => {
       console.log(id);
       let data: User = await fetchSingleUser(id);
+      console.log('test after fetchsingleUser')
       console.log(data);
       setReceiver(data);
       setStart(true);

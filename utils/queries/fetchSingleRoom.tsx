@@ -8,7 +8,7 @@ const fetchSingleRoom = async (id: string) => {
     .eq('user_id', id)
     .single()
 
-  if (error) console.log("error while fetching signup user", error)
+  if (error) console.log("error while fetching single room", error)
   if (data) {
     console.log("Here is single room", data)
     // localStorage.setItem("sender", JSON.stringify(data))
