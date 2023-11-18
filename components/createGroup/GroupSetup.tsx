@@ -97,7 +97,7 @@ const GroupSetup = () => {
         {
           name: profileName,
           user_id: senderId,
-          group_icon: profileImage,
+          image: profileImage,
           status: true,
         },
       ])
