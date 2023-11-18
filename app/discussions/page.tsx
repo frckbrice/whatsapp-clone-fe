@@ -37,6 +37,10 @@ import { Message, User } from "@/type";
 import { getMessages } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
+import { LOCAL_STORAGE } from "@/utils/service/storage";
+// import {profilepict} from "useWhatSappContext"
+
+// import { useWhatSappContext } from "@/components/context";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -66,6 +70,8 @@ const Discossions = () => {
     showPPicture,
     importPict,
     profilepict,
+    profileImage,
+    setProfileImage,
     start,
   } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
@@ -88,7 +94,13 @@ const Discossions = () => {
     }
   };
 
+  const activeUser = LOCAL_STORAGE.get("sender");
+  const userImage = activeUser.image;
+  setProfileImage(userImage);
+
   useEffect(() => {
+    // set profile picture
+
     fetchSignupUser()
       .then((data) => setCurrentUser(data))
       .catch((err) => {
@@ -212,8 +224,8 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    currentUser.image !== ""
-                      ? `${currentUser.image}`
+                    profileImage
+                      ? profileImage
                       : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
                   size={10}
