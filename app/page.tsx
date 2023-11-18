@@ -30,13 +30,7 @@ export default async function Index() {
 
   return (
     <div className="flex-1 h-[80vh] w-[100%] flex flex-col items-center mx-auto rounded-sm ">
-<<<<<<< HEAD
-      {/* <Signupb /> */}
       <Signup />
-      {/* <Discossions /> */}
-=======
-      <Signup />
->>>>>>> e8aef946cded4c83a7e2dd96ec998797a525407e
     </div>
   );
 }
