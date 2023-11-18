@@ -11,6 +11,7 @@ import {
 type WhatSappContextType = {
   openSideNav: boolean;
   showPPicture: boolean;
+  openCreateGroup: boolean;
   importPict: boolean;
   profilepict: string;
   profileImage: string;
@@ -22,12 +23,15 @@ type WhatSappContextType = {
   setProfilPict: Dispatch<SetStateAction<string>>;
   setImportPict: Dispatch<SetStateAction<boolean>>;
   setShowPPicture: Dispatch<SetStateAction<boolean>>;
+  setOpenCreateGroup: Dispatch<SetStateAction<boolean>>;
+
   setOpenSideNav: Dispatch<SetStateAction<boolean>>;
 };
 
 const initContextState: WhatSappContextType = {
   openSideNav: false,
   showPPicture: false,
+  openCreateGroup: false,
   importPict: false,
   start: false,
   profilepict: "",
@@ -38,6 +42,7 @@ const initContextState: WhatSappContextType = {
   setProfilPict: () => "",
   setStart: (start) => !start,
   setShowPPicture: (showPPicture) => !showPPicture,
+  setOpenCreateGroup: (openCreateGroup) => !openCreateGroup,
   setOpenSideNav: (openSideNav) => !openSideNav,
   setImportPict: (importPict) => !importPict,
 };
@@ -48,6 +53,7 @@ export const WhatSappContext =
 export const WhatSappContextProvider = ({ children }: any) => {
   const [openSideNav, setOpenSideNav] = useState<boolean>(false);
   const [showPPicture, setShowPPicture] = useState<boolean>(false);
+  const [openCreateGroup, setOpenCreateGroup] = useState<boolean>(false);
   const [importPict, setImportPict] = useState<boolean>(false);
   const [profilepict, setProfilPict] = useState<string>("");
   const [profileImage, setProfileImage] = useState<string>("");
@@ -59,6 +65,8 @@ export const WhatSappContextProvider = ({ children }: any) => {
     setOpenSideNav,
     showPPicture,
     setShowPPicture,
+    openCreateGroup,
+    setOpenCreateGroup,
     importPict,
     setImportPict,
     profilepict,
@@ -86,6 +94,8 @@ export const useWhatSappContext = () => {
     setOpenSideNav,
     showPPicture,
     setShowPPicture,
+    openCreateGroup,
+    setOpenCreateGroup,
     importPict,
     setImportPict,
     profilepict,
@@ -102,6 +112,8 @@ export const useWhatSappContext = () => {
     setOpenSideNav,
     showPPicture,
     setShowPPicture,
+    openCreateGroup,
+    setOpenCreateGroup,
     importPict,
     setImportPict,
     profilepict,

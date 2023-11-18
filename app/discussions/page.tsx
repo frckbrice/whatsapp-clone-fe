@@ -35,6 +35,8 @@ import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
 import { Message, User } from "@/type";
 import { getMessages } from "@/utils/queries/getMessage";
+import CreateGrt from "@/components/profilPage/CreateGrt";
+import CreateGroup from "@/components/createGroup/CreateGroup";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -42,10 +44,9 @@ const Discossions = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [message, setMessage] = useState<any>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
-  // const [currentUser, setCurrentUser] = useState<User>(() =>
-    // JSON.parse(localStorage.getItem("sender") || "{}")
-  // );
-   // state containing the user info
+  const [currentUser, setCurrentUser] = useState<User>(() =>
+    JSON.parse(localStorage.getItem("sender") || "{}")
+  ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [allRooms, setAllRooms] = useState<User>();
   const [roomObject, setRoomObject] = useState<User>();
@@ -57,6 +58,7 @@ const Discossions = () => {
     useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<any[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
+  const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
 
   const {
     setOpenSideNav,
@@ -85,15 +87,10 @@ const Discossions = () => {
       setMessageEmoji(false);
     }
   };
-  const currentUser: User = JSON.parse(localStorage.getItem("sender") || "{}")
-  console.log('this is current User', currentUser)
 
   useEffect(() => {
     fetchSignupUser()
-      .then((data) => {
-        // setCurrentUser(data)
-        console.log(data)
-      })
+      .then((data) => setCurrentUser(data))
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
@@ -219,7 +216,7 @@ const Discossions = () => {
                       ? `${currentUser.image}`
                       : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
-                  size={8}
+                  size={10}
                 />
 
                 <div className="flex gap-5">
@@ -377,6 +374,12 @@ const Discossions = () => {
               <SideNavRight title="Search for messages">
                 <SearchField />
               </SideNavRight>
+            )}
+
+            {showCreateGroup && (
+              <CreateGrt title="Create new group">
+                <CreateGroup />
+              </CreateGrt>
             )}
           </div>
         </>

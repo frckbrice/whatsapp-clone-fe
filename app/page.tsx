@@ -10,13 +10,14 @@ import Signupb from "@/components/signupb";
 import Discossions from "@/app/discussions/page";
 import SideNavRight from "@/components/RightSideBar/SideNavRight";
 import SearchField from "@/components/RightSideBar/SearchField";
+import CreateGroup from "@/components/createGroup/CreateGroup";
 
 export default async function Index() {
   const cookieStore = cookies();
 
   const canInitSupabaseClient = () => {
-    // This function is just for the interactive tutorial.
-    // Feel free to remove it once you have Supabase connected.
+    // This function is just for the interactive tutorial.//
+    // Feel free to remove it once you have Supabase connected.//
     try {
       createClient(cookieStore);
       return true;
