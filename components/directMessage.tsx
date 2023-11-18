@@ -15,13 +15,12 @@ type Props = {
   users: User[];
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
-  // setUserObject: (user: User) => void
 };
 
 const DirectMessage = React.memo(
   ({ className, users, setReceiver, setRoomObject }: Props) => {
-    const [target, setTarget] = useState("");
     // to style the select room
+    const [target, setTarget] = useState("");
 
     const { setStart } = useWhatSappContext();
     const { openProfile } = useProfileContext();
@@ -29,14 +28,14 @@ const DirectMessage = React.memo(
     const handleDirectMessage = async (id: string) => {
       console.log(id);
       let data: User = await fetchSingleUser(id);
-      console.log("test after fetchsingleUser");
-      console.log(data);
+      // console.log("test after fetchsingleUser");
+      // console.log(data);
       setReceiver(data);
       setStart(true);
       setTarget(id);
       let room: User = await fetchSingleRoom(id);
       setRoomObject(room);
-      console.log("single room object", room);
+      // console.log("single room object", room);
     };
 
     const handleClick = () => {

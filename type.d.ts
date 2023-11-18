@@ -37,3 +37,9 @@ type Message = {
   updated_at?: string;
   emoji?: string;
 };
+
+type Roomuser = {
+  id: string;
+  room_id: string;
+  user_id: string;
+};

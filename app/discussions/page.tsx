@@ -33,10 +33,12 @@ import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import { Message, User } from "@/type";
+import { Message, Roomuser, User } from "@/type";
 import { getMessages } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
+import { getGroupMembers } from "@/utils/queries/getGroupMembers";
+import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -48,10 +50,14 @@ const Discossions = () => {
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
-  const [allRooms, setAllRooms] = useState<User>();
+  const [groupOfUserId, setGroupOfUserId] = useState<string[] | null>([]);
   const [roomObject, setRoomObject] = useState<User>();
   const [sendingMessage, setSendingMessage] = useState<string[]>([]);
-  const [receivingMessage, setReceivingMessage] = useState<string[]>([]);
+
+  const [groupMessageDiscussions, setGroupMessageDiscussions] = useState<any[]>(
+    []
+  );
+  const [groupMembersIds, setGroupMembersIds] = useState<any[]>();
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
   const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
@@ -109,6 +115,19 @@ const Discossions = () => {
         if (err instanceof Error) console.error(err);
       });
 
+    fetchGroupsOfSingleUser(currentUser.id as string)
+      .then((groups: any) => {
+        if (groups?.length) {
+          console.log("group from which the user belongsto : ", groups);
+          setGroupOfUserId(() =>
+            groups?.map((group: Roomuser) => group.room_id)
+          );
+        }
+      })
+      .catch((err) => {
+        if (err instanceof Error) console.error(err);
+      });
+
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
@@ -128,16 +147,25 @@ const Discossions = () => {
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
+    getGroupMembers(receiver?.id as string)
+      .then((members) => {
+        if (members?.length) {
+          console.log("the member of selected group: ", messages);
+          setGroupMembersIds(members);
+        }
+      })
+      .catch((err) => {
+        if (err instanceof Error) console.error(err);
+      });
   }, [receiver?.id]);
 
   const sendMessageToDB = async () => {
+    if (message === "") return;
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_id: receiver?.id as string,
       content: message,
     };
-
-    console.log("message to send: ", sendingMessage);
 
     const { error } = await supabase.from("messages").insert(sendingMessage);
     if (error) console.log("error inserting messages: ", error);
@@ -155,6 +183,7 @@ const Discossions = () => {
       { event: "*", schema: "public", table: "messages" },
       (payload: any) => {
         console.log("Change received!", payload);
+
         if (payload.eventType === "UPDATE") {
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
@@ -162,21 +191,13 @@ const Discossions = () => {
           discussionsMessages[newIndex].emoji = payload.new.emoji;
           setDiscussionsMessages(discussionsMessages);
         }
+
         if (payload.eventType === "INSERT") {
           setDiscussionsMessages((prev) => [...prev, payload.new]);
         }
       }
     )
     .subscribe();
-
-  // console.log("sent messages: ", sendingMessage);
-  // console.log("received messages: ", receivingMessage);
-  //  if (payload.eventType === "UPDATE") {
-  //    setDiscussionsMessages(discussionsMessages);
-  //  }
-  //  if (payload.eventType === "INSERT") {
-  //    setDiscussionsMessages((prev) => [...prev, payload.new]);
-  //  }
 
   return (
     <>

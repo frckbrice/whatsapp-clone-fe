@@ -18,6 +18,7 @@ import CreateGroup from "./CreateGroup";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { supabase } from "@/utils/supabase/client";
 import { data } from "autoprefixer";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 const GroupSetup = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
@@ -85,6 +86,7 @@ const GroupSetup = () => {
   ];
 
   // handle create group
+  let subscription: RealtimeChannel;
   const handleCreateGroup = async () => {
     const groupMembers = LOCAL_STORAGE.get("group_members");
     const sender = LOCAL_STORAGE.get("sender");
@@ -136,6 +138,7 @@ const GroupSetup = () => {
     // console.log("Group Discription: ", profileName);
     // console.log("profile image: ", profileImage);
     // console.log("Group Members Id: ", membersID);
+    subscription = supabase.channel(`group_:${profileName}`).subscribe();
   };
 
   return (

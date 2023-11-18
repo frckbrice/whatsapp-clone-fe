@@ -22,7 +22,6 @@ type Props = {
   setMessageEmoji: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
-  // const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
   const [target, setTarget] = useState<string>(props.messageList[0].content);
   const [emojie, setEmojie] = useState<string>();
   const [messageId, setMessageId] = useState<string>("");
@@ -64,7 +63,8 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   if (
     // eslint-disable-next-line no-restricted
-    sortMessageList[0].receiver_id === props.currentUser.id &&
+    (sortMessageList[0].receiver_id === props.currentUser.id ||
+      sortMessageList[0].receiver_room_id === props.currentUser.id) &&
     sortMessageList[0].sender_id !== props.currentUser.id
   )
     content = (
@@ -107,7 +107,8 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     );
 
   if (
-    (sortMessageList[0].receiver_id !== props.currentUser.id &&
+    ((sortMessageList[0].receiver_id !== props.currentUser.id ||
+      sortMessageList[0].receiver_room_id !== props.currentUser.id) &&
       sortMessageList[0].sender_id === props.currentUser.id) ||
     (sortMessageList[0].receiver_id === props.currentUser.id &&
       sortMessageList[0].sender_id === props.currentUser.id)
@@ -163,26 +164,23 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   const listOfMessages = sortMessageList?.slice(1).map((messages, i) => {
     if (
-      messages.receiver_id === props.currentUser.id &&
+      (messages.receiver_room_id === props.currentUser.id ||
+        messages.receiver_id === props.currentUser.id) &&
       messages.sender_id !== props.currentUser.id
     ) {
-      console.log("messages: ", messages.content);
+      // console.log("messages: ", messages.content);
 
       return (
         <>
           <div className="flex justify-start" key={i}>
-            {messages.id !== oldmessageId ? (
-              <SimpleMessage
-                content={messages.content}
-                styleStyle={classForMessageReceiver}
-                time={sortMessageList[0].created_at
-                  .split("T")[1]
-                  .split(".")[0]
-                  .slice(0, 5)}
-              />
-            ) : (
-              ""
-            )}
+            <SimpleMessage
+              content={messages.content}
+              styleStyle={classForMessageReceiver}
+              time={sortMessageList[0].created_at
+                .split("T")[1]
+                .split(".")[0]
+                .slice(0, 5)}
+            />
 
             <span
               className=" opacity-0 hover:opacity-100 mx-1  hover:block  rounded-full bg-[#a3adb3a7] w-8 h-8 flex justify-center items-center place-content-center pl-[6px] pt-[5px] cursor-pointer"
@@ -209,7 +207,8 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
         </>
       );
     } else if (
-      (messages.receiver_id !== props.currentUser.id &&
+      ((messages.receiver_room_id !== props.currentUser.id ||
+        messages.receiver_id !== props.currentUser.id) &&
         messages.sender_id === props.currentUser.id) ||
       (messages.receiver_id === props.currentUser.id &&
         messages.sender_id === props.currentUser.id)
