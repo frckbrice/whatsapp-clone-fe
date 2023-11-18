@@ -33,15 +33,19 @@ import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import { Message, User } from "@/type";
+import { Group, Message, User } from "@/type";
 import { getMessages } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
+import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
+import getAllGroups from "@/utils/queries/getAllGroups";
+import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
   const [users, setUsers] = useState<User[]>([]);
+  const [groups, setGroups] = useState<Group[]>([])
   const [message, setMessage] = useState<any>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(() =>
@@ -58,6 +62,7 @@ const Discossions = () => {
     useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<any[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
+  
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
 
   const {
@@ -89,6 +94,17 @@ const Discossions = () => {
   };
 
   useEffect(() => {
+    
+    fetchGroupsOfSingleUser()
+      .then((grp) => {
+        if(grp) {
+          setGroups(grp)
+        }
+      })
+      .catch((error: any) => {
+        if (error instanceof Error) console.log(error)
+      })
+    getAllGroupsPerUser(groups)
     fetchSignupUser()
       .then((data) => setCurrentUser(data))
       .catch((err) => {
@@ -237,6 +253,7 @@ const Discossions = () => {
               </div>
               <DirectMessage
                 users={users}
+                groups={groups}
                 setReceiver={setReceiver}
                 className="overflow-scroll overscroll-y-contain h-fit "
                 setRoomObject={setRoomObject}

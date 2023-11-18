@@ -5,29 +5,36 @@ import Avatar from "@/components/Avatar";
 import { supabase } from "@/utils/supabase/client";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
-import { User } from "@/type";
+import { Group, User } from "@/type";
 import { useWhatSappContext } from "./context";
 import { useProfileContext } from "./context/profileContext";
 import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
+import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
 
 type Props = {
   className?: string;
   users: User[];
+  groups: Group[] | null ;
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
   // setUserObject: (user: User) => void
 };
 
 const DirectMessage = React.memo(
-  ({ className, users, setReceiver, setRoomObject }: Props) => {
+  ({ className, users, groups, setReceiver, setRoomObject }: Props) => {
     const [target, setTarget] = useState("");
     // to style the select room
 
     const { setStart } = useWhatSappContext();
     const { openProfile } = useProfileContext();
 
+    // let combinedArray = [...users, ...groups]
+    // console.log("cmbien arrays", combinedArray)
+    // const com = groups.concat(users)
+
     const handleDirectMessage = async (id: string) => {
       console.log(id);
+     
       let data: User = await fetchSingleUser(id);
       console.log('test after fetchsingleUser')
       console.log(data);
@@ -40,6 +47,7 @@ const DirectMessage = React.memo(
     };
 
     const handleClick = () => {
+      
       console.log("avatar");
     };
 
