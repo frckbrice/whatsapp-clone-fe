@@ -137,7 +137,7 @@ const ProfilePageContent = () => {
         </div>
         <div className="bg-bgGray px-7 pt-4 pb-5">
           <p>
-            this is not your username but the one that will be visible to other
+            This is not your username but the one that will be visible to other
             users.
           </p>
         </div>

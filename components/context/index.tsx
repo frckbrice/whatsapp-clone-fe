@@ -51,6 +51,7 @@ export const WhatSappContext =
   createContext<WhatSappContextType>(initContextState);
 
 export const WhatSappContextProvider = ({ children }: any) => {
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [openSideNav, setOpenSideNav] = useState<boolean>(false);
   const [showPPicture, setShowPPicture] = useState<boolean>(false);
   const [openCreateGroup, setOpenCreateGroup] = useState<boolean>(false);
