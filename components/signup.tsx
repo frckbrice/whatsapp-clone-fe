@@ -1,69 +1,76 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { supabase } from "@/utils/supabase/client";
-import { setDefaultResultOrder } from "dns";
+import { useRouter } from "next/navigation";
 
 const Signup = () => {
   const [email, setEmail] = React.useState<string>("");
   const [submitted, setSubmitted] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
+  const [success, setSuccess] = React.useState<string>("")
+  const router = useRouter()
+
+  if (typeof localStorage === "undefined") return
+
+  useEffect(() => {
+    const localEmail: any = localStorage.getItem("email")
+    console.log(localEmail)
+    if (localEmail) {
+      router.push('/discussions')
+    }
+  }, [])
 
   const signup = async (e: any) => {
     e.preventDefault();
     if (email === "") {
+      setError("Please enter your email")
       return;
     } else {
-      let expression: any = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+      let expression: any = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/
       let regularExp = new RegExp(expression);
-      if (email.match(regularExp)) {
-        console.log("email match")
-        return
+      if (!email.match(regularExp)) {
+        console.log("invalid email address")
+        setError('Invalid email address')
+
       } else {
-        return console.log('invalid email a')
+        const { data } = await supabase.from("user").select("email");
+        let res = data?.filter((i) => i.email === email);
+        console.log(res);
+        if (res?.length === 1) {
+          localStorage.setItem("email", email)
+          setSuccess("Welcome back 🙂")
+          router.push('/discussions')
+          return
+        }
+        if (res?.length === 0) {
+          const { error, data } = await supabase.auth.signInWithOtp({ email });
+
+          if (error) {
+            setError('Something went wrong')
+            console.log(error);
+            return
+          }
+          if (data) {
+            console.log(data);
+            setError("");
+            localStorage.setItem("email", email);
+            setSubmitted(true);
+          }
+          if (submitted) {
+            console.log("check your email address");
+            return (
+              <div>
+                <h1 className="text-center text-green-600">
+                  Please check your email to signup
+                </h1>
+              </div>
+            );
+          }
+        }
       }
-
-      const { data, error } = await supabase.from("user").select("email");
-      let res = data?.filter((i) => i.email === email);
-      console.log(res);
-      if (res?.length === 1) {
-        return setError("Email address already exist");
-      }
-    }
-
-    const { error, data } = await supabase.auth.signInWithOtp({ email });
-
-    if (error) console.log(error);
-    if (data) {
-      console.log(data);
-      setError("");
-      localStorage.setItem("email", email);
-      setSubmitted(true);
-    }
-    if (submitted) {
-      console.log("check your email address");
-      return (
-        <div>
-          <h1 className="text-center text-green-600">
-            Please check your email to signup
-          </h1>
-        </div>
-      );
     }
   };
-
-  const handleTest = () => {
-    let expression: any = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
-    let regularExp = new RegExp(expression);
-    console.log(email)
-    if (!email.match(regularExp)) {
-      console.log("invalid email address")
-
-    } else {
-      console.log('valid email')
-    }
-    console.log('test')
-  }
 
   return (
     <div>
@@ -91,6 +98,7 @@ const Signup = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
             <p className="text-red-600">{error}</p>
+            <p className="text-center">{success}</p>
             <button
               // onClick={() => signup()}
               type="submit"
@@ -99,9 +107,6 @@ const Signup = () => {
               NEXT
             </button>
           </form>
-          <button onClick={() => handleTest()}>
-            test
-          </button>
           {submitted ? (
             <p className="text-center py-4">Please check out your mail</p>
           ) : (
@@ -112,5 +117,4 @@ const Signup = () => {
     </div>
   );
 };
-
-export default Signup;
+export default Signup
