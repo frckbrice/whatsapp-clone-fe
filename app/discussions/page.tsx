@@ -32,31 +32,21 @@ import { RiContactsBookLine } from "react-icons/ri";
 import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
-// import { User } from "@supabase/supabase-js";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import CreateGroup from "@/components/createGroup/CreateGroup";
-import CreateGrt from "@/components/profilPage/CreateGrt";
 import { Message, User } from "@/type";
 import { getMessages } from "@/utils/queries/getMessage";
+import CreateGrt from "@/components/profilPage/CreateGrt";
+import CreateGroup from "@/components/createGroup/CreateGroup";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
-  // const [hasMounted, setHasMounted] = useState(false);
-  // useEffect(() => {
-  //   setHasMounted(true);
-  // }, []);
-  // if (!hasMounted) return null;
-  const sender: User = JSON.parse(localStorage.getItem("sender") || "{}");
-  // const [allRooms, setAllRooms] = useState<User>();
-  // const [roomObject, setRoomObject] = useState<User>();
-  const [userObject, setUserObject] = useState<User>();
+
   const [users, setUsers] = useState<User[]>([]);
   const [message, setMessage] = useState<any>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
-  // const [currentUser, setCurrentUser] = useState<User>(() =>
-  // JSON.parse(localStorage.getItem("sender") || "{}")
-  // );
-  // state containing the user info
+  const [currentUser, setCurrentUser] = useState<User>(() =>
+    JSON.parse(localStorage.getItem("sender") || "{}")
+  ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [allRooms, setAllRooms] = useState<User>();
   const [roomObject, setRoomObject] = useState<User>();
@@ -68,7 +58,6 @@ const Discossions = () => {
     useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<any[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
-
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
 
   const {
@@ -98,18 +87,10 @@ const Discossions = () => {
       setMessageEmoji(false);
     }
   };
-  const currentUser: User = JSON.parse(localStorage.getItem("sender") || "{}");
-  console.log("this is current User", currentUser);
 
   useEffect(() => {
-    const reciever: any = JSON.parse(localStorage.getItem("reciever") || "{}");
-    // console.log("reciever msg from localstorage", reciever);
-    console.log("this is user from discussion", users);
     fetchSignupUser()
-      .then((data) => {
-        // setCurrentUser(data)
-        console.log(data);
-      })
+      .then((data) => setCurrentUser(data))
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
@@ -231,11 +212,11 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    sender.image !== ""
-                      ? `${sender.image}`
+                    currentUser.image !== ""
+                      ? `${currentUser.image}`
                       : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
-                  size={8}
+                  size={10}
                 />
 
                 <div className="flex gap-5">
@@ -255,10 +236,10 @@ const Discossions = () => {
                 </div>
               </div>
               <DirectMessage
-                setReceiver={setUserObject}
-                setRoomObject={setRoomObject}
                 users={users}
-                className={openProfile ? "hidden" : "px-3 overflow-auto h-full"}
+                setReceiver={setReceiver}
+                className="overflow-scroll overscroll-y-contain h-fit "
+                setRoomObject={setRoomObject}
               />
             </div>
             <div
@@ -394,6 +375,7 @@ const Discossions = () => {
                 <SearchField />
               </SideNavRight>
             )}
+
             {showCreateGroup && (
               <CreateGrt title="Create new group">
                 <CreateGroup />
