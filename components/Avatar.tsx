@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 type AvatarProps = {
   onClick: () => void;
@@ -21,15 +20,7 @@ const Avatar = React.memo(
             height: `${size * 5}px`,
           }}
           className={`bg-cover bg-center object-fill rounded-[50%] h-${size} w-${size}`}
-        >
-          {/* <Image
-        src={dp}
-        width={50}
-        height={50}
-        alt={""}
-        className="rounded-full object-"
-      /> */}
-        </button>
+        ></button>
       </div>
     );
   }

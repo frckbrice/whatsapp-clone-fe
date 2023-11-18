@@ -1,55 +1,80 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { supabase } from "@/utils/supabase/client";
-import { setDefaultResultOrder } from "dns";
+import { useRouter } from "next/navigation";
 
 const Signup = () => {
-  const [email, setEmail] = React.useState("");
-  const [submitted, setSubmitted] = React.useState(false);
-  const [error, setError] = React.useState("");
+  const [email, setEmail] = React.useState<string>("");
+  const [submitted, setSubmitted] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>("");
+  const [success, setSuccess] = React.useState<string>("")
+  const router = useRouter()
+
+  if (typeof localStorage === "undefined") return
+
+  useEffect(() => {
+    const localEmail: any = localStorage.getItem("email")
+    console.log(localEmail)
+    if (localEmail) {
+      router.push('/discussions')
+    }
+  }, [])
 
   const signup = async (e: any) => {
     e.preventDefault();
-    if (!email) {
+    if (email === "") {
+      setError("Please enter your email")
       return;
     } else {
-      const { data, error } = await supabase.from("user").select("email");
-      let res = data?.filter((i) => i.email === email);
-      console.log(res);
-      if (res?.length === 1) {
-        return setError("Email address already exist");
+      let expression: any = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/
+      let regularExp = new RegExp(expression);
+      if (!email.match(regularExp)) {
+        console.log("invalid email address")
+        setError('Invalid email address')
+
+      } else {
+        const { data } = await supabase.from("user").select("email");
+        let res = data?.filter((i) => i.email === email);
+        console.log(res);
+        if (res?.length === 1) {
+          localStorage.setItem("email", email)
+          setSuccess("Welcome back 🙂")
+          router.push('/discussions')
+          return
+        }
+        if (res?.length === 0) {
+          const { error, data } = await supabase.auth.signInWithOtp({ email });
+
+          if (error) {
+            setError('Something went wrong')
+            console.log(error);
+            return
+          }
+          if (data) {
+            console.log(data);
+            setError("");
+            localStorage.setItem("email", email);
+            setSubmitted(true);
+          }
+          if (submitted) {
+            console.log("check your email address");
+            return (
+              <div>
+                <h1 className="text-center text-green-600">
+                  Please check your email to signup
+                </h1>
+              </div>
+            );
+          }
+        }
       }
-    }
-
-    // const { data, error } = supabase.auth.setSession({
-    //   access_token,
-    //   refresh_token
-    // })
-    const { error, data } = await supabase.auth.signInWithOtp({ email });
-
-    if (error) console.log(error);
-    if (data) {
-      console.log(data);
-      setError("");
-      localStorage.setItem("email", email);
-      setSubmitted(true);
-    }
-    if (submitted) {
-      console.log("check your email address");
-      return (
-        <div>
-          <h1 className="text-center text-green-600">
-            Please check your email to signup
-          </h1>
-        </div>
-      );
     }
   };
 
   return (
     <div>
-      <div className="flex flex-col justify-center xl:mt-5 w-[75vw] mobile:max-sm:w-[95%]">
+      <div className="flex flex-col justify-center mt-2 xl:mt-5 w-[75vw] mobile:max-sm:w-[95%]">
         <div className="flex items-center gap-4 text-white">
           <Image src={"/logo.png"} width={50} height={50} alt={""}></Image>
           <p>WHATSAPP WEB</p>
@@ -73,6 +98,7 @@ const Signup = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
             <p className="text-red-600">{error}</p>
+            <p className="text-center">{success}</p>
             <button
               // onClick={() => signup()}
               type="submit"
@@ -91,5 +117,4 @@ const Signup = () => {
     </div>
   );
 };
-
-export default Signup;
+export default Signup
