@@ -130,6 +130,7 @@ const Discossions = () => {
     return () => document.removeEventListener("click", handleClickOutSide);
   }, []);
 
+  console.log('these are groups', groups)
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(currentUser?.id as string, receiver?.id as string)

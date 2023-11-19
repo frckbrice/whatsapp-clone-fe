@@ -12,7 +12,7 @@ const fetchSingleUser = async (id: string) => {
 
   if (error) console.log(error)
   if (data) {
-    console.log(data)
+    // console.log(data)
     localStorage.setItem('reciever', JSON.stringify(data)) // sending the reciever object to the local storage after a click
     // roomObject = await fetchSingleRoom(data.name)
     // console.log('roomObject', roomObject)

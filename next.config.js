@@ -32,7 +32,9 @@ const nextConfig = {
       {
         hostname: "media.istockphoto.com"
       },
-      
+      {
+        hostname: "bestcompaniesaz.com"
+      },
     ],
   },
 };

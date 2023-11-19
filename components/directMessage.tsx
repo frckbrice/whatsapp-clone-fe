@@ -10,11 +10,13 @@ import { useWhatSappContext } from "./context";
 import { useProfileContext } from "./context/profileContext";
 import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
+import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 type Props = {
   className?: string;
   users: User[];
-  groups: Group[] | null ;
+  groups: Group[] ;
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
   // setUserObject: (user: User) => void
@@ -23,18 +25,21 @@ type Props = {
 const DirectMessage = React.memo(
   ({ className, users, groups, setReceiver, setRoomObject }: Props) => {
     const [target, setTarget] = useState("");
+    const [fetchedGroups, setFetchedGroups] = useState<Promise<User[]>[]>([])
     // to style the select room
 
     const { setStart } = useWhatSappContext();
     const { openProfile } = useProfileContext();
 
+    let allGroups: any
+    
     // let combinedArray = [...users, ...groups]
     // console.log("cmbien arrays", combinedArray)
     // const com = groups.concat(users)
 
     const handleDirectMessage = async (id: string) => {
       console.log(id);
-     
+      console.log('fetchedGroups', fetchedGroups)
       let data: User = await fetchSingleUser(id);
       console.log('test after fetchsingleUser')
       console.log(data);
@@ -44,12 +49,29 @@ const DirectMessage = React.memo(
       let room: User = await fetchSingleRoom(id);
       setRoomObject(room);
       console.log("single room object", room);
+      // getGroups()
+
+      // console.log('these are groups from DM', allGroups)
+      getAllGroupsPerUser(groups)
+      .then((data) => {
+        if (data) {
+          console.log(data)
+        setFetchedGroups(data)
+        }
+      })
+      .catch((err) => {
+        if (err instanceof Error) console.log(err)
+      })
+
+    
     };
+    console.log('these are groups from DM', fetchedGroups)
 
     const handleClick = () => {
       
       console.log("avatar");
     };
+    
 
     return (
       <div className={` ${openProfile ? "hidden" : className} `}>
