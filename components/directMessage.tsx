@@ -3,21 +3,21 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Avatar from "@/components/Avatar";
 import { supabase } from "@/utils/supabase/client";
-import fetchUsers from "@/utils/queries/fetchUsers";
+// import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
 import { PartRoomUser, User } from "@/type";
 import { useWhatSappContext } from "./context";
 import { useProfileContext } from "./context/profileContext";
 import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
-import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
-import { shuffleArr } from "@/utils/queries/getMessage";
-import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
+
+import { IoIosClose } from "react-icons/io";
 
 type Props = {
   className?: string;
   users: User[];
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
+  setUsers: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 const DirectMessage = ({
@@ -25,6 +25,7 @@ const DirectMessage = ({
   users,
   setReceiver,
   setRoomObject,
+  setUsers,
 }: Props) => {
   // to style the select room
   const [target, setTarget] = useState("");
@@ -46,11 +47,17 @@ const DirectMessage = ({
     setTarget(id);
     let room: User = await fetchSingleRoom(id);
     setRoomObject(room);
+    setReceiver(room);
     // console.log("single room object", room);
   };
 
   const handleClick = () => {
     console.log("avatar");
+  };
+
+  const removeMember = (id: string) => {
+    const filteredMembers = users.filter((member) => member.id !== id);
+    setUsers(filteredMembers);
   };
 
   return (
@@ -92,12 +99,14 @@ const DirectMessage = ({
                   <span className="py-8 text-[14px]">
                     Lorem, ipsum dolor sit amet .
                   </span>
-                  {/* <hr/> */}
                 </div>
               </div>
               <span className="">
-                {item?.updated_at.split("T")[1].split(".")[0]}
+                {/* {item?.updated_at.split("T")[1].split(".")[0]} */}
               </span>
+              <button onClick={() => removeMember(item.id)}>
+                <IoIosClose size={20} />
+              </button>
             </div>
           ))}
         </div>

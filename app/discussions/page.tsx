@@ -39,7 +39,7 @@ import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
-import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
+// import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 // import {profilepict} from "useWhatSappContext"
 
@@ -275,6 +275,7 @@ const Discossions = () => {
                 setReceiver={setReceiver}
                 className="overflow-scroll overscroll-y-contain h-fit "
                 setRoomObject={setRoomObject}
+                setUsers={setUsers}
               />
             </div>
             <div
@@ -413,7 +414,7 @@ const Discossions = () => {
 
             {showCreateGroup && (
               <CreateGrt title="Create new group">
-                <CreateGroup />
+                <CreateGroup currentUser={currentUser} users={users} />
               </CreateGrt>
             )}
           </div>

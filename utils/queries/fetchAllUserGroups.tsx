@@ -1,8 +1,8 @@
 import { supabase } from "../supabase/client";
 import fetchGroupsOfSingleUser from "./fetchGroupsOfSingleUser";
 
-const fetchUserGoups = async (currentUser: string) => {
-  const groups = await fetchGroupsOfSingleUser(currentUser);
+const fetchUserGoups = async (userId: string) => {
+  const groups = await fetchGroupsOfSingleUser(userId);
 
   const userGroups: Promise<any[] | null>[] | undefined = groups?.map(
     async (group) => {
