@@ -40,6 +40,10 @@ import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
 import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
+import { LOCAL_STORAGE } from "@/utils/service/storage";
+// import {profilepict} from "useWhatSappContext"
+
+// import { useWhatSappContext } from "@/components/context";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -97,7 +101,13 @@ const Discossions = () => {
     }
   };
 
+  const activeUser = LOCAL_STORAGE.get("sender");
+  const userImage = activeUser.image;
+  setProfileImage(userImage);
+
   useEffect(() => {
+    // set profile picture
+
     fetchSignupUser()
       .then((data) => setCurrentUser(data))
       .catch((err) => {
@@ -149,18 +159,6 @@ const Discossions = () => {
         if (err instanceof Error) console.error(err);
       });
   }, [receiver?.id]);
-
-  useEffect(() => {
-    fetchGroupsOfSingleUser(currentUser.id as string)
-      .then((groups: any) => {
-        if (groups.length) {
-          setUserGroups(groups);
-        }
-      })
-      .catch((err) => {
-        if (err instanceof Error) console.error(err);
-      });
-  }, []);
 
   const sendMessageToDB = async () => {
     if (message === "") return;
@@ -314,8 +312,8 @@ const Discossions = () => {
                     }
                     size={10}
                   />
-                  <div>
-                    <h4 className="text-gray-700">{receiver?.name}</h4>
+                  <div className="flex flex-col items-start scrollbar-track-bg-red-600 ">
+                    <h4 className="text-gray-700 text-sm">{receiver?.name}</h4>
                     <p className="text-gray-500 text-xs">
                       {receiver?.phone || receiver?.email}
                     </p>
@@ -341,7 +339,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col mt-3 px-10 h-full overflow-y-auto ">
+              <div className=" w-full flex flex-col mt-3 px-10 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}

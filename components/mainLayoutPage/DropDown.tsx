@@ -9,6 +9,7 @@ import DisconnectPopup from "../popups/disconnectPopup";
 import { uploadFile } from "@/utils/service/getFile";
 import { useProfileContext } from "../context/profileContext";
 import { useWhatSappContactContext } from "../context/Context";
+import { uploadGroupIcon } from "@/utils/queries/UploadGroupIcon";
 
 export interface IAppProps {
   dropdownList: string[];
@@ -61,6 +62,29 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
       setImportPict(true);
       inputFile.click();
     }
+
+    // handle add group icon
+    if (value === "Upload photo") {
+      const inputFile = document.createElement("input") as HTMLInputElement;
+      inputFile.type = "file";
+      inputFile.addEventListener("change", (e: any) => {
+        const file = e.target.files[0];
+        setSendingFile(file);
+        const reader = new FileReader();
+        reader.addEventListener("load", (e: any) => {
+          const fileContent = reader.result;
+          if (fileContent) {
+            setProfilPict(fileContent as string);
+          }
+        });
+        reader.readAsDataURL(file);
+        // uploadGroupIcon(file);
+      });
+
+      // setImportPict(true);
+      inputFile.click();
+    }
+
     if (value === "contact infos") setOpenContactInfo(true);
     if (uldd !== null) {
       uldd.style.display = "none";

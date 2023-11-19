@@ -9,10 +9,11 @@ const fetchUsers = async (id: string) => {
   const groups = await Promise.all(
     (await fetchGroupsOfSingleUser(id)) as any[]
   );
+  console.log("user groups: ", groups);
+  console.log("users: ", data);
 
-  if (data) {
-    const newList = shuffleArr([...groups, ...data]);
-    return newList;
-  }
+  const newList = shuffleArr([...groups, ...data]);
+  console.log("user and  groups: ", newList);
+  return newList;
 };
 export default fetchUsers;
