@@ -33,24 +33,25 @@ import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import { Message, Roomuser, User } from "@/type";
-import { getMessages } from "@/utils/queries/getMessage";
+import { Message, PartRoomUser, Room, Roomuser, User } from "@/type";
+import { getMessages, shuffleArr } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
+import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [message, setMessage] = useState<any>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
-  const [groupOfUserId, setGroupOfUserId] = useState<string[] | null>([]);
+  const [userGroups, setUserGroups] = useState<any[]>([]);
   const [roomObject, setRoomObject] = useState<User>();
   const [sendingMessage, setSendingMessage] = useState<string[]>([]);
 
@@ -72,6 +73,8 @@ const Discossions = () => {
     showPPicture,
     importPict,
     profilepict,
+    profileImage,
+    setProfileImage,
     start,
   } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
@@ -100,8 +103,9 @@ const Discossions = () => {
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
-    fetchUsers()
+    fetchUsers(currentUser.id as string)
       .then((users) => {
+        console.log("the users: ", users);
         if (users) setUsers(users);
       })
       .catch((err) => {
@@ -110,19 +114,6 @@ const Discossions = () => {
     insertUsersInRooms(users)
       .then((data) => {
         if (data) setRooms(data);
-      })
-      .catch((err) => {
-        if (err instanceof Error) console.error(err);
-      });
-
-    fetchGroupsOfSingleUser(currentUser.id as string)
-      .then((groups: any) => {
-        if (groups?.length) {
-          console.log("group from which the user belongsto : ", groups);
-          setGroupOfUserId(() =>
-            groups?.map((group: Roomuser) => group.room_id)
-          );
-        }
       })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
@@ -159,6 +150,18 @@ const Discossions = () => {
       });
   }, [receiver?.id]);
 
+  useEffect(() => {
+    fetchGroupsOfSingleUser(currentUser.id as string)
+      .then((groups: any) => {
+        if (groups.length) {
+          setUserGroups(groups);
+        }
+      })
+      .catch((err) => {
+        if (err instanceof Error) console.error(err);
+      });
+  }, []);
+
   const sendMessageToDB = async () => {
     if (message === "") return;
     const sendingMessage: Message = {
@@ -193,7 +196,20 @@ const Discossions = () => {
         }
 
         if (payload.eventType === "INSERT") {
-          setDiscussionsMessages((prev) => [...prev, payload.new]);
+          if (
+            userGroups?.includes(receiver?.id as string) &&
+            receiver?.id === payload.new.received_room_id
+          ) {
+            supabase.channel(`group_:${receiver?.id}`).subscribe((status) => {
+              if (status === "SUBSCRIBED") {
+                supabase.channel.send({
+                  type: "broadcast",
+                  event: "INSERT",
+                  payload: { message: payload.new.content },
+                });
+              }
+            });
+          } else setDiscussionsMessages((prev) => [...prev, payload.new]);
         }
       }
     )
@@ -233,8 +249,8 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    currentUser.image !== ""
-                      ? `${currentUser.image}`
+                    profileImage
+                      ? profileImage
                       : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
                   size={10}

@@ -9,7 +9,7 @@ const fetchGroupsOfSingleUser = async (userId: string) => {
       .eq("user_id", userId);
     if (data) {
       console.log("these are groups to which you belong", data);
-      return data as Roomuser[];
+      return data;
     }
   } catch (error) {
     if (error)

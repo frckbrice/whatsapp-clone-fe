@@ -138,7 +138,11 @@ const GroupSetup = () => {
     // console.log("Group Discription: ", profileName);
     // console.log("profile image: ", profileImage);
     // console.log("Group Members Id: ", membersID);
-    subscription = supabase.channel(`group_:${profileName}`).subscribe();
+    subscription = supabase
+      .channel(`group_:${data[0].id}`)
+      .subscribe(sender.id);
+    LOCAL_STORAGE.save("groupId", data[0].id);
+    if (subscription) console.log(" user subscribed to a group");
   };
 
   return (

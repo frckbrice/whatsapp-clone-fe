@@ -5,10 +5,13 @@ import Avatar from "@/components/Avatar";
 import { supabase } from "@/utils/supabase/client";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
-import { User } from "@/type";
+import { PartRoomUser, User } from "@/type";
 import { useWhatSappContext } from "./context";
 import { useProfileContext } from "./context/profileContext";
 import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
+import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
+import { shuffleArr } from "@/utils/queries/getMessage";
+import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
 
 type Props = {
   className?: string;
@@ -17,88 +20,95 @@ type Props = {
   setRoomObject: (room: User) => void;
 };
 
-const DirectMessage = React.memo(
-  ({ className, users, setReceiver, setRoomObject }: Props) => {
-    // to style the select room
-    const [target, setTarget] = useState("");
+const DirectMessage = ({
+  className,
+  users,
+  setReceiver,
+  setRoomObject,
+}: Props) => {
+  // to style the select room
+  const [target, setTarget] = useState("");
 
-    const { setStart } = useWhatSappContext();
-    const { openProfile } = useProfileContext();
+  console.log(users);
 
-    const handleDirectMessage = async (id: string) => {
-      console.log(id);
-      let data: User = await fetchSingleUser(id);
-      // console.log("test after fetchsingleUser");
-      // console.log(data);
-      setReceiver(data);
-      setStart(true);
-      setTarget(id);
-      let room: User = await fetchSingleRoom(id);
-      setRoomObject(room);
-      // console.log("single room object", room);
-    };
+  const { setStart } = useWhatSappContext();
+  const { openProfile } = useProfileContext();
 
-    const handleClick = () => {
-      console.log("avatar");
-    };
+  console.log("avatar");
 
-    return (
-      <div className={` ${openProfile ? "hidden" : className} `}>
-        {users && (
-          <div className="flex gap-2 p-0 w-full h-[85vh] flex-col">
-            {users?.map((item: any) => (
-              <div
-                onClick={() => handleDirectMessage(item.id)}
-                key={item.id}
-                className={
-                  target === item.id
-                    ? "bg-gray-300 flex w-full justify-between border-b border-slate-100 py-1 gap-5 hover:cursor-pointer px-4 items-center "
-                    : "flex w-full justify-between border-b border-slate-100  gap-5 hover:bg-gray-100 hover:cursor-pointer px-4 py-1 items-center "
-                }
-              >
-                <div className="flex items-center gap-3 ">
-                  <Avatar
-                    onClick={() => handleClick()}
-                    profilePicture={
-                      item.image !== ""
-                        ? `${item.image}`
-                        : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
-                    }
-                    size={10}
-                    className="my-auto"
-                  />
-                  <div className="leading-2 ">
-                    {item.name !== "" ? (
-                      <p className="py-1 text-[#111011] font-medium">
-                        {item.name}
-                      </p>
-                    ) : (
-                      <p className="py-1 text-[#111011] font-medium">
-                        {item.email}
-                      </p>
-                    )}
+  const handleDirectMessage = async (id: string) => {
+    console.log(id);
+    let data: User = await fetchSingleUser(id);
+    // console.log("test after fetchsingleUser");
+    // console.log(data);
+    setReceiver(data);
+    setStart(true);
+    setTarget(id);
+    let room: User = await fetchSingleRoom(id);
+    setRoomObject(room);
+    // console.log("single room object", room);
+  };
 
-                    <span className="py-8 text-[14px]">
-                      Lorem, ipsum dolor sit amet .
-                    </span>
-                    {/* <hr/> */}
-                  </div>
+  const handleClick = () => {
+    console.log("avatar");
+  };
+
+  return (
+    <div className={` ${openProfile ? "hidden" : className} `}>
+      {users && (
+        <div className="flex gap-2 p-0 w-full h-[85vh] flex-col">
+          {users?.map((item: any) => (
+            <div
+              onClick={() => handleDirectMessage(item.id)}
+              key={item.id}
+              className={
+                target === item.id
+                  ? "bg-gray-300 flex w-full justify-between border-b border-slate-100 py-1 gap-5 hover:cursor-pointer px-4 items-center "
+                  : "flex w-full justify-between border-b border-slate-100  gap-5 hover:bg-gray-100 hover:cursor-pointer px-4 py-1 items-center "
+              }
+            >
+              <div className="flex items-center gap-3 ">
+                <Avatar
+                  onClick={() => handleClick()}
+                  profilePicture={
+                    item.image !== ""
+                      ? `${item.image}`
+                      : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
+                  }
+                  size={10}
+                  className="my-auto"
+                />
+                <div className="leading-2 ">
+                  {item.name !== "" ? (
+                    <p className="py-1 text-[#111011] font-medium">
+                      {item.name}
+                    </p>
+                  ) : (
+                    <p className="py-1 text-[#111011] font-medium">
+                      {item.email}
+                    </p>
+                  )}
+
+                  <span className="py-8 text-[14px]">
+                    Lorem, ipsum dolor sit amet .
+                  </span>
+                  {/* <hr/> */}
                 </div>
-                <span className="">
-                  {item.updated_at.split("T")[1].split(".")[0]}
-                </span>
               </div>
-            ))}
-          </div>
-        )}
-        {/* <div className="flex pl-4 pr-2 gap-4">
+              <span className="">
+                {item?.updated_at.split("T")[1].split(".")[0]}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+      {/* <div className="flex pl-4 pr-2 gap-4">
         <div className="border-b-2">
           <p></p>
           <span></span>
         </div>
       </div> */}
-      </div>
-    );
-  }
-);
-export default DirectMessage;
+    </div>
+  );
+};
+export default React.memo(DirectMessage);

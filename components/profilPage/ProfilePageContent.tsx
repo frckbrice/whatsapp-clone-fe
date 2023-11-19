@@ -9,6 +9,7 @@ import { useWhatSappContext } from "../context";
 import updateUserName from "@/utils/queries/updateUserName";
 import updatePhoneNumber from "@/utils/queries/updatephoneNumber";
 import { User } from "@/type";
+import { LOCAL_STORAGE } from "@/utils/service/storage";
 
 const ProfilePageContent = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
@@ -17,9 +18,9 @@ const ProfilePageContent = () => {
   const [shosenEmojiesdow, setShosenEmojiesdow] = useState<string[]>([]);
 
   // * change the name david beckamp by the user name
-  const sender: User = JSON.parse(localStorage.getItem("sender") || '{}')
+  const sender: User = JSON.parse(localStorage.getItem("sender") || "{}");
   const [profileName, setProfileName] = useState<string>(sender.name);
-  const [phone, setPhone] = useState<string>('(+237)');
+  const [phone, setPhone] = useState<string>("(+237)");
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
   const { profileImage, profilepict } = useWhatSappContext();
@@ -49,6 +50,8 @@ const ProfilePageContent = () => {
     }
   };
 
+  const currentUser = LOCAL_STORAGE.get("sender");
+
   useEffect(() => {
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickonEmpty);
@@ -57,16 +60,15 @@ const ProfilePageContent = () => {
   }, []);
 
   const handleUpdateName = (name: string) => {
-    updateUserName(name)
-    console.log('profile name', profileName)
-    setShowInput1((prev) => !prev)
-  }
+    updateUserName(name);
+    console.log("profile name", profileName);
+    setShowInput1((prev) => !prev);
+  };
 
   const handleUpdatePhone = (phone: string) => {
-    setShowInput((prev) => !prev)
-    updatePhoneNumber(phone)
-  }
-
+    setShowInput((prev) => !prev);
+    updatePhoneNumber(phone);
+  };
 
   return (
     <div
@@ -76,7 +78,7 @@ const ProfilePageContent = () => {
       {/* //** add profile image and profile name here  */}
       <CardWithoutTitle
         image={
-          profilepict ||
+          profileImage ||
           "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
         }
         ref={dropdownRef}
@@ -128,7 +130,8 @@ const ProfilePageContent = () => {
                 </span>
                 <span
                   className=" mr-0 cursor-pointer"
-                  onClick={() => handleUpdateName(profileName)}>
+                  onClick={() => handleUpdateName(profileName)}
+                >
                   <AiOutlineCheck size={23} />
                 </span>
               </div>
@@ -137,7 +140,7 @@ const ProfilePageContent = () => {
         </div>
         <div className="bg-bgGray px-7 pt-4 pb-5">
           <p>
-            this is not your username but the one that will be visible to other
+            This is not your username but the one that will be visible to other
             users.
           </p>
         </div>
@@ -167,7 +170,6 @@ const ProfilePageContent = () => {
                 className=" italic text-[10px] font-thin text-black cursor-pointer"
                 onClick={() => setShowInput((prev) => !prev)}
               >
-
                 <RiPencilFill size={25} color="#54656f" />
               </span>
             </div>
@@ -188,7 +190,8 @@ const ProfilePageContent = () => {
                 </span>
                 <span
                   className=" mr-0 cursor-pointer"
-                  onClick={() => handleUpdatePhone(phone)}>
+                  onClick={() => handleUpdatePhone(phone)}
+                >
                   <AiOutlineCheck size={23} />
                 </span>
               </div>

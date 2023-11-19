@@ -9,12 +9,14 @@ import { LOCAL_STORAGE } from "@/utils/service/storage";
 // icon imports
 import { FaCircleArrowRight } from "react-icons/fa6";
 import GroupSetup from "./GroupSetup";
+import { supabase } from "@/utils/supabase/client";
 
 const CreateGroup = () => {
   const [users, setUsers] = useState<Array<{}>>([]);
   const [members, setMembers] = useState<Array<User>>(
     LOCAL_STORAGE.get("group_members") || []
   );
+  const groupId = LOCAL_STORAGE.get("groupId") || {};
   const [membersID, setMembersId] = useState<Array<string>>([]);
   const [showNextBtn, setShowNextBtn] = useState(false);
   const [groupSetup, setGroupSetup] = useState(true);
@@ -38,7 +40,7 @@ const CreateGroup = () => {
   }, []);
 
   // Add group members
-  function handleDirectMessage(member: User) {
+  function handleDirectMessage(member: any) {
     if (members.find((user) => user.id === member.id)) {
       console.log("aready added");
       return;
@@ -54,6 +56,12 @@ const CreateGroup = () => {
 
     console.clear();
     console.log("you clicked on: ", member);
+
+    const subscribeUser = supabase
+      .channel(`group_:${groupId}`)
+      .subscribe(member.id);
+    if (subscribeUser)
+      console.log("user successfully subscribed to channel: ", subscribeUser);
   }
 
   console.log("group menbers from state", members);
