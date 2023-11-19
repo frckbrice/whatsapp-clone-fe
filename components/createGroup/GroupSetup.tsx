@@ -96,15 +96,14 @@ const GroupSetup = () => {
       .insert([
         {
           name: profileName,
-          user_id: senderId,
-          group_icon: profileImage,
+          image: profileImage,
           status: true,
         },
       ])
       .select();
 
     if (error) {
-      console.log("An error occured", error);
+      console.log("An error occured while creating group", error);
       return;
     }
 
@@ -147,7 +146,7 @@ const GroupSetup = () => {
       <CardWithoutTitle
         image={
           profileImage ||
-          "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+          "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
         }
         ref={dropdownRef}
       />
@@ -161,7 +160,7 @@ const GroupSetup = () => {
                   src={emoji}
                   alt="emojie"
                   width={20}
-                  height={20}
+                  height={20} 
                   key={index}
                 />
               ))}
