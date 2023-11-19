@@ -19,7 +19,7 @@ const ProfilePageContent = () => {
   // * change the name david beckamp by the user name
   const sender: User = JSON.parse(localStorage.getItem("sender") || '{}')
   const [profileName, setProfileName] = useState<string>(sender.name);
-  const [phone, setPhone] = useState<string>('(+237)');
+  const [phone, setPhone] = useState<string | undefined>(sender?.phone);
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
   const { profileImage, profilepict } = useWhatSappContext();
@@ -62,7 +62,7 @@ const ProfilePageContent = () => {
     setShowInput1((prev) => !prev)
   }
 
-  const handleUpdatePhone = (phone: string) => {
+  const handleUpdatePhone = (phone: string | undefined) => {
     setShowInput((prev) => !prev)
     updatePhoneNumber(phone)
   }
@@ -75,7 +75,9 @@ const ProfilePageContent = () => {
     >
       {/* //** add profile image and profile name here  */}
       <CardWithoutTitle
-        image={sender?.image || "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
+        image={
+          // sender?.image || 
+          "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
         ref={dropdownRef}
       />
 

@@ -10,7 +10,7 @@ const fetchSingleRoom = async (id: string) => {
 
   if (error) console.log("error while fetching single room", error)
   if (data) {
-    // console.log("Here is single room", data)
+    console.log("Here is single room", data)
     // localStorage.setItem("sender", JSON.stringify(data))
   }
   return data
