@@ -26,3 +26,9 @@ export const dropdownProfilePict = [
   "Import a picture",
   "Delete a picture",
 ];
+
+export const dropdownGroupItems = [
+  "Take photo",
+  "Upload photo",
+  "Emogi & Sticker",
+];

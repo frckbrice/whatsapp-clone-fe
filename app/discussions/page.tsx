@@ -289,7 +289,7 @@ const Discossions = () => {
                     }
                     size={10}
                   />
-                  <div className="flex flex-col items-start scrollbar-track-bg-red-600">
+                  <div className="flex flex-col items-start scrollbar-track-bg-red-600 ">
                     <h4 className="text-gray-700 text-sm">{receiver?.name}</h4>
                     <p className="text-gray-500 text-xs">
                       {receiver?.phone || receiver?.email}
