@@ -41,7 +41,7 @@ const DirectMessage = React.memo(
       console.log(id);
       console.log('fetchedGroups', fetchedGroups)
       let data: User = await fetchSingleUser(id);
-      console.log('test after fetchsingleUser')
+      console.log("test after fetchsingleUser");
       console.log(data);
       setReceiver(data);
       setStart(true);
@@ -76,7 +76,7 @@ const DirectMessage = React.memo(
     return (
       <div className={` ${openProfile ? "hidden" : className} `}>
         {users && (
-          <div className="flex gap-2 p-0 w-full flex-col">
+          <div className="flex gap-2 p-0 w-full h-[85vh] flex-col">
             {users?.map((item: any) => (
               <div
                 onClick={() => handleDirectMessage(item.id)}
@@ -98,7 +98,7 @@ const DirectMessage = React.memo(
                     size={10}
                     className="my-auto"
                   />
-                  <div className="leading-2 font-serif">
+                  <div className="leading-2 ">
                     {item.name !== "" ? (
                       <p className="py-1 text-[#111011] font-medium">
                         {item.name}

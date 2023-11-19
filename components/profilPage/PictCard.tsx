@@ -6,6 +6,8 @@ import { AiOutlineCheck } from "react-icons/ai";
 import { useWhatSappContext } from "../context";
 import { uploadFile } from "@/utils/service/getFile";
 import { supabase } from "@/utils/supabase/client";
+import { LOCAL_STORAGE } from "@/utils/service/storage";
+import updateUserAvatar from "@/utils/queries/updateUserAvatar";
 
 type Props = {
   profilepict: string;
@@ -16,7 +18,8 @@ type Props = {
 const PictCard = ({ profilepict, setProfilPict, setImportPict }: Props) => {
   // const [sendingFile, setSendingFile] = useState<any>();
 
-  const { setProfileImage, sendingFile, setSendingFile } = useWhatSappContext();
+  const { profileImage, setProfileImage, sendingFile, setSendingFile } =
+    useWhatSappContext();
 
   const reloadFile = () => {
     const newInput = document.createElement("input") as HTMLInputElement;
@@ -56,7 +59,11 @@ const PictCard = ({ profilepict, setProfilPict, setImportPict }: Props) => {
     if (data) console.log(data.publicUrl);
     // setProfileImage(publicUrl as unknown as string);
     // setProfileImage(data.publicUrl);
-    setProfilPict(data.publicUrl);
+    // setProfilPict(data.publicUrl);
+    setProfileImage(data.publicUrl);
+    LOCAL_STORAGE.save("imageURL", data.publicUrl);
+    updateUserAvatar(data.publicUrl);
+    console.log("this is your profile picture");
     setImportPict(false);
   };
 

@@ -40,6 +40,10 @@ import CreateGroup from "@/components/createGroup/CreateGroup";
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
 import getAllGroups from "@/utils/queries/getAllGroups";
 import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
+import { LOCAL_STORAGE } from "@/utils/service/storage";
+// import {profilepict} from "useWhatSappContext"
+
+// import { useWhatSappContext } from "@/components/context";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -71,6 +75,8 @@ const Discossions = () => {
     showPPicture,
     importPict,
     profilepict,
+    profileImage,
+    setProfileImage,
     start,
   } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
@@ -92,6 +98,10 @@ const Discossions = () => {
       setMessageEmoji(false);
     }
   };
+
+  const activeUser = LOCAL_STORAGE.get("sender");
+  const userImage = activeUser.image;
+  setProfileImage(userImage);
 
   useEffect(() => {
     
@@ -229,8 +239,8 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    currentUser.image !== ""
-                      ? `${currentUser.image}`
+                    profileImage
+                      ? profileImage
                       : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
                   size={10}
@@ -295,8 +305,8 @@ const Discossions = () => {
                     }
                     size={10}
                   />
-                  <div>
-                    <h4 className="text-gray-700">{receiver?.name}</h4>
+                  <div className="flex flex-col items-start scrollbar-track-bg-red-600 ">
+                    <h4 className="text-gray-700 text-sm">{receiver?.name}</h4>
                     <p className="text-gray-500 text-xs">
                       {receiver?.phone || receiver?.email}
                     </p>
@@ -322,7 +332,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col mt-3 px-10 h-full overflow-y-auto ">
+              <div className=" w-full flex flex-col mt-3 px-10 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}

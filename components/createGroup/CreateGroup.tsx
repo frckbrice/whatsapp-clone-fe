@@ -85,11 +85,21 @@ const CreateGroup = () => {
                         throw new Error("Function not implemented.");
                       }}
                       profilePicture={
-                        "https://hips.hearstapps.com/hmg-prod/images/african-baby-girl-holding-flower-royalty-free-image-1676500153.jpg?crop=1.00xw:0.344xh;0,0.189xh&resize=1200:*"
+                        member.image !== ""
+                          ? `${member.image}`
+                          : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                       }
                       size={5}
                     />
-                    <p className="text-xs">{member.email}</p>
+                    {member.name !== "" ? (
+                      <p className="py-1 text-slate-500 text-xs">
+                        {member.name}
+                      </p>
+                    ) : (
+                      <p className="py-1 text-slate-500 text-xs">
+                        {member.email}
+                      </p>
+                    )}
                     <button onClick={() => removeMember(member.id)}>
                       <IoIosClose size={20} />
                     </button>
@@ -125,9 +135,15 @@ const CreateGroup = () => {
                           className="my-auto"
                         />
                         <div className=" py-4 leading-2">
-                          <p className="py-1 text-[#111011] font-medium">
-                            {item.email}
-                          </p>
+                          {item.name !== "" ? (
+                            <p className="py-1 text-[#111011] font-medium">
+                              {item.name}
+                            </p>
+                          ) : (
+                            <p className="py-1 text-[#111011] font-medium">
+                              {item.email}
+                            </p>
+                          )}
                           <span className="py-8 text-[14px]">
                             Lorem, ipsum dolor sit amet .
                           </span>

@@ -6,6 +6,7 @@ export const dropdownRight = [
   "close discussions",
   "mute notifications",
   "ephemeral messages",
+  "cancel this discussion",
   "remove the discussion",
   "report",
   "to block",
@@ -25,4 +26,10 @@ export const dropdownProfilePict = [
   "Take a picture",
   "Import a picture",
   "Delete a picture",
+];
+
+export const dropdownGroupItems = [
+  "Take photo",
+  "Upload photo",
+  "Emogi & Sticker",
 ];

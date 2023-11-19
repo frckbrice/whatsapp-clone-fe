@@ -30,7 +30,10 @@ const nextConfig = {
         hostname: "xkwspfurbsmpwwazlkmu.supabase.co",
       },
       {
-        hostname: "media.istockphoto.com"
+        hostname: "media.istockphoto.com",
+      },
+      {
+        hostname: "i.pinimg.com",
       },
       {
         hostname: "bestcompaniesaz.com"
