@@ -18,6 +18,7 @@ import CreateGroup from "./CreateGroup";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { supabase } from "@/utils/supabase/client";
 import { data } from "autoprefixer";
+import CardWithoutTitleB from "./CardWithoutTitleB";
 
 const GroupSetup = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
@@ -144,10 +145,10 @@ const GroupSetup = () => {
       className="relative p-0 bg-bgGray text-[14px] h-[80vh] border-r border-r-[[#444e54]] "
     >
       {/* //** add profile image and profile name here  */}
-      <CardWithoutTitle
+      <CardWithoutTitleB
         image={
-          profileImage ||
-          "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
+          // profileImage ||
+          "https://i.pinimg.com/564x/cb/9d/bb/cb9dbbffa2363a2ec0d7a74602b91cd4.jpg"
         }
         ref={dropdownRef}
       />
