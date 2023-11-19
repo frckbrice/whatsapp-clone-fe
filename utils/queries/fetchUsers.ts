@@ -1,14 +1,18 @@
 import { supabase } from "../supabase/client";
+import fetchUserGoups from "./fetchAllUserGroups";
+import fetchGroupsOfSingleUser from "./fetchGroupsOfSingleUser";
+import { shuffleArr } from "./getMessage";
 
-const fetchUsers = async () => {
+const fetchUsers = async (id: string) => {
   const { data, error } = await supabase.from("user").select();
-  // console.log(data)
-  // console.log(typeof data)
-  if (error) console.log(error);
-  if (data) {
-    // console.log("users: ", data);
-  }
+  if (error) return [];
 
-  return data;
+  const groups = await Promise.all((await fetchUserGoups(id)) as any[]);
+  console.log("user groups: ", groups);
+  console.log("users: ", data);
+
+  const newList = shuffleArr([...groups, ...data]);
+  console.log("user and  groups: ", newList);
+  return newList;
 };
 export default fetchUsers;

@@ -41,3 +41,20 @@ type Message = {
 type Group = {
   room_id?: string;
 }
+type Roomuser = {
+  id: string;
+  room_id: string;
+  user_id: string;
+};
+
+type Room = {
+  created_at?: string;
+  id?: string;
+  image?: string;
+  name: string;
+  status?: boolean;
+  updated_at?: string;
+  user_id?: string;
+};
+
+type PartRoomUser = Pick<Room | "updated_at" | "name" | "image"> & User;

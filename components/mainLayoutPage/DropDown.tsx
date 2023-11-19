@@ -6,7 +6,7 @@ import Reportpopup from "../popups/reportpopup";
 import Deletepopup from "../popups/deletepopup";
 import CancelPopup from "../popups/cancelPopup";
 import DisconnectPopup from "../popups/disconnectPopup";
-import { uploadFile } from "@/utils/service/getFile";
+// import { uploadFile } from "@/utils/service/getFile";
 import { useProfileContext } from "../context/profileContext";
 import { useWhatSappContactContext } from "../context/Context";
 import { uploadGroupIcon } from "@/utils/queries/UploadGroupIcon";

@@ -9,36 +9,41 @@ import { LOCAL_STORAGE } from "@/utils/service/storage";
 // icon imports
 import { FaCircleArrowRight } from "react-icons/fa6";
 import GroupSetup from "./GroupSetup";
+import { supabase } from "@/utils/supabase/client";
+import { User } from "@/type";
 
-const CreateGroup = () => {
-  const [users, setUsers] = useState<Array<{}>>([]);
+type Props = {
+  currentUser: User;
+  users: User[];
+};
+
+//  interface User {
+//    created_at: string;
+//    email: string;
+//    id: string;
+//    image: string;
+//    name: string;
+//    phone: null;
+//  }
+
+const CreateGroup = ({ users, currentUser }: Props) => {
+  // const [users, setUsers] = useState<Array<{}>>([]);
   const [members, setMembers] = useState<Array<User>>(
     LOCAL_STORAGE.get("group_members") || []
   );
+  const groupId = LOCAL_STORAGE.get("groupId") || {};
+  // const currentUser = LOCAL_STORAGE.get("sender") || {};
   const [membersID, setMembersId] = useState<Array<string>>([]);
   const [showNextBtn, setShowNextBtn] = useState(false);
   const [groupSetup, setGroupSetup] = useState(true);
 
-  interface User {
-    created_at: string;
-    email: string;
-    id: string;
-    image: string;
-    name: string;
-    phone: null;
-  }
-
   useEffect(() => {
-    fetchUsers().then((data) => {
-      if (data) setUsers(data);
-    });
     LOCAL_STORAGE.save("group_members", []);
     setMembers([]);
-    console.log("data: ", users);
   }, []);
 
   // Add group members
-  function handleDirectMessage(member: User) {
+  function handleDirectMessage(member: any) {
     if (members.find((user) => user.id === member.id)) {
       console.log("aready added");
       return;
@@ -54,6 +59,12 @@ const CreateGroup = () => {
 
     console.clear();
     console.log("you clicked on: ", member);
+
+    const subscribeUser = supabase
+      .channel(`group_:${groupId}`)
+      .subscribe(member.id);
+    if (subscribeUser)
+      console.log("user successfully subscribed to channel: ", subscribeUser);
   }
 
   console.log("group menbers from state", members);

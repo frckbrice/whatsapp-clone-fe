@@ -33,13 +33,14 @@ import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import { Group, Message, User } from "@/type";
-import { getMessages } from "@/utils/queries/getMessage";
+import { Message, PartRoomUser, Room, Roomuser, User, Group } from "@/type";
+import { getMessages, shuffleArr } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
+import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
-import getAllGroups from "@/utils/queries/getAllGroups";
 import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
+// import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 // import {profilepict} from "useWhatSappContext"
 
@@ -56,10 +57,14 @@ const Discossions = () => {
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
-  const [allRooms, setAllRooms] = useState<User>();
+  const [userGroups, setUserGroups] = useState<any[]>([]);
   const [roomObject, setRoomObject] = useState<User>();
   const [sendingMessage, setSendingMessage] = useState<string[]>([]);
-  const [receivingMessage, setReceivingMessage] = useState<string[]>([]);
+
+  const [groupMessageDiscussions, setGroupMessageDiscussions] = useState<any[]>(
+    []
+  );
+  const [groupMembersIds, setGroupMembersIds] = useState<any[]>();
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
   const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
@@ -105,7 +110,7 @@ const Discossions = () => {
 
   useEffect(() => {
     
-    fetchGroupsOfSingleUser()
+    fetchGroupsOfSingleUser(currentUser?.id)
       .then((grp) => {
         if(grp) {
           setGroups(grp)
@@ -120,8 +125,9 @@ const Discossions = () => {
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
-    fetchUsers()
+    fetchUsers(currentUser.id as string)
       .then((users) => {
+        console.log("the users: ", users);
         if (users) setUsers(users);
       })
       .catch((err) => {
@@ -155,16 +161,25 @@ const Discossions = () => {
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
+    getGroupMembers(receiver?.id as string)
+      .then((members: string) => {
+        if (members?.length) {
+          console.log("the member of selected group: ", messages);
+          setGroupMembersIds(members);
+        }
+      })
+      .catch((err: any) => {
+        if (err instanceof Error) console.error(err);
+      });
   }, [receiver?.id]);
 
   const sendMessageToDB = async () => {
+    if (message === "") return;
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_id: receiver?.id as string,
       content: message,
     };
-
-    console.log("message to send: ", sendingMessage);
 
     const { error } = await supabase.from("messages").insert(sendingMessage);
     if (error) console.log("error inserting messages: ", error);
@@ -182,6 +197,7 @@ const Discossions = () => {
       { event: "*", schema: "public", table: "messages" },
       (payload: any) => {
         console.log("Change received!", payload);
+
         if (payload.eventType === "UPDATE") {
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
@@ -189,21 +205,26 @@ const Discossions = () => {
           discussionsMessages[newIndex].emoji = payload.new.emoji;
           setDiscussionsMessages(discussionsMessages);
         }
+
         if (payload.eventType === "INSERT") {
-          setDiscussionsMessages((prev) => [...prev, payload.new]);
+          if (
+            userGroups?.includes(receiver?.id as string) &&
+            receiver?.id === payload.new.received_room_id
+          ) {
+            supabase.channel(`group_:${receiver?.id}`).subscribe((status) => {
+              if (status === "SUBSCRIBED") {
+                supabase.channel.send({
+                  type: "broadcast",
+                  event: "INSERT",
+                  payload: { message: payload.new.content },
+                });
+              }
+            });
+          } else setDiscussionsMessages((prev) => [...prev, payload.new]);
         }
       }
     )
     .subscribe();
-
-  // console.log("sent messages: ", sendingMessage);
-  // console.log("received messages: ", receivingMessage);
-  //  if (payload.eventType === "UPDATE") {
-  //    setDiscussionsMessages(discussionsMessages);
-  //  }
-  //  if (payload.eventType === "INSERT") {
-  //    setDiscussionsMessages((prev) => [...prev, payload.new]);
-  //  }
 
   return (
     <>
@@ -268,6 +289,7 @@ const Discossions = () => {
                 setReceiver={setReceiver}
                 className="overflow-scroll overscroll-y-contain h-fit "
                 setRoomObject={setRoomObject}
+                setUsers={setUsers}
               />
             </div>
             <div
@@ -406,7 +428,7 @@ const Discossions = () => {
 
             {showCreateGroup && (
               <CreateGrt title="Create new group">
-                <CreateGroup />
+                <CreateGroup currentUser={currentUser} users={users} />
               </CreateGrt>
             )}
           </div>
