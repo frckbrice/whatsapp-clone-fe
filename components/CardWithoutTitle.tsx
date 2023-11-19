@@ -10,7 +10,7 @@ import { useWhatSappContext } from "./context";
 import UploadPicture from "./profilPage/UploadPicture";
 
 type Props = {
-  image: string;
+  image: string | undefined;
 };
 
 const CardWithoutTitle = forwardRef<HTMLUListElement, Props>((props, ref) => {
