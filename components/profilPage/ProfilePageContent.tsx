@@ -78,7 +78,8 @@ const ProfilePageContent = () => {
       {/* //** add profile image and profile name here  */}
       <CardWithoutTitle
         image={
-          profileImage ||
+          profilepict ||
+          currentUser?.image ||
           "https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
         }
         ref={dropdownRef}

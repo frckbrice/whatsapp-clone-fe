@@ -31,7 +31,7 @@ const CreateGroup = ({ users, currentUser }: Props) => {
   const [members, setMembers] = useState<Array<User>>(
     LOCAL_STORAGE.get("group_members") || []
   );
-  const groupId = LOCAL_STORAGE.get("groupId") || {};
+
   // const currentUser = LOCAL_STORAGE.get("sender") || {};
   const [membersID, setMembersId] = useState<Array<string>>([]);
   const [showNextBtn, setShowNextBtn] = useState(false);
@@ -61,7 +61,7 @@ const CreateGroup = ({ users, currentUser }: Props) => {
     console.log("you clicked on: ", member);
 
     const subscribeUser = supabase
-      .channel(`group_:${groupId}`)
+      .channel(`group_:${currentUser.id}`)
       .subscribe(member.id);
     if (subscribeUser)
       console.log("user successfully subscribed to channel: ", subscribeUser);
@@ -111,7 +111,7 @@ const CreateGroup = ({ users, currentUser }: Props) => {
                         {member.email}
                       </p>
                     )}
-                    <button onClick={() => removeMember(member.id)}>
+                    <button onClick={() => removeMember(member.id as string)}>
                       <IoIosClose size={20} />
                     </button>
                   </div>

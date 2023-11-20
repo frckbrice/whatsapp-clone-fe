@@ -4,12 +4,12 @@ export const getGroupMembers = async (groupId: string) => {
   try {
     const { data } = await supabase
       .from("roomuser")
-      .select("user_id")
+      .select("*")
       .eq("room_id", groupId);
 
     if (data) {
       console.log(" the members of the group: ", data);
-      return data;
+      return data?.map((member) => member.user_id);
     }
   } catch (error) {
     if (error) console.log("error fetching the group members: ", error);

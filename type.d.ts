@@ -31,11 +31,12 @@ type Message = {
   id?: string;
   created_at?: string;
   sender_id: string;
-  receiver_id: string;
+  receiver_id?: string;
   content: string;
   sent_at?: string;
   updated_at?: string;
   emoji?: string;
+  receiver_room_id?: string;
 };
 
 type Roomuser = {

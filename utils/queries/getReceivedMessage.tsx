@@ -6,14 +6,14 @@ export const getReceivedMessages = async (
 ) => {
   const { data, error } = await supabase.from("messages").select("*").match({
     sender_id: receiver_id,
-    receiver_id: sender_id,
+    receiver_room_id: sender_id,
   });
 
   if (error) return;
 
   if (data) {
     // sendingMessages = [...sendingMessages, data];
-    // console.log("this is messages: ", data);
+    console.log("this is messages: ", data);
     return data;
   }
 };

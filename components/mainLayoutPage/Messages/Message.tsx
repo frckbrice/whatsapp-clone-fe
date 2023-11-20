@@ -39,6 +39,8 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     setMessageId(id);
   };
 
+  console.log(props.messageList);
+
   const getEmoji = async (emoji: string) => {
     setEmojie(emoji);
     const { data, error } = await supabase
@@ -62,9 +64,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
   );
 
   if (
-    // eslint-disable-next-line no-restricted
-    (sortMessageList[0].receiver_id === props.currentUser.id ||
-      sortMessageList[0].receiver_room_id === props.currentUser.id) &&
+    sortMessageList[0].receiver_room_id === props.currentUser.id &&
     sortMessageList[0].sender_id !== props.currentUser.id
   )
     content = (
@@ -107,10 +107,9 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     );
 
   if (
-    ((sortMessageList[0].receiver_id !== props.currentUser.id ||
-      sortMessageList[0].receiver_room_id !== props.currentUser.id) &&
+    (sortMessageList[0].receiver_room_id !== props.currentUser.id &&
       sortMessageList[0].sender_id === props.currentUser.id) ||
-    (sortMessageList[0].receiver_id === props.currentUser.id &&
+    (sortMessageList[0].receiver_room_id === props.currentUser.id &&
       sortMessageList[0].sender_id === props.currentUser.id)
   ) {
     content = (
@@ -164,11 +163,10 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   const listOfMessages = sortMessageList?.slice(1).map((messages, i) => {
     if (
-      (messages.receiver_room_id === props.currentUser.id ||
-        messages.receiver_id === props.currentUser.id) &&
+      messages.receiver_room_id === props.currentUser.id &&
       messages.sender_id !== props.currentUser.id
     ) {
-      // console.log("messages: ", messages.content);
+      console.log("messages received: ", messages.content);
 
       return (
         <>
@@ -206,9 +204,10 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
           )}
         </>
       );
-    } else if (
-      ((messages.receiver_room_id !== props.currentUser.id ||
-        messages.receiver_id !== props.currentUser.id) &&
+    }
+
+    if (
+      (messages.receiver_room_id !== props.currentUser.id &&
         messages.sender_id === props.currentUser.id) ||
       (messages.receiver_id === props.currentUser.id &&
         messages.sender_id === props.currentUser.id)
