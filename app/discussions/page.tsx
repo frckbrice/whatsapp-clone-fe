@@ -42,6 +42,7 @@ import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
 import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 // import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
+import { useRouter } from "next/navigation";
 // import {profilepict} from "useWhatSappContext"
 
 // import { useWhatSappContext } from "@/components/context";
@@ -51,29 +52,36 @@ const Discossions = () => {
 
   const [users, setUsers] = useState<User[]>([]);
   const [groups, setGroups] = useState<Group[]>([])
-  const [message, setMessage] = useState<any>("");
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
+  const [userInGroupsCreations, setUserInGroupsCreations] = useState<User[]>(
+    []
+  );
+  const [message, setMessage] = useState<string>("");
+  const [updateUsers, setUpdateUsers] = useState<User[]>([]);
+  const [recipient, setRecipient] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
-  const [userGroups, setUserGroups] = useState<any[]>([]);
+  const [userGroups, setUserGroups] = useState<Room[]>([]);
   const [roomObject, setRoomObject] = useState<User>();
   const [sendingMessage, setSendingMessage] = useState<string[]>([]);
 
   const [groupMessageDiscussions, setGroupMessageDiscussions] = useState<any[]>(
     []
   );
-  const [groupMembersIds, setGroupMembersIds] = useState<any[]>();
+  const [groupMembersIds, setGroupMembersIds] = useState<string[]>();
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
   const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
-  const [discussionsMessages, setDiscussionsMessages] = useState<any[]>([]);
+  const [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
   
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
+  const router = useRouter();
 
+  if (!currentUser) router.push("/");
   const {
     setOpenSideNav,
     openSideNav,
@@ -83,6 +91,7 @@ const Discossions = () => {
     profileImage,
     setProfileImage,
     start,
+    addedGroup, //to make the the page re-render to get new group added
   } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile, setOpenProfile } = useProfileContext();
@@ -104,9 +113,9 @@ const Discossions = () => {
     }
   };
 
-  const activeUser = LOCAL_STORAGE.get("sender");
-  const userImage = activeUser.image;
-  setProfileImage(userImage);
+  // const activeUser = LOCAL_STORAGE.get("sender");
+  // const userImage = activeUser.image;
+  // setProfileImage(userImage);
 
   useEffect(() => {
     
@@ -126,16 +135,13 @@ const Discossions = () => {
         if (err instanceof Error) console.error(err);
       });
     fetchUsers(currentUser.id as string)
-      .then((users) => {
+      .then((users: any) => {
         console.log("the users: ", users);
-        if (users) setUsers(users);
-      })
-      .catch((err) => {
-        if (err instanceof Error) console.error(err);
-      });
-    insertUsersInRooms(users)
-      .then((data) => {
-        if (data) setRooms(data);
+        if (users) {
+          setUsers(users.merged);
+          setUserGroups(users.groups);
+          setUserInGroupsCreations(users.data);
+        }
       })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
@@ -144,7 +150,7 @@ const Discossions = () => {
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
-  }, []);
+  }, [updateUsers]);
 
   console.log('these are groups', groups)
   useEffect(() => {
@@ -164,24 +170,27 @@ const Discossions = () => {
     getGroupMembers(receiver?.id as string)
       .then((members: any) => {
         if (members?.length) {
-          console.log("the member of selected group: ", messages);
+          console.log("the member of selected group: ", members);
           setGroupMembersIds(members);
         }
       })
       .catch((err: any) => {
         if (err instanceof Error) console.error(err);
       });
-  }, [receiver?.id]);
+  }, [receiver?.id, addedGroup]);
 
   const sendMessageToDB = async () => {
     if (message === "") return;
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
-      receiver_id: receiver?.id as string,
+      receiver_room_id: receiver?.id as string,
       content: message,
     };
 
-    const { error } = await supabase.from("messages").insert(sendingMessage);
+    const { data, error } = await supabase
+      .from("messages")
+      .insert(sendingMessage);
+    console.log(data);
     if (error) console.log("error inserting messages: ", error);
     setMessage("");
   };
@@ -206,25 +215,35 @@ const Discossions = () => {
           setDiscussionsMessages(discussionsMessages);
         }
 
-        if (payload.eventType === "INSERT") {
-          if (
-            userGroups?.includes(receiver?.id as string) &&
-            receiver?.id === payload.new.received_room_id
-          ) {
-            supabase.channel(`group_:${receiver?.id}`).subscribe((status) => {
-              if (status === "SUBSCRIBED") {
-                supabase.channel.send({
-                  type: "broadcast",
-                  event: "INSERT",
-                  payload: { message: payload.new.content },
-                });
-              }
-            });
-          } else setDiscussionsMessages((prev) => [...prev, payload.new]);
-        }
+        if (payload.eventType === "INSERT")
+          setDiscussionsMessages((prev) => [...prev, payload.new]);
+
+        // if (
+        //   userGroups
+        //     ?.map((group: Room) => group.id)
+        //     ?.includes(receiver?.id as string) &&
+        //   receiver?.id === payload.new.receiver_room_id
+        // ) {
+        //   supabase.channel(`group_:${receiver?.id}`).send({
+        //     type: "broadcast",
+        //     event: "*",
+        //     payload: { message: payload.new.content },
+        //   });
+        // }
       }
     )
     .subscribe();
+
+  // const newUsers = supabase
+  //   .channel("custom-all-channel")
+  //   .on(
+  //     "postgres_changes",
+  //     { event: "*", schema: "public", table: "user" },
+  //     (payload: any) => {
+  //       setUpdateUsers(payload);
+  //     }
+  //   )
+  //   .subscribe();
 
   return (
     <>
@@ -233,7 +252,8 @@ const Discossions = () => {
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
             <Image
               src={
-                // currentUser.image ||
+                profilepict ||
+                currentUser?.image ||
                 "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
               }
               alt=""
@@ -260,9 +280,9 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    profileImage
-                      ? profileImage
-                      : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
+                    profilepict ||
+                    currentUser?.image ||
+                    "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
                   size={10}
                 />
@@ -290,6 +310,7 @@ const Discossions = () => {
                 className="overflow-scroll overscroll-y-contain h-fit "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
+                setRecipient={setRecipient}
               />
             </div>
             <div
@@ -322,15 +343,15 @@ const Discossions = () => {
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
                     profilePicture={
-                      receiver?.image ||
+                      recipient?.image ||
                       "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                     }
                     size={10}
                   />
                   <div className="flex flex-col items-start scrollbar-track-bg-red-600 ">
-                    <h4 className="text-gray-700 text-sm">{receiver?.name}</h4>
+                    <h4 className="text-gray-700 text-sm">{recipient?.name}</h4>
                     <p className="text-gray-500 text-xs">
-                      {receiver?.phone || receiver?.email}
+                      {recipient?.phone || recipient?.email}
                     </p>
                   </div>
                 </div>
@@ -428,7 +449,10 @@ const Discossions = () => {
 
             {showCreateGroup && (
               <CreateGrt title="Create new group">
-                <CreateGroup currentUser={currentUser} users={users} />
+                <CreateGroup
+                  currentUser={currentUser}
+                  users={userInGroupsCreations}
+                />
               </CreateGrt>
             )}
           </div>

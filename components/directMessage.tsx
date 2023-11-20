@@ -5,7 +5,7 @@ import Avatar from "@/components/Avatar";
 import { supabase } from "@/utils/supabase/client";
 // import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
-import { PartRoomUser, User, Group } from "@/type";
+import { PartRoomUser, User, Group, Room } from "@/type";
 import { useWhatSappContext } from "./context";
 import { useProfileContext } from "./context/profileContext";
 import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
@@ -36,12 +36,12 @@ const DirectMessage = ({
   const [target, setTarget] = useState("");
   const [fetchedGroups, setFetchedGroups] = useState<Promise<any> | undefined>()
 
-  console.log(users);
+  // console.log(users);
 
   const { setStart } = useWhatSappContext();
   const { openProfile } = useProfileContext();
 
-  console.log("avatar");
+  // console.log("avatar");
 
   let allGroups: any
 
@@ -51,16 +51,16 @@ const DirectMessage = ({
 
   const handleDirectMessage = async (id: string) => {
     console.log(id);
-    let data: User = await fetchSingleUser(id);
-    console.log("test after fetchsingleUser");
-    console.log(data);
+    // let data: User = await fetchSingleUser(id);
+    // console.log("test after fetchsingleUser");
+    // console.log(data);
+    // setReceiver(data);
     setStart(true);
     setTarget(id);
-    let room: User = await fetchSingleRoom(id);
-    setReceiver(room);
+    let room: Room = (await fetchSingleRoom(id)) as Room;
     setRoomObject(room);
+    setReceiver(room);
     console.log("single room object", room);
-    // getGroups()
   };
 
   const handleClick = () => {
@@ -76,7 +76,7 @@ const DirectMessage = ({
 
   return (
     <div className={` ${openProfile ? "hidden" : className} `}>
-      {users && (
+      {users.length ? (
         <div className="flex gap-2 p-0 w-full h-[85vh] flex-col">
           {users?.map((item: any) => (
             <div
@@ -117,7 +117,7 @@ const DirectMessage = ({
               </div>
               <div>
                 <span className="">
-                  {item?.updated_at.split("T")[1].split(".")[0]}
+                  {item?.updated_at.split("T")[1].split(".")[0].slice(0, 5)}
                 </span>
                 <button onClick={() => removeMember(item.id)}>
                   <IoIosClose size={20} />
@@ -126,6 +126,8 @@ const DirectMessage = ({
             </div>
           ))}
         </div>
+      ) : (
+        ""
       )}
       {/* <div className="flex pl-4 pr-2 gap-4">
         <div className="border-b-2">

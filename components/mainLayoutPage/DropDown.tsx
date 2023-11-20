@@ -32,10 +32,11 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
 
   const { setShowPPicture, setProfilPict, setImportPict, setSendingFile } =
     useWhatSappContext();
-  const { setOpenProfile } = useProfileContext();
+  const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
   const { setOpenContactInfo } = useWhatSappContactContext();
 
   const handleLink = (value: string) => {
+    if (value === "new group") setShowCreateGroupe((prev) => !prev);
     if (value === "to block") setPopupMod(true);
     else if (value === "report") setReportPopup(true);
     else if (value === "remove the discussion") setDelPopup(true);

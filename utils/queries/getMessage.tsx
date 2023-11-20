@@ -10,14 +10,14 @@ export const getMessages = async (sender_id: string, receiver_id?: string) => {
 
   const { data, error } = await supabase.from("messages").select("*").match({
     sender_id: sender_id,
-    receiver_id: receiver_id,
+    receiver_room_id: receiver_id,
   });
 
   if (error) return;
 
-  // console.log("this is received messages: ", messages);
+  console.log("this is received messages: ", messages);
   if (data) {
-    // console.log("this is sent messages: ", data);
+    console.log("this is sent messages: ", data);
     if (sender_id !== receiver_id) return shuffleArr([...data, ...messages]);
 
     return data;

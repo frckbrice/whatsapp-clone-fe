@@ -1,18 +1,18 @@
+import { Room, User } from "@/type";
 import { supabase } from "../supabase/client";
 
-const fetchSingleRoom = async (id: string) => {
-  console.log(id);
+const fetchSingleRoom = async (roomId: string) => {
+  // console.log(id);
   const { data, error } = await supabase
     .from("rooms")
-    .select()
-    .eq("user_id", id)
-    .single();
+    .select("*")
+    .eq("id", roomId);
 
   if (error) console.log("error while fetching single room", error);
   if (data) {
-    // console.log("Here is single room", data)
+    console.log("Here is single room", data);
     // localStorage.setItem("sender", JSON.stringify(data))
-    return data;
+    return data[0] as unknown as Room;
   }
 };
 export default fetchSingleRoom;

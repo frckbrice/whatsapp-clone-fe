@@ -34,7 +34,7 @@ const GroupSetup = () => {
   const [profileDescription, setProfileDescription] = useState<string>("");
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
-  const { groupIcon, profileImage } = useWhatSappContext();
+  const { profileImage, setAddedGroup } = useWhatSappContext();
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
@@ -93,8 +93,8 @@ const GroupSetup = () => {
   let subscription: RealtimeChannel;
   const handleCreateGroup = async () => {
     const groupMembers = LOCAL_STORAGE.get("group_members");
-    const sender = LOCAL_STORAGE.get("sender");
-    const senderId = sender.id;
+    const currentUser = LOCAL_STORAGE.get("sender");
+    const senderId = currentUser.id;
     const membersID = groupMembers.map((member: User) => member.id);
 
     const { data, error } = await supabase
@@ -102,8 +102,8 @@ const GroupSetup = () => {
       .insert([
         {
           name: profileName,
-          user_id: senderId,
-          image: groupIcon,
+          // user_id: senderId,
+          image: profileImage,
           status: true,
         },
       ])
@@ -113,24 +113,32 @@ const GroupSetup = () => {
       console.log("An error occured while creating group", error);
       return;
     }
-    console.log("Group Icon", groupIcon);
     console.log("data: ", data);
 
     if (data) {
       const groupID = data[0].id;
 
-      const groupData = membersID.map(async (ID: string) => {
-        const { data, error } = await supabase
-          .from("roomuser")
-          .insert([{ room_id: groupID, user_id: ID }])
-          .select();
+      const groupData = Promise.all(
+        membersID.map(async (ID: string) => {
+          const { data, error } = await supabase
+            .from("roomuser")
+            .insert([{ room_id: groupID, user_id: ID }])
+            .select();
 
-        if (error) {
-          return error;
-        }
-        return data;
-      });
+          if (error) {
+            return error;
+          }
 
+          return data;
+        })
+      );
+      groupData
+        .then((data) => {
+          setAddedGroup(true);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       console.clear();
       console.log("data: ", data);
       console.log("data[0].id: ", data[0].id);
@@ -143,11 +151,10 @@ const GroupSetup = () => {
     // console.log("Group Discription: ", profileName);
     // console.log("profile image: ", profileImage);
     // console.log("Group Members Id: ", membersID);
-    subscription = supabase
-      .channel(`group_:${data[0].id}`)
-      .subscribe(sender.id);
+    subscription = supabase.channel(`group_:${currentUser.id}`).subscribe();
     LOCAL_STORAGE.save("groupId", data[0].id);
-    if (subscription) console.log(" user subscribed to a group");
+    if (subscription)
+      console.log(" creation of a group user subscribed to a group");
   };
 
   return (
@@ -158,7 +165,7 @@ const GroupSetup = () => {
       {/* //** add profile image and profile name here  */}
       <CardWithoutTitleB
         image={
-          groupIcon ||
+          profileImage ||
           "https://i.pinimg.com/564x/cb/9d/bb/cb9dbbffa2363a2ec0d7a74602b91cd4.jpg"
         }
         ref={dropdownRef}
