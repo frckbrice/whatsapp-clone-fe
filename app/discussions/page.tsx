@@ -343,15 +343,15 @@ const Discossions = () => {
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
                     profilePicture={
-                      receiver?.image ||
+                      roomObject?.image ||
                       "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                     }
                     size={10}
                   />
                   <div className="flex flex-col items-start scrollbar-track-bg-red-600 ">
-                    <h4 className="text-gray-700 text-sm">{receiver?.name}</h4>
+                    <h4 className="text-gray-700 text-sm">{roomObject?.name}</h4>
                     <p className="text-gray-500 text-xs">
-                      {receiver?.phone || receiver?.email}
+                      {roomObject?.phone || roomObject?.email}
                     </p>
                   </div>
                 </div>
@@ -439,7 +439,7 @@ const Discossions = () => {
             </div>
             {openContactInfo ? (
               <SideNavRight title="Contact Infos">
-                <ContactInfoPage />
+                <ContactInfoPage roomObject={roomObject}/>
               </SideNavRight>
             ) : (
               <SideNavRight title="Search for messages">

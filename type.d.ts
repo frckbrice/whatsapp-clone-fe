@@ -56,6 +56,7 @@ type Room = {
   status?: boolean;
   updated_at?: string;
   user_id?: string;
+  phone?: string
 };
 
 type PartRoomUser = Pick<Room | "updated_at" | "name" | "image"> & User;

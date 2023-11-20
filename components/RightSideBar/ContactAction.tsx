@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { HiOutlineTrash } from "react-icons/hi";
 import { IoBan } from "react-icons/io5";
 import { BiSolidDislike } from "react-icons/bi";
-import { User } from "@/type";
+import { Room, User } from "@/type";
 import Deletepopup from "../popups/deletepopup";
 import Reportpopup from "../popups/reportpopup";
 import BlockContactPopup from "../popups/blockContactPopup";
 
-type Props = {};
+type Props = {
+  roomObject?: Room
+};
 
-const ContactAction = (props: Props) => {
+const ContactAction = ({roomObject}: Props) => {
   const reciever: User = JSON.parse(localStorage.getItem("reciever") || '{}')
   const [popupMod, setPopupMod] = useState<boolean>(false);
   const [reportPopup, setReportPopup] = useState<boolean>(false);
@@ -26,7 +28,7 @@ const ContactAction = (props: Props) => {
         <span>
           <IoBan size={25} className=" rotate-90 " />
         </span>{" "}
-        <span> To Bloc {reciever?.name || ''}</span>
+        <span> To Bloc {roomObject?.name || ''}</span>
       </div>
       <div
         onClick={() => setReportPopup(true)}
@@ -35,7 +37,7 @@ const ContactAction = (props: Props) => {
         <span>
           <BiSolidDislike size={25} />{" "}
         </span>{" "}
-        <span>Signal {reciever?.name || ''}</span>{" "}
+        <span>Signal {roomObject?.name || ''}</span>{" "}
       </div>
       <div
         onClick={() => setDelPopup(true)}
@@ -44,7 +46,7 @@ const ContactAction = (props: Props) => {
         <span>
           <HiOutlineTrash size={25} />{" "}
         </span>{" "}
-        <span>delete {reciever?.name || ''}</span>
+        <span>delete {roomObject?.name || ''}</span>
       </div>
       {<Deletepopup onClose={handleOnclose} visible={delPopup} />}
     </div>
