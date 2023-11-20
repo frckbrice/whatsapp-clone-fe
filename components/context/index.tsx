@@ -42,9 +42,9 @@ const initContextState: WhatSappContextType = {
   profilepict: "",
   profileImage: "",
   sendingFile: "",
-  groupIcon: "",
   addedGroup: false,
   setAddedGroup: (addedGroup) => !addedGroup,
+  groupIcon: "",
   setSendingFile: () => "",
   setGroupIcon: () => "",
   setProfileImage: () => "",
@@ -90,10 +90,10 @@ export const WhatSappContextProvider = ({ children }: any) => {
     setSendingFile,
     start,
     setStart,
-    groupIcon,
-    setGroupIcon,
     addedGroup,
     setAddedGroup,
+    groupIcon,
+    setGroupIcon,
   };
 
   if (importPict) console.log("importPict: ", importPict);
@@ -126,6 +126,8 @@ export const useWhatSappContext = () => {
     setStart,
     addedGroup,
     setAddedGroup,
+    groupIcon,
+    setGroupIcon,
   } = useContext(WhatSappContext);
   return {
     openSideNav,
@@ -146,5 +148,7 @@ export const useWhatSappContext = () => {
     setStart,
     addedGroup,
     setAddedGroup,
+    groupIcon,
+    setGroupIcon,
   };
 };

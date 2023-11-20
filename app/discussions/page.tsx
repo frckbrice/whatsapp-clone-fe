@@ -58,7 +58,7 @@ const Discossions = () => {
   );
   const [message, setMessage] = useState<string>("");
   const [updateUsers, setUpdateUsers] = useState<User[]>([]);
-  const [recipient, setRecipient] = useState<User[]>([]);
+  const [recipient, setRecipient] = useState<User>();
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
@@ -310,7 +310,7 @@ const Discossions = () => {
                 className="overflow-scroll overscroll-y-contain h-fit "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
-                // setRecipient={setRecipient}
+                setRecipient={setRecipient}
               />
             </div>
             <div

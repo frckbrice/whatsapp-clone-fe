@@ -34,7 +34,7 @@ const GroupSetup = () => {
   const [profileDescription, setProfileDescription] = useState<string>("");
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
-  const { profileImage, setAddedGroup } = useWhatSappContext();
+  const { groupIcon, profileImage, setAddedGroup } = useWhatSappContext();
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
@@ -103,7 +103,9 @@ const GroupSetup = () => {
         {
           name: profileName,
           // user_id: senderId,
-          image: profileImage,
+          // image: profileImage,
+          user_id: senderId,
+          image: currentUser.image,
           status: true,
         },
       ])
