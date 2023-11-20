@@ -61,7 +61,7 @@ const DirectMessage = ({
     setTarget(id);
     let room: Room = (await fetchSingleRoom(id)) as Room;
     setRoomObject(room);
-    // setReceiver(data);
+    setReceiver(room);
     console.log("single room object", room);
   };
 
@@ -82,7 +82,7 @@ const DirectMessage = ({
         <div className="flex gap-2 p-0 w-full h-[85vh] flex-col">
           {users?.map((item: any) => (
             <div
-              onClick={() => handleDirectMessage(item.id)}
+              onClick={() => handleDirectMessage(item.user_id)}
               key={item.id}
               className={
                 target === item.id

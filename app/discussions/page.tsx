@@ -1,7 +1,7 @@
 "use client";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Avatar";
-import { MdGroups2 } from "react-icons/md";
+import { MdGroups2, MdRecordVoiceOver } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { GoSearch } from "react-icons/go";
 import { BsEmojiSmile } from "react-icons/bs";
@@ -180,17 +180,19 @@ const Discossions = () => {
   }, [receiver?.id, addedGroup]);
 
   const sendMessageToDB = async () => {
-    if (message === "") return;
+    if (message === "" && !receiver?.id ) return;
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
       content: message,
     };
+    // console.log('receiver_room_id', receiver?.id)
 
     const { data, error } = await supabase
       .from("messages")
       .insert(sendingMessage);
     console.log(data);
+    if (data) console.log("returned msg", data)
     if (error) console.log("error inserting messages: ", error);
     setMessage("");
   };
@@ -244,6 +246,8 @@ const Discossions = () => {
   //     }
   //   )
   //   .subscribe();
+
+  // console.log('eciever from discusssion', receiver)
 
   return (
     <>
@@ -348,10 +352,10 @@ const Discossions = () => {
                     }
                     size={10}
                   />
-                  <div className="flex flex-col items-start scrollbar-track-bg-red-600 ">
-                    <h4 className="text-gray-700 text-sm">{roomObject?.name}</h4>
+                  <div className="flex flex-col items-start scrollbar-track-bg-red-600 my-auto">
+                    <h4 className="text-gray-700 text-xl">{roomObject?.name}</h4>
                     <p className="text-gray-500 text-xs">
-                      {roomObject?.phone || roomObject?.email}
+                      {roomObject?.phone || roomObject?.email || "hey there i'm using whatsapp"}
                     </p>
                   </div>
                 </div>
