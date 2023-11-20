@@ -185,7 +185,6 @@ const Discossions = () => {
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
-      receiver_id: recipient?.id as string,
       content: message,
     };
     // console.log('receiver_room_id', receiver?.id)
