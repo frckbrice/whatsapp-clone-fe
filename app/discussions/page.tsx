@@ -152,7 +152,7 @@ const Discossions = () => {
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [updateUsers]);
 
-  console.log('these are groups', groups)
+  // console.log('these is reciepiant', recipient)
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(currentUser?.id as string, receiver?.id as string)
@@ -180,10 +180,12 @@ const Discossions = () => {
   }, [receiver?.id, addedGroup]);
 
   const sendMessageToDB = async () => {
-    if (message === "" && !receiver?.id ) return;
+    console.log('receipient id from sendmsgtodb', receiver?.id)
+    if (message === "" && receiver?.id ) return;
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
+      receiver_id: recipient?.id as string,
       content: message,
     };
     // console.log('receiver_room_id', receiver?.id)
@@ -354,8 +356,8 @@ const Discossions = () => {
                   />
                   <div className="flex flex-col items-start scrollbar-track-bg-red-600 my-auto">
                     <h4 className="text-gray-700 text-xl">{roomObject?.name}</h4>
-                    <p className="text-gray-500 text-xs">
-                      {roomObject?.phone || roomObject?.email || "hey there i'm using whatsapp"}
+                    <p className="text-gray-500 text-sm">
+                      {roomObject?.phone || roomObject?.email || "Click here to have more info on the contact"}
                     </p>
                   </div>
                 </div>

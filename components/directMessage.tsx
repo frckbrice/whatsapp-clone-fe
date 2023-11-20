@@ -117,11 +117,11 @@ const DirectMessage = ({
                   </span>
                 </div>
               </div>
-              <div>
+              <div className="flex flex-col gap-3">
                 <span className="">
                   {item?.updated_at.split("T")[1].split(".")[0].slice(0, 5)}
                 </span>
-                <button onClick={() => removeMember(item.id)}>
+                <button className="hover:bg-gray-300 rounded-full w-fit" onClick={() => removeMember(item.id)}>
                   <IoIosClose size={20} />
                 </button>
               </div>
