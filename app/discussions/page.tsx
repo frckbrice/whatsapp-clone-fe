@@ -55,7 +55,7 @@ const Discossions = () => {
   );
   const [message, setMessage] = useState<string>("");
   const [updateUsers, setUpdateUsers] = useState<User[]>([]);
-  const [recipient, setRecipient] = useState<User>([]);
+  const [recipient, setRecipient] = useState<User>();
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info

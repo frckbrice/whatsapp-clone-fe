@@ -1,6 +1,10 @@
+import { useWhatSappContext } from "@/components/context";
 import { supabase } from "../supabase/client";
+import { LOCAL_STORAGE } from "../service/storage";
 
 export const uploadGroupIcon = async (file: any) => {
+  const { setGroupIcon } = useWhatSappContext();
+
   const fileValue = `avatar${Date.now()}.png`;
   const { error } = await supabase.storage
     .from("whatsapp_avatars/images")
@@ -13,6 +17,8 @@ export const uploadGroupIcon = async (file: any) => {
     .from("whatsapp_avatars/images")
     .getPublicUrl(fileValue);
   if (data) {
+    setGroupIcon(data.publicUrl);
+    LOCAL_STORAGE.save("groupIcon", data.publicUrl);
     console.clear();
     console.log("Group Icon", data.publicUrl);
     return data.publicUrl;

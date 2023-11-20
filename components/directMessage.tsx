@@ -17,7 +17,8 @@ type Props = {
   users: User[];
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
-  setUsers: React.Dispatch<React.SetStateAction<any[]>>;
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  setRecipient: React.Dispatch<React.SetStateAction<User>>;
 };
 
 const DirectMessage = ({
@@ -26,6 +27,7 @@ const DirectMessage = ({
   setReceiver,
   setRoomObject,
   setUsers,
+  setRecipient,
 }: Props) => {
   // to style the select room
   const [target, setTarget] = useState("");
@@ -39,10 +41,10 @@ const DirectMessage = ({
 
   const handleDirectMessage = async (id: string) => {
     console.log(id);
-    // let data: User = await fetchSingleUser(id);
+    let data: User = await fetchSingleUser(id);
     // console.log("test after fetchsingleUser");
     // console.log(data);
-    // setReceiver(data);
+    setRecipient(data);
     setStart(true);
     setTarget(id);
     let room: Room = (await fetchSingleRoom(id)) as Room;

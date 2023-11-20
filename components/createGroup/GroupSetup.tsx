@@ -20,6 +20,8 @@ import { supabase } from "@/utils/supabase/client";
 import { data } from "autoprefixer";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import CardWithoutTitleB from "./CardWithoutTitleB";
+import { useProfileContext } from "../context/profileContext";
+// import { useWhatSappContext } from "@/components/context";
 
 const GroupSetup = () => {
   const [showInput, setShowInput] = useState<boolean>(false);
@@ -32,7 +34,8 @@ const GroupSetup = () => {
   const [profileDescription, setProfileDescription] = useState<string>("");
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
-  const { profileImage, setAddedGroup } = useWhatSappContext();
+  const { groupIcon, profileImage, setAddedGroup } = useWhatSappContext();
+  const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -100,7 +103,9 @@ const GroupSetup = () => {
         {
           name: profileName,
           // user_id: senderId,
-          image: profileImage,
+          // image: profileImage,
+          user_id: senderId,
+          image: currentUser.image,
           status: true,
         },
       ])
@@ -110,7 +115,7 @@ const GroupSetup = () => {
       console.log("An error occured", error);
       return;
     }
-
+    console.log("Group Icon", groupIcon);
     console.log("data: ", data);
 
     if (data) {
@@ -141,6 +146,7 @@ const GroupSetup = () => {
       console.log("data: ", data);
       console.log("data[0].id: ", data[0].id);
       console.log("groupData: ", groupData);
+      setShowCreateGroupe(false);
     }
 
     // console.clear();
@@ -162,7 +168,7 @@ const GroupSetup = () => {
       {/* //** add profile image and profile name here  */}
       <CardWithoutTitleB
         image={
-          // profileImage ||
+          groupIcon ||
           "https://i.pinimg.com/564x/cb/9d/bb/cb9dbbffa2363a2ec0d7a74602b91cd4.jpg"
         }
         ref={dropdownRef}

@@ -13,8 +13,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Clone App",
-  description: "to build apps with Next.js and Supabase",
+  title: "WhatsApp Clone App",
+  description: "Reimplementing WhatsApp features with NextJS and Supabase",
 };
 
 export default function RootLayout({
