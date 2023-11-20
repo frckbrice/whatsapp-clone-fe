@@ -94,15 +94,17 @@ const Discossions = () => {
     }
   };
 
-  const activeUser = LOCAL_STORAGE.get("sender");
-  const userImage = activeUser.image;
-  setProfileImage(userImage);
+  // const activeUser = LOCAL_STORAGE.get("sender");
+  // const userImage = currentUser.image;
 
   useEffect(() => {
     // set profile picture
 
     fetchSignupUser()
-      .then((data) => setCurrentUser(data))
+      .then((data) => {
+        setCurrentUser(data);
+        setProfileImage(data.image);
+      })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
