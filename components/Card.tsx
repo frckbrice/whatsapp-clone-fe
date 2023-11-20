@@ -20,8 +20,8 @@ const Card = (props: Props) => {
         className="bg-cover bg-center object-cover w-44 h-44 rounded-full "
       />
       <div className=" flex flex-col gap-2">
-        <span className=" text-[27px] text-[#111b11]">{props.usernames}</span>
-        <span className=" text-[17px] text-[#808f97] font-sans">
+        <span className=" text-[27px] text-[#111b11] text-center">{props.usernames}</span>
+        <span className=" text-[17px] text-[#808f97] font-sans text-center">
           {" "}
           {props.phoneNumber}
         </span>

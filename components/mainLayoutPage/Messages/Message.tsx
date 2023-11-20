@@ -39,7 +39,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     setMessageId(id);
   };
 
-  console.log(props.messageList);
+  console.log("msg list", props.messageList);
 
   const getEmoji = async (emoji: string) => {
     setEmojie(emoji);
@@ -63,6 +63,9 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     a.created_at > b.created_at ? 1 : -1
   );
 
+  console.log("sortmsg list", sortMessageList)
+
+  // recieved messages
   if (
     sortMessageList[0].receiver_room_id === props.currentUser.id &&
     sortMessageList[0].sender_id !== props.currentUser.id
@@ -105,7 +108,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
         )}
       </>
     );
-
+// messages sent
   if (
     (sortMessageList[0].receiver_room_id !== props.currentUser.id &&
       sortMessageList[0].sender_id === props.currentUser.id) ||

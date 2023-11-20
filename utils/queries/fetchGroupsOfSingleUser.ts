@@ -1,7 +1,6 @@
-import { Roomuser } from "@/type";
 import { supabase } from "../supabase/client";
 // get all the groups to which a signup user belongs to
-const fetchGroupsOfSingleUser = async (userId: string) => {
+const fetchGroupsOfSingleUser = async (userId: string | undefined) => {
   try {
     let { data } = await supabase
       .from("roomuser")

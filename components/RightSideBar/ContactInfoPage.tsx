@@ -12,18 +12,21 @@ import { RxSwitch } from "react-icons/rx";
 import SwitchButton from "./SwitchButton";
 import Image from "next/image";
 import { MdLock } from "react-icons/md";
+import { Room, User } from "@/type";
 
 type Props = {
   children?: React.ReactElement[];
+  roomObject?: Room
 };
 
-const ContactInfoPage = (props: Props) => {
+const ContactInfoPage = ({ roomObject }: Props) => {
+  const reciever: User = JSON.parse(localStorage.getItem("reciever") || '{}')
   return (
-    <div className=" flex flex-col space-y-2 bg-bgGray">
+    <div className=" flex flex-col space-y-2 bg-bgGray max-h-screen overflow-auto">
       <Card
-        image="https://static.startuptalky.com/2022/04/david-beckham-endorsed-brands-startuptalky-.jpg"
-        phoneNumber="(+327 6 964 854 325)"
-        usernames="Verges DKV"
+        image={roomObject?.image || "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
+        phoneNumber={roomObject?.phone || "Edit Your profile"}
+        usernames={roomObject?.name || "Edite your profile"}
       />
       <div className=" flex flex-col gap-2 w-full px-7 py-5 border-y border-y-gray-200 shadow-zinc-200 bg-white">
         <span className=" text-[#667781]">Infos</span>
@@ -118,7 +121,7 @@ const ContactInfoPage = (props: Props) => {
         </div>
       </div>
       <div className=" w-full px-7 py-5 bg-white border-y border-y-gray-200">
-        <ContactAction />
+        <ContactAction roomObject={roomObject}/>
       </div>
     </div>
   );

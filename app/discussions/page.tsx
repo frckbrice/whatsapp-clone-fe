@@ -1,7 +1,7 @@
 "use client";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Avatar";
-import { MdGroups2 } from "react-icons/md";
+import { MdGroups2, MdRecordVoiceOver } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { GoSearch } from "react-icons/go";
 import { BsEmojiSmile } from "react-icons/bs";
@@ -33,12 +33,13 @@ import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import { Message, PartRoomUser, Room, Roomuser, User } from "@/type";
+import { Message, PartRoomUser, Room, Roomuser, User, Group } from "@/type";
 import { getMessages, shuffleArr } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
+import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 // import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { useRouter } from "next/navigation";
@@ -50,6 +51,8 @@ const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
   const [users, setUsers] = useState<User[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
   const [userInGroupsCreations, setUserInGroupsCreations] = useState<User[]>(
     []
   );
@@ -74,6 +77,7 @@ const Discossions = () => {
     useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
+
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
   const router = useRouter();
   const [imageUrl, setImageUrl] = useState("");
@@ -114,8 +118,16 @@ const Discossions = () => {
   // const userImage = currentUser.image;
 
   useEffect(() => {
-    // set profile picture
-
+    fetchGroupsOfSingleUser(currentUser?.id)
+      .then((grp) => {
+        if (grp) {
+          setGroups(grp);
+        }
+      })
+      .catch((error: any) => {
+        if (error instanceof Error) console.log(error);
+      });
+    getAllGroupsPerUser(groups);
     fetchSignupUser()
       .then((data) => {
         setCurrentUser(data);
@@ -148,6 +160,7 @@ const Discossions = () => {
     // i am using this localhost image to check if the use have setup his/her profile
   }, []);
 
+  console.log("these are groups", groups);
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(currentUser?.id as string, receiver?.id as string)
@@ -163,29 +176,31 @@ const Discossions = () => {
         if (err instanceof Error) console.error(err);
       });
     getGroupMembers(receiver?.id as string)
-      .then((members) => {
+      .then((members: any) => {
         if (members?.length) {
           console.log("the member of selected group: ", members);
           setGroupMembersIds(members);
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         if (err instanceof Error) console.error(err);
       });
   }, [receiver?.id, addedGroup]);
 
   const sendMessageToDB = async () => {
-    if (message === "") return;
+    if (message === "" && !receiver?.id) return;
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
       content: message,
     };
+    // console.log('receiver_room_id', receiver?.id)
 
     const { data, error } = await supabase
       .from("messages")
       .insert(sendingMessage);
     console.log(data);
+    if (data) console.log("returned msg", data);
     if (error) console.log("error inserting messages: ", error);
     setMessage("");
   };
@@ -239,6 +254,8 @@ const Discossions = () => {
   //     }
   //   )
   //   .subscribe();
+
+  // console.log('eciever from discusssion', receiver)
 
   return (
     <>
@@ -300,6 +317,7 @@ const Discossions = () => {
               </div>
               <DirectMessage
                 users={users}
+                groups={groups}
                 setReceiver={setReceiver}
                 className="overflow-scroll overscroll-y-contain h-fit "
                 setRoomObject={setRoomObject}
@@ -337,15 +355,19 @@ const Discossions = () => {
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
                     profilePicture={
-                      recipient?.image ||
+                      roomObject?.image ||
                       "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                     }
                     size={10}
                   />
-                  <div className="flex flex-col items-start scrollbar-track-bg-red-600 ">
-                    <h4 className="text-gray-700 text-sm">{recipient?.name}</h4>
+                  <div className="flex flex-col items-start scrollbar-track-bg-red-600 my-auto">
+                    <h4 className="text-gray-700 text-xl">
+                      {roomObject?.name}
+                    </h4>
                     <p className="text-gray-500 text-xs">
-                      {recipient?.phone || recipient?.email}
+                      {roomObject?.phone ||
+                        roomObject?.email ||
+                        "hey there i'm using whatsapp"}
                     </p>
                   </div>
                 </div>
@@ -433,7 +455,7 @@ const Discossions = () => {
             </div>
             {openContactInfo ? (
               <SideNavRight title="Contact Infos">
-                <ContactInfoPage />
+                <ContactInfoPage roomObject={roomObject} />
               </SideNavRight>
             ) : (
               <SideNavRight title="Search for messages">

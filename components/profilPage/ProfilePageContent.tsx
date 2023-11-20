@@ -20,7 +20,7 @@ const ProfilePageContent = () => {
   // * change the name david beckamp by the user name
   const sender: User = JSON.parse(localStorage.getItem("sender") || "{}");
   const [profileName, setProfileName] = useState<string>(sender.name);
-  const [phone, setPhone] = useState<string>("(+237)");
+  const [phone, setPhone] = useState<string | undefined>(sender?.phone);
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
   const { profileImage, profilepict } = useWhatSappContext();
@@ -65,10 +65,11 @@ const ProfilePageContent = () => {
     setShowInput1((prev) => !prev);
   };
 
-  const handleUpdatePhone = (phone: string) => {
-    setShowInput((prev) => !prev);
-    updatePhoneNumber(phone);
-  };
+  const handleUpdatePhone = (phone: string | undefined) => {
+    setShowInput((prev) => !prev)
+    updatePhoneNumber(phone)
+  }
+
 
   return (
     <div

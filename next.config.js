@@ -35,6 +35,9 @@ const nextConfig = {
       {
         hostname: "i.pinimg.com",
       },
+      {
+        hostname: "bestcompaniesaz.com"
+      },
     ],
   },
 };

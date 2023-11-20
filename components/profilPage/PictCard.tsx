@@ -4,7 +4,6 @@ import { AiOutlineClose } from "react-icons/ai";
 import { RiArrowGoBackLine } from "react-icons/ri";
 import { AiOutlineCheck } from "react-icons/ai";
 import { useWhatSappContext } from "../context";
-// import { uploadFile } from "@/utils/service/getFile";
 import { supabase } from "@/utils/supabase/client";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import updateUserAvatar from "@/utils/queries/updateUserAvatar";
@@ -65,7 +64,6 @@ const PictCard = ({ profilepict, setProfilPict, setImportPict }: Props) => {
     }
     // setProfileImage(publicUrl as unknown as string);
     // setProfileImage(data.publicUrl);
-
     // setProfilPict(data.publicUrl);
     // setProfileImage(data.publicUrl);
     LOCAL_STORAGE.save("imageURL", data.publicUrl);
