@@ -310,7 +310,7 @@ const Discossions = () => {
                 className="overflow-scroll overscroll-y-contain h-fit "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
-                setRecipient={setRecipient}
+                // setRecipient={setRecipient}
               />
             </div>
             <div
@@ -343,15 +343,15 @@ const Discossions = () => {
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
                     profilePicture={
-                      recipient?.image ||
+                      receiver?.image ||
                       "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                     }
                     size={10}
                   />
                   <div className="flex flex-col items-start scrollbar-track-bg-red-600 ">
-                    <h4 className="text-gray-700 text-sm">{recipient?.name}</h4>
+                    <h4 className="text-gray-700 text-sm">{receiver?.name}</h4>
                     <p className="text-gray-500 text-xs">
-                      {recipient?.phone || recipient?.email}
+                      {receiver?.phone || receiver?.email}
                     </p>
                   </div>
                 </div>

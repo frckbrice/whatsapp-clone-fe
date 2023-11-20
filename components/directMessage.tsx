@@ -51,15 +51,15 @@ const DirectMessage = ({
 
   const handleDirectMessage = async (id: string) => {
     console.log(id);
-    // let data: User = await fetchSingleUser(id);
+    let data: User[] = await fetchSingleUser(id);
     // console.log("test after fetchsingleUser");
     // console.log(data);
-    // setReceiver(data);
+    setReceiver(data);
     setStart(true);
     setTarget(id);
     let room: Room = (await fetchSingleRoom(id)) as Room;
     setRoomObject(room);
-    setReceiver(room);
+    // setReceiver(data);
     console.log("single room object", room);
   };
 

@@ -8,11 +8,11 @@ const fetchSingleUser = async (id: string) => {
     .from('user')
     .select()
     .eq('id', id)
-    .single()
+    // .single()
 
   if (error) console.log(error)
   if (data) {
-    // console.log(data)
+    console.log("single user object", data)
     localStorage.setItem('reciever', JSON.stringify(data)) // sending the reciever object to the local storage on a click
    
   }
