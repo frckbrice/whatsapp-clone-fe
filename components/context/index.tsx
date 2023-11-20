@@ -18,6 +18,8 @@ type WhatSappContextType = {
   profileImage: string;
   groupIcon: string;
   start: boolean;
+  addedGroup: boolean;
+  setAddedGroup: Dispatch<SetStateAction<boolean>>;
   setStart: Dispatch<SetStateAction<boolean>>;
   sendingFile: any;
   setSendingFile: Dispatch<SetStateAction<any>>;
@@ -40,6 +42,8 @@ const initContextState: WhatSappContextType = {
   profilepict: "",
   profileImage: "",
   sendingFile: "",
+  addedGroup: false,
+  setAddedGroup: (addedGroup) => !addedGroup,
   groupIcon: "",
   setSendingFile: () => "",
   setGroupIcon: () => "",
@@ -56,6 +60,7 @@ export const WhatSappContext =
   createContext<WhatSappContextType>(initContextState);
 
 export const WhatSappContextProvider = ({ children }: any) => {
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [openSideNav, setOpenSideNav] = useState<boolean>(false);
   const [showPPicture, setShowPPicture] = useState<boolean>(false);
   const [openCreateGroup, setOpenCreateGroup] = useState<boolean>(false);
@@ -66,6 +71,7 @@ export const WhatSappContextProvider = ({ children }: any) => {
 
   const [sendingFile, setSendingFile] = useState<any>();
   const [start, setStart] = useState<boolean>(false);
+  const [addedGroup, setAddedGroup] = useState<boolean>(false);
 
   const values = {
     openSideNav,
@@ -84,6 +90,8 @@ export const WhatSappContextProvider = ({ children }: any) => {
     setSendingFile,
     start,
     setStart,
+    addedGroup,
+    setAddedGroup,
     groupIcon,
     setGroupIcon,
   };
@@ -116,6 +124,8 @@ export const useWhatSappContext = () => {
     setSendingFile,
     start,
     setStart,
+    addedGroup,
+    setAddedGroup,
     groupIcon,
     setGroupIcon,
   } = useContext(WhatSappContext);
@@ -136,6 +146,8 @@ export const useWhatSappContext = () => {
     setSendingFile,
     start,
     setStart,
+    addedGroup,
+    setAddedGroup,
     groupIcon,
     setGroupIcon,
   };

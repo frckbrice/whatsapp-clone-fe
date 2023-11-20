@@ -4,7 +4,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { RiArrowGoBackLine } from "react-icons/ri";
 import { AiOutlineCheck } from "react-icons/ai";
 import { useWhatSappContext } from "../context";
-import { uploadFile } from "@/utils/service/getFile";
+// import { uploadFile } from "@/utils/service/getFile";
 import { supabase } from "@/utils/supabase/client";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import updateUserAvatar from "@/utils/queries/updateUserAvatar";
@@ -18,6 +18,7 @@ type Props = {
 const PictCard = ({ profilepict, setProfilPict, setImportPict }: Props) => {
   // const [sendingFile, setSendingFile] = useState<any>();
 
+  const currentUser = LOCAL_STORAGE.get("sender");
   const { profileImage, setProfileImage, sendingFile, setSendingFile } =
     useWhatSappContext();
 
@@ -56,9 +57,15 @@ const PictCard = ({ profilepict, setProfilPict, setImportPict }: Props) => {
     const { data } = supabase.storage
       .from("whatsapp_avatars/images")
       .getPublicUrl(fileValue);
-    if (data) console.log(data.publicUrl);
+    if (data) {
+      console.log(data.publicUrl);
+      setProfilPict(data.publicUrl);
+      currentUser.image = data.publicUrl;
+      LOCAL_STORAGE.save("sender", currentUser);
+    }
     // setProfileImage(publicUrl as unknown as string);
     // setProfileImage(data.publicUrl);
+
     // setProfilPict(data.publicUrl);
     // setProfileImage(data.publicUrl);
     LOCAL_STORAGE.save("imageURL", data.publicUrl);
@@ -86,7 +93,7 @@ const PictCard = ({ profilepict, setProfilPict, setImportPict }: Props) => {
       </div>
       <div className="border-none cursor-move ">
         <Image
-          src={profilepict}
+          src={profilepict || profileImage}
           alt=""
           width={100}
           height={100}
