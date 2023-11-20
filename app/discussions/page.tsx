@@ -450,17 +450,22 @@ const Discossions = () => {
               </CreateGrt>
             )}
           </div>
-          {imageUrl && (
-            <div className="bg-themecolor flex justify-between items-center fixed w-full p-5">
-              <p>Welcome to WhatsApp Clone..!</p>
-              <button
-                onClick={() => setShowDropdownleft(true)}
-                className="border"
+          {!profilepict ||
+            (!currentUser?.image && (
+              <div
+                className={`bg-themecolor ${
+                  openProfile ? "hidden" : "visible"
+                } flex justify-between items-center fixed w-full p-5`}
               >
-                setup your profile
-              </button>
-            </div>
-          )}
+                <p>Welcome to WhatsApp Clone..!</p>
+                <button
+                  onClick={() => setOpenProfile(true)}
+                  className="border p-2 rounded-full"
+                >
+                  setup your profile
+                </button>
+              </div>
+            ))}
         </>
       )}
     </>
