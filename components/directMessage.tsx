@@ -18,7 +18,7 @@ import { IoIosClose } from "react-icons/io";
 type Props = {
   className?: string;
   users: User[];
-  groups: Group[] ;
+  groups: Group[];
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
   setUsers: React.Dispatch<React.SetStateAction<any[]>>;
@@ -43,45 +43,31 @@ const DirectMessage = ({
 
   console.log("avatar");
 
-    let allGroups: any
-    
-    // let combinedArray = [...users, ...groups]
-    // console.log("cmbien arrays", combinedArray)
-    // const com = groups.concat(users)
+  let allGroups: any
 
-    const handleDirectMessage = async (id: string) => {
-      console.log(id);
-      let data: User = await fetchSingleUser(id);
-      console.log("test after fetchsingleUser");
-      console.log(data);
-      setStart(true);
-      setTarget(id);
-      let room: User = await fetchSingleRoom(id);
-      setReceiver(room);
-      setRoomObject(room);
-      console.log("single room object", room);
-      // getGroups()
+  // let combinedArray = [...users, ...groups]
+  // console.log("cmbien arrays", combinedArray)
+  // const com = groups.concat(users)
 
-      // console.log('these are groups from DM', allGroups)
-      // getAllGroupsPerUser(groups)
-      // .then((data) => {
-      //   if (data) {
-      //     console.log(data)
-      //   setFetchedGroups(data)
-      //   }
-      // })
-      // .catch((err) => {
-      //   if (err instanceof Error) console.log(err)
-      // })
+  const handleDirectMessage = async (id: string) => {
+    console.log(id);
+    let data: User = await fetchSingleUser(id);
+    console.log("test after fetchsingleUser");
+    console.log(data);
+    setStart(true);
+    setTarget(id);
+    let room: User = await fetchSingleRoom(id);
+    setReceiver(room);
+    setRoomObject(room);
+    console.log("single room object", room);
+    // getGroups()
+  };
 
-    
-    };
+  const handleClick = () => {
 
-    const handleClick = () => {
-      
-      console.log("avatar");
-    };
-    
+    console.log("avatar");
+  };
+
 
   const removeMember = (id: string) => {
     const filteredMembers = users.filter((member) => member.id !== id);
@@ -125,16 +111,18 @@ const DirectMessage = ({
                   )}
 
                   <span className="py-8 text-[14px]">
-                    Lorem, ipsum dolor sit amet .
+                    Hey there i'm using whatsapp.
                   </span>
                 </div>
               </div>
-              <span className="">
-                {/* {item?.updated_at.split("T")[1].split(".")[0]} */}
-              </span>
-              <button onClick={() => removeMember(item.id)}>
-                <IoIosClose size={20} />
-              </button>
+              <div>
+                <span className="">
+                  {item?.updated_at.split("T")[1].split(".")[0]}
+                </span>
+                <button onClick={() => removeMember(item.id)}>
+                  <IoIosClose size={20} />
+                </button>
+              </div>
             </div>
           ))}
         </div>
