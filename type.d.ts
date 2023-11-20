@@ -25,6 +25,7 @@ type User = {
   name: string;
   phone?: string;
   updated_at?: string;
+  user_id: string;
 };
 
 type Message = {

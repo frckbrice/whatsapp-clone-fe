@@ -6,7 +6,7 @@ const fetchSingleRoom = async (roomId: string) => {
   const { data, error } = await supabase
     .from("rooms")
     .select("*")
-    .eq("id", roomId);
+    .eq("user_id", roomId);
 
   if (error) console.log("error while fetching single room", error);
   if (data) {

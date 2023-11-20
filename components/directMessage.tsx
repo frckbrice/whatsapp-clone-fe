@@ -18,7 +18,7 @@ type Props = {
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
-  setRecipient: React.Dispatch<React.SetStateAction<User>>;
+  setRecipient: React.Dispatch<React.SetStateAction<User | undefined>>;
 };
 
 const DirectMessage = ({
@@ -47,7 +47,7 @@ const DirectMessage = ({
     setRecipient(data);
     setStart(true);
     setTarget(id);
-    let room: Room = (await fetchSingleRoom(id)) as Room;
+    let room: User = (await fetchSingleRoom(id)) as User;
     setRoomObject(room);
     setReceiver(room);
     console.log("single room object", room);
@@ -68,10 +68,10 @@ const DirectMessage = ({
         <div className="flex gap-2 p-0 w-full h-[85vh] flex-col">
           {users?.map((item: any) => (
             <div
-              onClick={() => handleDirectMessage(item.id)}
+              onClick={() => handleDirectMessage(item.user_id)}
               key={item.id}
               className={
-                target === item.id
+                target === item.user_id
                   ? "bg-gray-300 flex w-full justify-between border-b border-slate-100 py-1 gap-5 hover:cursor-pointer px-4 items-center "
                   : "flex w-full justify-between border-b border-slate-100  gap-5 hover:bg-gray-100 hover:cursor-pointer px-4 py-1 items-center "
               }

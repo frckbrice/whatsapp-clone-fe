@@ -113,6 +113,8 @@ const Discossions = () => {
   // const userImage = activeUser.image;
   // setProfileImage(userImage);
 
+  console.log(receiver);
+
   useEffect(() => {
     // set profile picture
 
@@ -166,10 +168,11 @@ const Discossions = () => {
   }, [receiver?.id, addedGroup]);
 
   const sendMessageToDB = async () => {
-    if (message === "") return;
+    if (message === "" || !receiver?.user_id) return;
+
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
-      receiver_room_id: receiver?.id as string,
+      receiver_room_id: receiver?.user_id as string,
       content: message,
     };
 

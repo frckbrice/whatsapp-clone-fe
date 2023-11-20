@@ -63,6 +63,8 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     a.created_at > b.created_at ? 1 : -1
   );
 
+  console.log("sort list", sortMessageList);
+
   if (
     sortMessageList[0].receiver_room_id === props.currentUser.id &&
     sortMessageList[0].sender_id !== props.currentUser.id
