@@ -18,6 +18,7 @@ import CreateGroup from "./CreateGroup";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { supabase } from "@/utils/supabase/client";
 import { data } from "autoprefixer";
+import { RealtimeChannel } from "@supabase/supabase-js";
 import CardWithoutTitleB from "./CardWithoutTitleB";
 import { useProfileContext } from "../context/profileContext";
 // import { useWhatSappContext } from "@/components/context";
@@ -33,7 +34,7 @@ const GroupSetup = () => {
   const [profileDescription, setProfileDescription] = useState<string>("");
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
-  const { groupIcon, profileImage } = useWhatSappContext();
+  const { groupIcon, profileImage, setAddedGroup } = useWhatSappContext();
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
@@ -89,10 +90,11 @@ const GroupSetup = () => {
   ];
 
   // handle create group
+  let subscription: RealtimeChannel;
   const handleCreateGroup = async () => {
     const groupMembers = LOCAL_STORAGE.get("group_members");
-    const sender = LOCAL_STORAGE.get("sender");
-    const senderId = sender.id;
+    const currentUser = LOCAL_STORAGE.get("sender");
+    const senderId = currentUser.id;
     const membersID = groupMembers.map((member: User) => member.id);
 
     const { data, error } = await supabase
@@ -100,8 +102,10 @@ const GroupSetup = () => {
       .insert([
         {
           name: profileName,
+          // user_id: senderId,
+          // image: profileImage,
           user_id: senderId,
-          image: groupIcon,
+          image: currentUser.image,
           status: true,
         },
       ])
@@ -117,18 +121,27 @@ const GroupSetup = () => {
     if (data) {
       const groupID = data[0].id;
 
-      const groupData = membersID.map(async (ID: string) => {
-        const { data, error } = await supabase
-          .from("roomuser")
-          .insert([{ room_id: groupID, user_id: ID }])
-          .select();
+      const groupData = Promise.all(
+        membersID.map(async (ID: string) => {
+          const { data, error } = await supabase
+            .from("roomuser")
+            .insert([{ room_id: groupID, user_id: ID }])
+            .select();
 
-        if (error) {
-          return error;
-        }
-        return data;
-      });
+          if (error) {
+            return error;
+          }
 
+          return data;
+        })
+      );
+      groupData
+        .then((data) => {
+          setAddedGroup(true);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       console.clear();
       console.log("data: ", data);
       console.log("data[0].id: ", data[0].id);
@@ -141,6 +154,10 @@ const GroupSetup = () => {
     // console.log("Group Discription: ", profileName);
     // console.log("profile image: ", profileImage);
     // console.log("Group Members Id: ", membersID);
+    subscription = supabase.channel(`group_:${currentUser.id}`).subscribe();
+    LOCAL_STORAGE.save("groupId", data[0].id);
+    if (subscription)
+      console.log(" creation of a group user subscribed to a group");
   };
 
   return (
