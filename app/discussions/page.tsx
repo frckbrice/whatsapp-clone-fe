@@ -162,7 +162,7 @@ const Discossions = () => {
         if (err instanceof Error) console.error(err);
       });
     getGroupMembers(receiver?.id as string)
-      .then((members: string) => {
+      .then((members: any) => {
         if (members?.length) {
           console.log("the member of selected group: ", messages);
           setGroupMembersIds(members);

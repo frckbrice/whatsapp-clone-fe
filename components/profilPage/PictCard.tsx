@@ -60,8 +60,10 @@ const PictCard = ({ profilepict, setProfilPict, setImportPict }: Props) => {
     // setProfileImage(publicUrl as unknown as string);
     // setProfileImage(data.publicUrl);
     // setProfilPict(data.publicUrl);
-    setProfileImage(data.publicUrl);
+    // setProfileImage(data.publicUrl);
     LOCAL_STORAGE.save("imageURL", data.publicUrl);
+    setProfileImage(LOCAL_STORAGE.get("imageURL"));
+
     updateUserAvatar(data.publicUrl);
     console.log("this is your profile picture");
     setImportPict(false);

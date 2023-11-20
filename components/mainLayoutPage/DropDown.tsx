@@ -67,7 +67,7 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
     if (value === "Upload photo") {
       const inputFile = document.createElement("input") as HTMLInputElement;
       inputFile.type = "file";
-      inputFile.addEventListener("change", (e: any) => {
+      inputFile.addEventListener("change", async (e: any) => {
         const file = e.target.files[0];
         setSendingFile(file);
         const reader = new FileReader();
@@ -78,7 +78,7 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
           }
         });
         reader.readAsDataURL(file);
-        // uploadGroupIcon(file);
+        uploadGroupIcon(file);
       });
 
       // setImportPict(true);
