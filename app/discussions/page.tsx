@@ -76,6 +76,7 @@ const Discossions = () => {
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
   const router = useRouter();
+  const [imageUrl, setImageUrl] = useState("");
 
   if (!currentUser) router.push("/");
   const {
@@ -140,6 +141,12 @@ const Discossions = () => {
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [updateUsers]);
+
+  // this is useEffect is mainly to let user setup their profile after the have signup
+  useEffect(() => {
+    setImageUrl(LOCAL_STORAGE.get("imageURL"));
+    // i am using this localhost image to check if the use have setup his/her profile
+  }, []);
 
   useEffect(() => {
     setDiscussionsMessages([]);
@@ -443,6 +450,17 @@ const Discossions = () => {
               </CreateGrt>
             )}
           </div>
+          {imageUrl && (
+            <div className="bg-themecolor flex justify-between items-center fixed w-full p-5">
+              <p>Welcome to WhatsApp Clone..!</p>
+              <button
+                onClick={() => setShowDropdownleft(true)}
+                className="border"
+              >
+                setup your profile
+              </button>
+            </div>
+          )}
         </>
       )}
     </>
