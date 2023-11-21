@@ -36,6 +36,7 @@ const CreateGroup = ({ users, currentUser }: Props) => {
   const [membersID, setMembersId] = useState<Array<string>>([]);
   const [showNextBtn, setShowNextBtn] = useState(false);
   const [groupSetup, setGroupSetup] = useState(true);
+  const [notify, setNotify] = useState<string>("")
 
   useEffect(() => {
     LOCAL_STORAGE.save("group_members", []);
@@ -45,9 +46,15 @@ const CreateGroup = ({ users, currentUser }: Props) => {
   // Add group members
   function handleDirectMessage(member: any) {
     if (members.find((user) => user.id === member.id)) {
+      setNotify("Already added")
+      
       console.log("aready added");
       return;
     }
+
+    setTimeout(() => {
+      setNotify('')
+    }, 1000)
 
     let selectedMember = members;
     selectedMember.push(member);
@@ -110,6 +117,7 @@ const CreateGroup = ({ users, currentUser }: Props) => {
                     </button>
                   </div>
                 ))}
+                <p className="text-red-500">{notify}</p>
               </div>
 
               <input
