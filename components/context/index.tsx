@@ -19,6 +19,10 @@ type WhatSappContextType = {
   groupIcon: string;
   start: boolean;
   addedGroup: boolean;
+  isDark: boolean;
+  label: string;
+  setLabel: Dispatch<SetStateAction<string>>;
+  setIsDark: Dispatch<SetStateAction<boolean>>;
   setAddedGroup: Dispatch<SetStateAction<boolean>>;
   setStart: Dispatch<SetStateAction<boolean>>;
   sendingFile: any;
@@ -43,6 +47,10 @@ const initContextState: WhatSappContextType = {
   profileImage: "",
   sendingFile: "",
   addedGroup: false,
+  isDark: false,
+  setIsDark: (label) => !label,
+  label: "",
+  setLabel: () => "",
   setAddedGroup: (addedGroup) => !addedGroup,
   groupIcon: "",
   setSendingFile: () => "",
@@ -72,8 +80,14 @@ export const WhatSappContextProvider = ({ children }: any) => {
   const [sendingFile, setSendingFile] = useState<any>();
   const [start, setStart] = useState<boolean>(false);
   const [addedGroup, setAddedGroup] = useState<boolean>(false);
+  const [isDark, setIsDark] = useState(false);
+  const [label, setLabel] = useState("Night");
 
   const values = {
+    isDark,
+    setIsDark,
+    label,
+    setLabel,
     openSideNav,
     setOpenSideNav,
     showPPicture,
@@ -128,6 +142,10 @@ export const useWhatSappContext = () => {
     setAddedGroup,
     groupIcon,
     setGroupIcon,
+    isDark,
+    setIsDark,
+    label,
+    setLabel,
   } = useContext(WhatSappContext);
   return {
     openSideNav,
@@ -150,5 +168,9 @@ export const useWhatSappContext = () => {
     setAddedGroup,
     groupIcon,
     setGroupIcon,
+    isDark,
+    setIsDark,
+    label,
+    setLabel,
   };
 };

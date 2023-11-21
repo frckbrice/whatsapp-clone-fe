@@ -43,7 +43,8 @@ import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 // import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { useRouter } from "next/navigation";
-import { RealtimeChannel, RealtimeClient } from "@supabase/supabase-js";
+
+import Header from "@/components/profilPage/Header";
 
 // import { useWhatSappContext } from "@/components/context";
 
@@ -91,6 +92,10 @@ const Discossions = () => {
     profileImage,
     setProfileImage,
     start,
+    isDark,
+    setIsDark,
+    label,
+    setLabel,
     addedGroup, //to make the the page re-render to get new group added
   } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
@@ -113,24 +118,14 @@ const Discossions = () => {
     }
   };
 
-  // const activeUser = LOCAL_STORAGE.get("sender");
-  // const userImage = currentUser.image;
+  const switchTheme: any = () => {
+    console.log("clicked");
+    setIsDark((prev) => !prev);
 
-  // console.log(receiver);
+    setLabel(() => (label === "Light" ? "Night" : "Light"));
+  };
 
   useEffect(() => {
-    console.log("recipent", recipient);
-
-    fetchGroupsOfSingleUser(currentUser?.id)
-      .then((grp) => {
-        if (grp) {
-          setGroups(grp);
-        }
-      })
-      .catch((error: any) => {
-        if (error instanceof Error) console.log(error);
-      });
-    getAllGroupsPerUser(groups);
     fetchSignupUser()
       .then((data) => {
         setCurrentUser(data);
@@ -332,6 +327,7 @@ const Discossions = () => {
                 />
 
                 <div className="flex gap-5">
+                  <Header switchTheme={switchTheme} label={label} />
                   <button className="text-2xl text-gray-600">
                     <MdGroups2 />
                   </button>
