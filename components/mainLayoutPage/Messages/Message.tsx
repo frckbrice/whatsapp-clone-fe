@@ -42,7 +42,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     setMessageId(id);
   };
 
-  console.log("messages list", props.messageList);
+  // console.log("messages list", props.messageList);
 
   const getEmoji = async (emoji: string) => {
     setEmojie(emoji);
@@ -122,7 +122,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
         )}
       </>
     );
-
+  // messages sent
   if (
     (sortMessageList[0].receiver_room_id !== props.currentUserRoomId &&
       sortMessageList[0].sender_id === props.currentUser.id) ||

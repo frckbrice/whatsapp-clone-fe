@@ -1,7 +1,7 @@
 import { User } from "@/type"
 import { supabase } from "../supabase/client"
 
-const updatePhoneNumber = async (phone: string) => {
+const updatePhoneNumber = async (phone: string | undefined) => {
 	const currentUser: User = JSON.parse(localStorage.getItem('sender') || '{}')
 	// console.log(name)
 	const { data, error } = await supabase

@@ -25,7 +25,11 @@ type User = {
   name: string;
   phone?: string;
   updated_at?: string;
+<<<<<<< HEAD
   user_id: string;
+=======
+  user_id?: string;
+>>>>>>> 6e7ec3c53a797394a9073514e1d3bdd7d3e839a6
 };
 
 type Message = {
@@ -40,6 +44,9 @@ type Message = {
   receiver_room_id?: string;
 };
 
+type Group = {
+  room_id?: string;
+}
 type Roomuser = {
   id: string;
   room_id: string;
@@ -54,6 +61,7 @@ type Room = {
   status?: boolean;
   updated_at?: string;
   user_id?: string;
+  phone?: string
 };
 
 type PartRoomUser = Pick<Room | "updated_at" | "name" | "image"> & User;

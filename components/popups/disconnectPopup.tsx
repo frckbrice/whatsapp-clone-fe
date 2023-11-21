@@ -12,6 +12,7 @@ const DisconnectPopup = ({ visible, onClose }: any) => {
   const router = useRouter();
   const handleLogout = () => {
     sessionStorage.clear();
+    localStorage.removeItem('email')
     router.push("/");
   };
 
@@ -26,14 +27,14 @@ const DisconnectPopup = ({ visible, onClose }: any) => {
         <div>
           <p className="text-[16px]">You really want to logout ?</p>
           <p className="text-[16px]">
-            Otherwise, you can activate
+            Otherwise, you can activate {" "}
             <span className="text-blue-400">Log screen.</span>
           </p>
         </div>
 
         <div className="absolute bottom-8 right-6 flex gap-4">
-          <Whitebtn label="Cancel" className="" />
-          <Greenbtn label="Disconnect" className="" onClick={handleLogout} />
+          <Whitebtn label="Cancel" onClick={() => onClose()}/>
+          <Greenbtn label="Disconnect" onClick={handleLogout} />
         </div>
       </div>
     </div>

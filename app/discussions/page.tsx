@@ -1,7 +1,7 @@
 "use client";
 import React, { Suspense, useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Avatar";
-import { MdGroups2 } from "react-icons/md";
+import { MdGroups2, MdRecordVoiceOver } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { GoSearch } from "react-icons/go";
 import { BsEmojiSmile } from "react-icons/bs";
@@ -33,12 +33,13 @@ import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import { Message, PartRoomUser, Room, Roomuser, User } from "@/type";
+import { Message, PartRoomUser, Room, Roomuser, User, Group } from "@/type";
 import { getMessages, shuffleArr } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
+import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 // import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { useRouter } from "next/navigation";
@@ -50,6 +51,8 @@ const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
   const [users, setUsers] = useState<User[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
   const [userInGroupsCreations, setUserInGroupsCreations] = useState<User[]>(
     []
   );
@@ -64,9 +67,7 @@ const Discossions = () => {
   const [currentUserRoomId, setCurreUserRoomId] = useState<string>("");
   const [isGroupdiscussion, setIsGroupdiscussion] = useState<boolean>(false);
 
-  const [groupMessageDiscussions, setGroupMessageDiscussions] = useState<any[]>(
-    []
-  );
+  const [roomObject, setRoomObject] = useState<Room>();
   const [groupMembersIds, setGroupMembersIds] = useState<string[]>();
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
   const [receiver, setReceiver] = useState<User>();
@@ -74,8 +75,10 @@ const Discossions = () => {
     useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
+
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
   const router = useRouter();
+  const [imageUrl, setImageUrl] = useState("");
 
   if (!currentUser) router.push("/");
   const {
@@ -110,16 +113,26 @@ const Discossions = () => {
   };
 
   // const activeUser = LOCAL_STORAGE.get("sender");
-  // const userImage = activeUser.image;
-  // setProfileImage(userImage);
+  // const userImage = currentUser.image;
 
   // console.log(receiver);
 
   useEffect(() => {
-    // set profile picture
-
+    fetchGroupsOfSingleUser(currentUser?.id)
+      .then((grp) => {
+        if (grp) {
+          setGroups(grp);
+        }
+      })
+      .catch((error: any) => {
+        if (error instanceof Error) console.log(error);
+      });
+    getAllGroupsPerUser(groups);
     fetchSignupUser()
-      .then((data) => setCurrentUser(data))
+      .then((data) => {
+        setCurrentUser(data);
+        setProfileImage(data.image);
+      })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
@@ -142,6 +155,13 @@ const Discossions = () => {
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [updateUsers, addedGroup]);
 
+  // this is useEffect is mainly to let user setup their profile after the have signup
+  useEffect(() => {
+    setImageUrl(LOCAL_STORAGE.get("imageURL"));
+    // i am using this localhost image to check if the use have setup his/her profile
+  }, []);
+
+  console.log("these are groups", groups);
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(
@@ -180,19 +200,23 @@ const Discossions = () => {
           setGroupMembersIds(membersIds);
         }
       })
-      .catch((err) => {
+      .catch((err: any) => {
         if (err instanceof Error) console.error(err);
       });
   }, [receiver?.id]);
 
   const sendMessageToDB = async () => {
-    if (message === "" || !receiver?.user_id) return;
+    if (message === "" || !receiver?.id) {
+      console.log("message or receiver of the message can not be empty");
+      return;
+    }
 
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
       content: message,
     };
+    // console.log('receiver_room_id', receiver?.id)
 
     const { error } = await supabase.from("messages").insert(sendingMessage);
 
@@ -258,6 +282,8 @@ const Discossions = () => {
     console.log(payload);
   }
 
+  // console.log('eciever from discusssion', receiver)
+
   return (
     <>
       {showPPicture ? (
@@ -318,9 +344,10 @@ const Discossions = () => {
               </div>
               <DirectMessage
                 users={users}
+                groups={groups}
                 setReceiver={setReceiver}
                 className="overflow-scroll overscroll-y-contain h-fit "
-                // setRoomObject={setRoomObject}
+                setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
               />
@@ -360,10 +387,15 @@ const Discossions = () => {
                     }
                     size={10}
                   />
-                  <div className="flex flex-col items-start scrollbar-track-bg-red-600 ">
-                    <h4 className="text-gray-700 text-sm">{recipient?.name}</h4>
+                  <div className="flex flex-col items-start scrollbar-track-bg-red-600 my-auto">
+                    <h4 className="text-gray-700 text-xl">
+                      {recipient?.name || roomObject?.name}
+                    </h4>
                     <p className="text-gray-500 text-xs">
-                      {recipient?.phone || recipient?.email}
+                      {recipient?.phone ||
+                        roomObject?.phone ||
+                        recipient?.email ||
+                        "hey there i'm using whatsapp"}
                     </p>
                   </div>
                 </div>
@@ -454,7 +486,7 @@ const Discossions = () => {
             </div>
             {openContactInfo ? (
               <SideNavRight title="Contact Infos">
-                <ContactInfoPage />
+                <ContactInfoPage roomObject={recipient || roomObject} />
               </SideNavRight>
             ) : (
               <SideNavRight title="Search for messages">
@@ -471,6 +503,22 @@ const Discossions = () => {
               </CreateGrt>
             )}
           </div>
+          {!profilepict ||
+            (!currentUser?.image && (
+              <div
+                className={`bg-themecolor ${
+                  openProfile ? "hidden" : "visible"
+                } flex justify-between items-center fixed w-full p-5`}
+              >
+                <p>Welcome to WhatsApp Clone..!</p>
+                <button
+                  onClick={() => setOpenProfile(true)}
+                  className="border p-2 rounded-full"
+                >
+                  setup your profile
+                </button>
+              </div>
+            ))}
         </>
       )}
     </>

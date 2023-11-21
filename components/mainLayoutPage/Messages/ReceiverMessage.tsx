@@ -14,7 +14,7 @@ export default function ReceiverMessages({
   phoneNumber,
   time,
 }: Props) {
-  console.log("receved message", content);
+  // console.log("receved message", content);
 
   return (
     <div className="box arrow-left">

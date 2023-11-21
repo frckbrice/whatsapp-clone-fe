@@ -5,18 +5,22 @@ import Avatar from "@/components/Avatar";
 import { supabase } from "@/utils/supabase/client";
 // import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
-import { PartRoomUser, Room, User } from "@/type";
+import { PartRoomUser, User, Group, Room } from "@/type";
 import { useWhatSappContext } from "./context";
 import { useProfileContext } from "./context/profileContext";
 import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
+import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
+import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 import { IoIosClose } from "react-icons/io";
 
 type Props = {
   className?: string;
   users: User[];
+  groups: Group[];
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
-  // setRoomObject: (room: User) => void;
+  setRoomObject: (room: User) => void;
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
   setRecipient: React.Dispatch<React.SetStateAction<User | undefined>>;
 };
@@ -25,30 +29,32 @@ const DirectMessage = ({
   className,
   users,
   setReceiver,
-  // setRoomObject,
+  setRoomObject,
   setUsers,
+  groups,
   setRecipient,
 }: Props) => {
   // to style the select room
   const [target, setTarget] = useState("");
+  const [fetchedGroups, setFetchedGroups] = useState<
+    Promise<any> | undefined
+  >();
 
   // console.log(users);
 
   const { setStart } = useWhatSappContext();
   const { openProfile } = useProfileContext();
 
-  // console.log("avatar");
-
   const handleDirectMessage = async (id: string) => {
     console.log(id);
-    let data: User = await fetchSingleUser(id);
-    // console.log("test after fetchsingleUser");
-    // console.log(data);
+    let data: any = await fetchSingleUser(id);
+    console.log("test after fetchsingleUser", data);
+
     setRecipient(data);
     setStart(true);
     setTarget(id);
     let room: User = (await fetchSingleRoom(id)) as User;
-    // setRoomObject(room);
+    setRoomObject(room);
     setReceiver(room);
     console.log("single room object", room);
   };
@@ -89,9 +95,9 @@ const DirectMessage = ({
                 />
                 <div className="leading-2 ">
                   {item.name !== "" ? (
-                    <p className="py-1 text-[#111011] font-medium">
+                    <h5 className="py-1 text-[#111011] font-semibold ">
                       {item.name}
-                    </p>
+                    </h5>
                   ) : (
                     <p className="py-1 text-[#111011] font-medium">
                       {item.email}
@@ -99,28 +105,27 @@ const DirectMessage = ({
                   )}
 
                   <span className="py-8 text-[14px]">
-                    Lorem, ipsum dolor sit amet .
+                    Hey there i'm using whatsapp.
                   </span>
                 </div>
               </div>
-              <span className="">
-                {item?.updated_at.split("T")[1].split(".")[0].slice(0, 5)}
-              </span>
-              <button onClick={() => removeMember(item.id)}>
-                <IoIosClose size={20} />
-              </button>
+              <div className="flex flex-col gap-3">
+                <span className="">
+                  {item?.updated_at.split("T")[1].split(".")[0].slice(0, 5)}
+                </span>
+                <button
+                  className="hover:bg-gray-300 rounded-full w-fit"
+                  onClick={() => removeMember(item.id)}
+                >
+                  <IoIosClose size={20} />
+                </button>
+              </div>
             </div>
           ))}
         </div>
       ) : (
         ""
       )}
-      {/* <div className="flex pl-4 pr-2 gap-4">
-        <div className="border-b-2">
-          <p></p>
-          <span></span>
-        </div>
-      </div> */}
     </div>
   );
 };
