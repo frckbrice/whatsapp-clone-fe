@@ -8,6 +8,7 @@ type SimpleProps = {
 };
 
 const SimpleMessage = (props: SimpleProps) => {
+  console.log('props>constent', props.content)
   return (
     <div className={`box ${props.styleStyle}`}>
       <div className=" flex flex-col gap-1">

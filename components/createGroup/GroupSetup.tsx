@@ -112,10 +112,9 @@ const GroupSetup = () => {
       .select();
 
     if (error) {
-      console.log("An error occured", error);
+      console.log("An error occured while creating group", error);
       return;
     }
-    console.log("Group Icon", groupIcon);
     console.log("data: ", data);
 
     if (data) {
@@ -168,7 +167,7 @@ const GroupSetup = () => {
       {/* //** add profile image and profile name here  */}
       <CardWithoutTitleB
         image={
-          groupIcon ||
+          profileImage ||
           "https://i.pinimg.com/564x/cb/9d/bb/cb9dbbffa2363a2ec0d7a74602b91cd4.jpg"
         }
         ref={dropdownRef}
@@ -183,7 +182,7 @@ const GroupSetup = () => {
                   src={emoji}
                   alt="emojie"
                   width={20}
-                  height={20}
+                  height={20} 
                   key={index}
                 />
               ))}

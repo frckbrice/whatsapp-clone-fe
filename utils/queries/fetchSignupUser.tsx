@@ -13,6 +13,7 @@ const fetchSignupUser = async () => {
   if (data) {
     // console.log("Here is signup user", data)
     localStorage.setItem("sender", JSON.stringify(data))
+    localStorage.setItem('senderId', data.id)
   }
   return data
 }
