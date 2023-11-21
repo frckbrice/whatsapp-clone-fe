@@ -9,6 +9,8 @@ import { PartRoomUser, User, Group, Room } from "@/type";
 import { useWhatSappContext } from "./context";
 import { useProfileContext } from "./context/profileContext";
 import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
+import relativeTime from 'dayjs/plugin/relativeTime'
+import dayjs from "dayjs"
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
 import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 import { AiOutlineConsoleSql } from "react-icons/ai";
@@ -36,9 +38,9 @@ const DirectMessage = ({
 }: Props) => {
   // to style the select room
   const [target, setTarget] = useState("");
-  const [fetchedGroups, setFetchedGroups] = useState<
-    Promise<any> | undefined
-  >();
+  const [fetchedGroups, setFetchedGroups] = useState<Promise<any> | undefined>()
+  dayjs.extend(relativeTime)
+
 
   // console.log(users);
 
@@ -60,7 +62,9 @@ const DirectMessage = ({
   };
 
   const handleClick = () => {
-    console.log("avatar");
+    // console.log('updated_at', users[0].updated_at)
+    // const lastMsg = dayjs().to(dayjs(users[0].updated_at))
+    // console.log("time from dayjs", lastMsg);
   };
 
   const removeMember = (id: string) => {
@@ -95,9 +99,9 @@ const DirectMessage = ({
                 />
                 <div className="leading-2 ">
                   {item.name !== "" ? (
-                    <h5 className="py-1 text-[#111011] font-semibold ">
+                    <h6 className="py-1 text-[#111011] font-semibold ">
                       {item.name}
-                    </h5>
+                    </h6>
                   ) : (
                     <p className="py-1 text-[#111011] font-medium">
                       {item.email}
@@ -109,14 +113,11 @@ const DirectMessage = ({
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col gap-3">
-                <span className="">
-                  {item?.updated_at.split("T")[1].split(".")[0].slice(0, 5)}
+              <div className="flex flex-col gap-1 w-[70px]">
+                <span className="mx-auto ">
+                  {dayjs().to(dayjs(item?.updated_at))}
                 </span>
-                <button
-                  className="hover:bg-gray-300 rounded-full w-fit"
-                  onClick={() => removeMember(item.id)}
-                >
+                <button className="hover:bg-gray-300 rounded-full w-fit self-center" onClick={() => removeMember(item.id)}>
                   <IoIosClose size={20} />
                 </button>
               </div>

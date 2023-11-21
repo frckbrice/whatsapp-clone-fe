@@ -279,8 +279,6 @@ const Discossions = () => {
     console.log(payload);
   }
 
-  // console.log('eciever from discusssion', receiver)
-
   return (
     <>
       {showPPicture ? (
