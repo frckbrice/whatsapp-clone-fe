@@ -9,7 +9,7 @@ export const getGroupMembers = async (groupId: string) => {
 
     if (data) {
       console.log(" the members of the group: ", data);
-      return data?.map((member) => member.user_id);
+      return data?.map((member) => member.room_id);
     }
   } catch (error) {
     if (error) console.log("error fetching the group members: ", error);

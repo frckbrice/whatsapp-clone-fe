@@ -1,6 +1,8 @@
 import { supabase } from "../supabase/client";
 import fetchUserGoups from "./fetchAllUserGroups";
 import fetchGroupsOfSingleUser from "./fetchGroupsOfSingleUser";
+import fetchSignupUser from "./fetchSignupUser";
+import fetchSingleRoom from "./fetchSingleRoom";
 import { shuffleArr } from "./getMessage";
 import insertUsersInRooms from "./insertUsersInRooms";
 
@@ -11,6 +13,7 @@ const fetchUsers = async (id: string) => {
   const groups = await Promise.all((await fetchUserGoups(id)) as any[]);
   // console.log("user groups: ", groups.flat());
   // console.log("users: ", data);
+  const currentUserRoomId = (await fetchSingleRoom(id))?.id;
 
   const value = [...groups.flat(), ...data];
   // console.log("user and  groups: ", value);
@@ -25,7 +28,8 @@ const fetchUsers = async (id: string) => {
   return {
     merged: usersInRoomTable.flat().filter(Boolean),
     data: data,
-    groups: groups.flat(),
+    groups: groups.flat().map((group) => group.id),
+    currentUserRoomId,
   };
 };
 export default fetchUsers;

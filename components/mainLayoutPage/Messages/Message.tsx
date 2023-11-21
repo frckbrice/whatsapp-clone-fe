@@ -20,6 +20,7 @@ type Props = {
   receiver: User;
   showMessageEmoji: any;
   setMessageEmoji: React.Dispatch<React.SetStateAction<boolean>>;
+  currentUserRoomId: string;
 };
 const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const [target, setTarget] = useState<string>(props.messageList[0].content);
@@ -39,7 +40,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     setMessageId(id);
   };
 
-  console.log(props.messageList);
+  // console.log("messages list", props.messageList);
 
   const getEmoji = async (emoji: string) => {
     setEmojie(emoji);
@@ -63,10 +64,11 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     a.created_at > b.created_at ? 1 : -1
   );
 
-  console.log("sort list", sortMessageList);
+  console.log("sorted list", sortMessageList);
+  console.log("current User room id", props.currentUserRoomId);
 
   if (
-    sortMessageList[0].receiver_room_id === props.currentUser.id &&
+    sortMessageList[0].receiver_room_id === props.currentUserRoomId &&
     sortMessageList[0].sender_id !== props.currentUser.id
   )
     content = (
@@ -109,9 +111,9 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     );
 
   if (
-    (sortMessageList[0].receiver_room_id !== props.currentUser.id &&
+    (sortMessageList[0].receiver_room_id !== props.currentUserRoomId &&
       sortMessageList[0].sender_id === props.currentUser.id) ||
-    (sortMessageList[0].receiver_room_id === props.currentUser.id &&
+    (sortMessageList[0].receiver_room_id === props.currentUserRoomId &&
       sortMessageList[0].sender_id === props.currentUser.id)
   ) {
     content = (
@@ -165,7 +167,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   const listOfMessages = sortMessageList?.slice(1).map((messages, i) => {
     if (
-      messages.receiver_room_id === props.currentUser.id &&
+      messages.receiver_room_id === props.currentUserRoomId &&
       messages.sender_id !== props.currentUser.id
     ) {
       console.log("messages received: ", messages.content);
@@ -209,9 +211,9 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     }
 
     if (
-      (messages.receiver_room_id !== props.currentUser.id &&
+      (messages.receiver_room_id !== props.currentUserRoomId &&
         messages.sender_id === props.currentUser.id) ||
-      (messages.receiver_id === props.currentUser.id &&
+      (messages.receiver_room_id === props.currentUserRoomId &&
         messages.sender_id === props.currentUser.id)
     ) {
       return (
@@ -273,4 +275,4 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
   );
 });
 
-export default Messages;
+export default React.memo(Messages);

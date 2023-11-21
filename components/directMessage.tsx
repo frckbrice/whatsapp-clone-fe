@@ -16,7 +16,7 @@ type Props = {
   className?: string;
   users: User[];
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
-  setRoomObject: (room: User) => void;
+  // setRoomObject: (room: User) => void;
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
   setRecipient: React.Dispatch<React.SetStateAction<User | undefined>>;
 };
@@ -25,7 +25,7 @@ const DirectMessage = ({
   className,
   users,
   setReceiver,
-  setRoomObject,
+  // setRoomObject,
   setUsers,
   setRecipient,
 }: Props) => {
@@ -48,7 +48,7 @@ const DirectMessage = ({
     setStart(true);
     setTarget(id);
     let room: User = (await fetchSingleRoom(id)) as User;
-    setRoomObject(room);
+    // setRoomObject(room);
     setReceiver(room);
     console.log("single room object", room);
   };
