@@ -70,7 +70,6 @@ const ProfilePageContent = () => {
     updatePhoneNumber(phone)
   }
 
-
   return (
     <div
       ref={ref}
