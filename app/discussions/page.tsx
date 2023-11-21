@@ -160,9 +160,10 @@ const Discossions = () => {
                 receiver_room_id: currentUserRoomId,
               }))
             );
+            setIsGroupdiscussion(true);
           } else {
             console.log("all messages: ", messages);
-
+            setIsGroupdiscussion(false);
             setDiscussionsMessages(messages);
           }
         } else {
@@ -396,6 +397,8 @@ const Discossions = () => {
                     showMessageEmoji={showMessageEmoji}
                     setMessageEmoji={setMessageEmoji}
                     currentUserRoomId={currentUserRoomId}
+                    recipient={recipient as User}
+                    isGroupdiscussion={isGroupdiscussion}
                   />
                 ) : (
                   ""
