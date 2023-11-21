@@ -59,12 +59,6 @@ const CreateGroup = ({ users, currentUser }: Props) => {
 
     console.clear();
     console.log("you clicked on: ", member);
-
-    const subscribeUser = supabase
-      .channel(`group_:${currentUser.id}`)
-      .subscribe(member.id);
-    if (subscribeUser)
-      console.log("user successfully subscribed to channel: ", subscribeUser);
   }
 
   console.log("group menbers from state", members);

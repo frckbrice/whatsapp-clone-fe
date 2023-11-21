@@ -103,8 +103,6 @@ const GroupSetup = () => {
         {
           name: profileName,
           // user_id: senderId,
-          // image: profileImage,
-          user_id: senderId,
           image: currentUser.image,
           status: true,
         },
@@ -147,16 +145,6 @@ const GroupSetup = () => {
       console.log("groupData: ", groupData);
       setShowCreateGroupe(false);
     }
-
-    // console.clear();
-    // console.log("senderId: ", senderId);
-    // console.log("Group Discription: ", profileName);
-    // console.log("profile image: ", profileImage);
-    // console.log("Group Members Id: ", membersID);
-    subscription = supabase.channel(`group_:${currentUser.id}`).subscribe();
-    LOCAL_STORAGE.save("groupId", data[0].id);
-    if (subscription)
-      console.log(" creation of a group user subscribed to a group");
   };
 
   return (

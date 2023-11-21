@@ -42,7 +42,7 @@ type Message = {
 
 type Group = {
   room_id?: string;
-}
+};
 type Roomuser = {
   id: string;
   room_id: string;
@@ -57,7 +57,7 @@ type Room = {
   status?: boolean;
   updated_at?: string;
   user_id?: string;
-  phone?: string
+  phone?: string;
 };
 
 type PartRoomUser = Pick<Room | "updated_at" | "name" | "image"> & User;

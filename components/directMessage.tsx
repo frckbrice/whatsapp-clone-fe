@@ -24,7 +24,7 @@ type Props = {
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
-  setRecipient: React.Dispatch<React.SetStateAction<User>>;
+  setRecipient: React.Dispatch<React.SetStateAction<User | undefined>>;
 };
 
 const DirectMessage = ({
@@ -47,34 +47,25 @@ const DirectMessage = ({
   const { setStart } = useWhatSappContext();
   const { openProfile } = useProfileContext();
 
-  // console.log("avatar");
-
-  let allGroups: any
-
-  // let combinedArray = [...users, ...groups]
-  // console.log("cmbien arrays", combinedArray)
-  // const com = groups.concat(users)
-
   const handleDirectMessage = async (id: string) => {
     console.log(id);
-    let data: any = await fetchSingleUser(id);
+    let data: User = (await fetchSingleUser(id)) as User;
     console.log("test after fetchsingleUser", data);
-    // console.log(data);
+
     setRecipient(data);
     setStart(true);
     setTarget(id);
-    let room: Room = (await fetchSingleRoom(id)) as Room;
+    let room: User = (await fetchSingleRoom(id)) as User;
     setRoomObject(room);
     setReceiver(room);
     console.log("single room object", room);
   };
 
   const handleClick = () => {
-    console.log('updated_at', users[0].updated_at)
-    const lastMsg = dayjs().to(dayjs(users[0].updated_at))
-    console.log("time from dayjs", lastMsg);
+    // console.log('updated_at', users[0].updated_at)
+    // const lastMsg = dayjs().to(dayjs(users[0].updated_at))
+    // console.log("time from dayjs", lastMsg);
   };
-
 
   const removeMember = (id: string) => {
     const filteredMembers = users.filter((member) => member.id !== id);
@@ -90,7 +81,7 @@ const DirectMessage = ({
               onClick={() => handleDirectMessage(item.user_id)}
               key={item.id}
               className={
-                target === item.id
+                target === item.user_id
                   ? "bg-gray-300 flex w-full justify-between border-b border-slate-100 py-1 gap-5 hover:cursor-pointer px-4 items-center "
                   : "flex w-full justify-between border-b border-slate-100  gap-5 hover:bg-gray-100 hover:cursor-pointer px-4 py-1 items-center "
               }
@@ -136,12 +127,6 @@ const DirectMessage = ({
       ) : (
         ""
       )}
-      {/* <div className="flex pl-4 pr-2 gap-4">
-        <div className="border-b-2">
-          <p></p>
-          <span></span>
-        </div>
-      </div> */}
     </div>
   );
 };
