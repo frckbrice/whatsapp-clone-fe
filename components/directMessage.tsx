@@ -103,9 +103,9 @@ const DirectMessage = ({
                 />
                 <div className="leading-2 ">
                   {item.name !== "" ? (
-                    <p className="py-1 text-[#111011] font-medium">
+                    <h5 className="py-1 text-[#111011] font-semibold ">
                       {item.name}
-                    </p>
+                    </h5>
                   ) : (
                     <p className="py-1 text-[#111011] font-medium">
                       {item.email}
@@ -117,11 +117,11 @@ const DirectMessage = ({
                   </span>
                 </div>
               </div>
-              <div>
+              <div className="flex flex-col gap-3">
                 <span className="">
                   {item?.updated_at.split("T")[1].split(".")[0].slice(0, 5)}
                 </span>
-                <button onClick={() => removeMember(item.id)}>
+                <button className="hover:bg-gray-300 rounded-full w-fit" onClick={() => removeMember(item.id)}>
                   <IoIosClose size={20} />
                 </button>
               </div>
