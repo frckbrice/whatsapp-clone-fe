@@ -2,15 +2,20 @@ import { Message } from "postcss";
 import { supabase } from "../supabase/client";
 import { getReceivedMessages } from "./getReceivedMessage";
 
-export const getMessages = async (sender_id: string, receiver_id?: string) => {
+export const getMessages = async (
+  current_user_id: string,
+  receiver_room_id: string,
+  receiver_user_id: string,
+  current_user_roomId: string
+) => {
   const messages: any = (await getReceivedMessages(
-    sender_id,
-    receiver_id
+    receiver_user_id,
+    current_user_roomId
   )) as any[];
 
   const { data, error } = await supabase.from("messages").select("*").match({
-    sender_id: sender_id,
-    receiver_room_id: receiver_id,
+    sender_id: current_user_id,
+    receiver_room_id: receiver_room_id,
   });
 
   if (error) return;
@@ -18,7 +23,8 @@ export const getMessages = async (sender_id: string, receiver_id?: string) => {
   console.log("this is received messages: ", messages);
   if (data) {
     console.log("this is sent messages: ", data);
-    if (sender_id !== receiver_id) return shuffleArr([...data, ...messages]);
+    if (current_user_id !== receiver_room_id)
+      return shuffleArr([...data, ...messages]);
 
     return data;
   }

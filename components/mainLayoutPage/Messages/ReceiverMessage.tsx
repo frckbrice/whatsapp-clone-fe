@@ -14,7 +14,8 @@ export default function ReceiverMessages({
   phoneNumber,
   time,
 }: Props) {
-  console.log('content', content)
+  // console.log("receved message", content);
+
   return (
     <div className="box arrow-left">
       <div className=" py-3 text-[#111b21]">

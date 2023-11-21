@@ -22,7 +22,7 @@ type Props = {
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
-  setRecipient: React.Dispatch<React.SetStateAction<User>>;
+  setRecipient: React.Dispatch<React.SetStateAction<User | undefined>>;
 };
 
 const DirectMessage = ({
@@ -36,40 +36,32 @@ const DirectMessage = ({
 }: Props) => {
   // to style the select room
   const [target, setTarget] = useState("");
-  const [fetchedGroups, setFetchedGroups] = useState<Promise<any> | undefined>()
+  const [fetchedGroups, setFetchedGroups] = useState<
+    Promise<any> | undefined
+  >();
 
   // console.log(users);
 
   const { setStart } = useWhatSappContext();
   const { openProfile } = useProfileContext();
 
-  // console.log("avatar");
-
-  let allGroups: any
-
-  // let combinedArray = [...users, ...groups]
-  // console.log("cmbien arrays", combinedArray)
-  // const com = groups.concat(users)
-
   const handleDirectMessage = async (id: string) => {
     console.log(id);
-    let data: any = await fetchSingleUser(id);
+    let data: User = (await fetchSingleUser(id)) as User;
     console.log("test after fetchsingleUser", data);
-    // console.log(data);
+
     setRecipient(data);
     setStart(true);
     setTarget(id);
-    let room: Room = (await fetchSingleRoom(id)) as Room;
+    let room: User = (await fetchSingleRoom(id)) as User;
     setRoomObject(room);
     setReceiver(room);
     console.log("single room object", room);
   };
 
   const handleClick = () => {
-
     console.log("avatar");
   };
-
 
   const removeMember = (id: string) => {
     const filteredMembers = users.filter((member) => member.id !== id);
@@ -85,7 +77,7 @@ const DirectMessage = ({
               onClick={() => handleDirectMessage(item.user_id)}
               key={item.id}
               className={
-                target === item.id
+                target === item.user_id
                   ? "bg-gray-300 flex w-full justify-between border-b border-slate-100 py-1 gap-5 hover:cursor-pointer px-4 items-center "
                   : "flex w-full justify-between border-b border-slate-100  gap-5 hover:bg-gray-100 hover:cursor-pointer px-4 py-1 items-center "
               }
@@ -121,7 +113,10 @@ const DirectMessage = ({
                 <span className="">
                   {item?.updated_at.split("T")[1].split(".")[0].slice(0, 5)}
                 </span>
-                <button className="hover:bg-gray-300 rounded-full w-fit" onClick={() => removeMember(item.id)}>
+                <button
+                  className="hover:bg-gray-300 rounded-full w-fit"
+                  onClick={() => removeMember(item.id)}
+                >
                   <IoIosClose size={20} />
                 </button>
               </div>
@@ -131,12 +126,6 @@ const DirectMessage = ({
       ) : (
         ""
       )}
-      {/* <div className="flex pl-4 pr-2 gap-4">
-        <div className="border-b-2">
-          <p></p>
-          <span></span>
-        </div>
-      </div> */}
     </div>
   );
 };

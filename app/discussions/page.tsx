@@ -43,7 +43,7 @@ import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 // import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { useRouter } from "next/navigation";
-// import {profilepict} from "useWhatSappContext"
+import { RealtimeChannel, RealtimeClient } from "@supabase/supabase-js";
 
 // import { useWhatSappContext } from "@/components/context";
 
@@ -57,19 +57,17 @@ const Discossions = () => {
     []
   );
   const [message, setMessage] = useState<string>("");
-  const [updateUsers, setUpdateUsers] = useState<User[]>([]);
+  const [updateUsers, setUpdateUsers] = useState<boolean>(false);
   const [recipient, setRecipient] = useState<User>();
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
   ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
-  const [userGroups, setUserGroups] = useState<Room[]>([]);
-  const [roomObject, setRoomObject] = useState<User>();
-  const [sendingMessage, setSendingMessage] = useState<string[]>([]);
+  const [userGroupsId, setUserGroupsId] = useState<string[]>([]);
+  const [currentUserRoomId, setCurreUserRoomId] = useState<string>("");
+  const [isGroupdiscussion, setIsGroupdiscussion] = useState<boolean>(false);
 
-  const [groupMessageDiscussions, setGroupMessageDiscussions] = useState<any[]>(
-    []
-  );
+  const [roomObject, setRoomObject] = useState<Room>();
   const [groupMembersIds, setGroupMembersIds] = useState<string[]>();
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
   const [receiver, setReceiver] = useState<User>();
@@ -117,6 +115,8 @@ const Discossions = () => {
   // const activeUser = LOCAL_STORAGE.get("sender");
   // const userImage = currentUser.image;
 
+  // console.log(receiver);
+
   useEffect(() => {
     fetchGroupsOfSingleUser(currentUser?.id)
       .then((grp) => {
@@ -141,8 +141,9 @@ const Discossions = () => {
         console.log("the users: ", users);
         if (users) {
           setUsers(users.merged);
-          setUserGroups(users.groups);
+          setUserGroupsId(users.groups);
           setUserInGroupsCreations(users.data);
+          setCurreUserRoomId(users.currentUserRoomId);
         }
       })
       .catch((err) => {
@@ -152,7 +153,7 @@ const Discossions = () => {
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
-  }, [updateUsers]);
+  }, [updateUsers, addedGroup]);
 
   // this is useEffect is mainly to let user setup their profile after the have signup
   useEffect(() => {
@@ -163,11 +164,28 @@ const Discossions = () => {
   console.log("these are groups", groups);
   useEffect(() => {
     setDiscussionsMessages([]);
-    getMessages(currentUser?.id as string, receiver?.id as string)
+    getMessages(
+      currentUser?.id as string,
+      receiver?.id as string,
+      receiver?.user_id as string,
+      currentUserRoomId
+    )
       .then((messages: any) => {
         if (messages.length) {
-          console.log("all messages: ", messages);
-          setDiscussionsMessages(messages);
+          if (userGroupsId?.includes(receiver?.id as string)) {
+            console.log("group messages: ", messages);
+            setDiscussionsMessages(() =>
+              messages.map((message: Message) => ({
+                ...message,
+                receiver_room_id: currentUserRoomId,
+              }))
+            );
+            setIsGroupdiscussion(true);
+          } else {
+            console.log("all messages: ", messages);
+            setIsGroupdiscussion(false);
+            setDiscussionsMessages(messages);
+          }
         } else {
           setDiscussionsMessages([]);
         }
@@ -176,19 +194,23 @@ const Discossions = () => {
         if (err instanceof Error) console.error(err);
       });
     getGroupMembers(receiver?.id as string)
-      .then((members: any) => {
-        if (members?.length) {
-          console.log("the member of selected group: ", members);
-          setGroupMembersIds(members);
+      .then((membersIds) => {
+        if (membersIds?.length) {
+          console.log("the member of selected group: ", membersIds);
+          setGroupMembersIds(membersIds);
         }
       })
       .catch((err: any) => {
         if (err instanceof Error) console.error(err);
       });
-  }, [receiver?.id, addedGroup]);
+  }, [receiver?.id]);
 
   const sendMessageToDB = async () => {
-    if (message === "" && !receiver?.id) return;
+    if (message === "" || !receiver?.id) {
+      console.log("message or receiver of the message can not be empty");
+      return;
+    }
+
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
@@ -196,11 +218,8 @@ const Discossions = () => {
     };
     // console.log('receiver_room_id', receiver?.id)
 
-    const { data, error } = await supabase
-      .from("messages")
-      .insert(sendingMessage);
-    console.log(data);
-    if (data) console.log("returned msg", data);
+    const { error } = await supabase.from("messages").insert(sendingMessage);
+
     if (error) console.log("error inserting messages: ", error);
     setMessage("");
   };
@@ -226,34 +245,42 @@ const Discossions = () => {
         }
 
         if (payload.eventType === "INSERT")
-          setDiscussionsMessages((prev) => [...prev, payload.new]);
-
-        // if (
-        //   userGroups
-        //     ?.map((group: Room) => group.id)
-        //     ?.includes(receiver?.id as string) &&
-        //   receiver?.id === payload.new.receiver_room_id
-        // ) {
-        //   supabase.channel(`group_:${receiver?.id}`).send({
-        //     type: "broadcast",
-        //     event: "*",
-        //     payload: { message: payload.new.content },
-        //   });
-        // }
+          if (userGroupsId?.includes(payload.new.receiver_room_id)) {
+            // setGroupMessageDiscussions(payload.new.content);
+            // setDiscussionsMessages((prev) => [...prev, payload.new]);
+            groupMembersIds?.map((memberId) => {
+              supabase
+                .channel(`group_:${payload.new.receiver_room_id}`)
+                .send({
+                  type: "broadcast",
+                  event: "test",
+                  payload: { message: payload.new.content },
+                })
+                .then((data) => {
+                  console.log("broadcast messages: ", data);
+                });
+            });
+            supabase
+              .channel(`group_:${payload.new.receiver_room_id}`)
+              .on("broadcast", { event: "test" }, (payload) => {
+                if (payload.receiver_room_id !== currentUser.id) {
+                  console.log("Received room message: ", payload);
+                }
+              })
+              .subscribe();
+            setDiscussionsMessages((prev) => [
+              ...prev,
+              { ...payload.new, receiver_room_id: currentUserRoomId },
+            ]);
+          } else setDiscussionsMessages((prev) => [...prev, payload.new]);
       }
     )
     .subscribe();
 
-  // const newUsers = supabase
-  //   .channel("custom-all-channel")
-  //   .on(
-  //     "postgres_changes",
-  //     { event: "*", schema: "public", table: "user" },
-  //     (payload: any) => {
-  //       setUpdateUsers(payload);
-  //     }
-  //   )
-  //   .subscribe();
+  // Simple function to log any messages we receive
+  function messageReceived(payload: any) {
+    console.log(payload);
+  }
 
   // console.log('eciever from discusssion', receiver)
 
@@ -355,18 +382,19 @@ const Discossions = () => {
                   <Avatar
                     onClick={() => setOpenContactInfo(true)}
                     profilePicture={
-                      roomObject?.image ||
+                      recipient?.image ||
                       "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                     }
                     size={10}
                   />
                   <div className="flex flex-col items-start scrollbar-track-bg-red-600 my-auto">
                     <h4 className="text-gray-700 text-xl">
-                      {roomObject?.name}
+                      {recipient?.name || roomObject?.name}
                     </h4>
                     <p className="text-gray-500 text-xs">
-                      {roomObject?.phone ||
-                        roomObject?.email ||
+                      {recipient?.phone ||
+                        roomObject?.phone ||
+                        recipient?.email ||
                         "hey there i'm using whatsapp"}
                     </p>
                   </div>
@@ -400,6 +428,9 @@ const Discossions = () => {
                     ref={emojiRef}
                     showMessageEmoji={showMessageEmoji}
                     setMessageEmoji={setMessageEmoji}
+                    currentUserRoomId={currentUserRoomId}
+                    recipient={recipient as User}
+                    isGroupdiscussion={isGroupdiscussion}
                   />
                 ) : (
                   ""
@@ -455,7 +486,7 @@ const Discossions = () => {
             </div>
             {openContactInfo ? (
               <SideNavRight title="Contact Infos">
-                <ContactInfoPage roomObject={roomObject} />
+                <ContactInfoPage roomObject={recipient || roomObject} />
               </SideNavRight>
             ) : (
               <SideNavRight title="Search for messages">

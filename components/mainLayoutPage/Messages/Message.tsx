@@ -9,7 +9,7 @@ import React, {
 import SenderMessages from "./SenderMessage";
 import ReceiverMessages from "./ReceiverMessage";
 import SimpleMessage from "./SimpleMessage";
-import { User } from "@/type";
+import { Message, User } from "@/type";
 import { FaFaceGrinWide } from "react-icons/fa6";
 import EmojiMessage from "./EmojiMessage";
 import { supabase } from "@/utils/supabase/client";
@@ -20,6 +20,9 @@ type Props = {
   receiver: User;
   showMessageEmoji: any;
   setMessageEmoji: React.Dispatch<React.SetStateAction<boolean>>;
+  currentUserRoomId: string;
+  recipient: User;
+  isGroupdiscussion: boolean;
 };
 const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const [target, setTarget] = useState<string>(props.messageList[0].content);
@@ -39,7 +42,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     setMessageId(id);
   };
 
-  console.log("msg list", props.messageList);
+  // console.log("messages list", props.messageList);
 
   const getEmoji = async (emoji: string) => {
     setEmojie(emoji);
@@ -58,28 +61,39 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
   };
 
   let content;
-
-  const sortMessageList = props.messageList.sort((a, b) =>
+  let sortMessageList = props.messageList.sort((a, b) =>
     a.created_at > b.created_at ? 1 : -1
   );
 
-  console.log("sortmsg list", sortMessageList)
+  console.log("sorted list", sortMessageList);
+  console.log("current User room id", props.currentUserRoomId);
 
-  // recieved messages
   if (
-    sortMessageList[0].receiver_room_id === props.currentUser.id &&
+    sortMessageList[0].receiver_room_id === props.currentUserRoomId &&
     sortMessageList[0].sender_id !== props.currentUser.id
   )
     content = (
       <>
         <div className="flex justify-start items-center">
-          <ReceiverMessages
-            content={sortMessageList[0].content}
-            time={sortMessageList[0].created_at
-              .split("T")[1]
-              .split(".")[0]
-              .slice(0, 5)}
-          />
+          {props.isGroupdiscussion ? (
+            <ReceiverMessages
+              content={sortMessageList[0].content}
+              time={sortMessageList[0]?.created_at
+                .split("T")[1]
+                .split(".")[0]
+                .slice(0, 5)}
+              senderName={props.recipient ? props.recipient.name : ""}
+              phoneNumber={props.recipient ? props.recipient.phone : ""}
+            />
+          ) : (
+            <ReceiverMessages
+              content={sortMessageList[0].content}
+              time={sortMessageList[0]?.created_at
+                .split("T")[1]
+                .split(".")[0]
+                .slice(0, 5)}
+            />
+          )}
           <span
             className=" opacity-0 hover:opacity-100 mx-1  hover:block p-[5px] rounded-full bg-[#a3adb3a7] "
             onClick={() =>
@@ -108,11 +122,11 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
         )}
       </>
     );
-// messages sent
+  // messages sent
   if (
-    (sortMessageList[0].receiver_room_id !== props.currentUser.id &&
+    (sortMessageList[0].receiver_room_id !== props.currentUserRoomId &&
       sortMessageList[0].sender_id === props.currentUser.id) ||
-    (sortMessageList[0].receiver_room_id === props.currentUser.id &&
+    (sortMessageList[0].receiver_room_id === props.currentUserRoomId &&
       sortMessageList[0].sender_id === props.currentUser.id)
   ) {
     content = (
@@ -139,13 +153,25 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
               size={25}
             />
           </span>
-          <SenderMessages
-            content={sortMessageList[0].content}
-            time={sortMessageList[0].created_at
-              .split("T")[1]
-              .split(".")[0]
-              .slice(0, 5)}
-          />
+          {props.isGroupdiscussion ? (
+            <SenderMessages
+              content={sortMessageList[0].content}
+              time={sortMessageList[0].created_at
+                .split("T")[1]
+                .split(".")[0]
+                .slice(0, 5)}
+              senderName={props.currentUser.name}
+              phoneNumber={props.currentUser.phone}
+            />
+          ) : (
+            <SenderMessages
+              content={sortMessageList[0].content}
+              time={sortMessageList[0].created_at
+                .split("T")[1]
+                .split(".")[0]
+                .slice(0, 5)}
+            />
+          )}
         </div>
         <div className=" w-full flex justify-end items-center">
           {sortMessageList[0].emoji ? (
@@ -166,7 +192,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   const listOfMessages = sortMessageList?.slice(1).map((messages, i) => {
     if (
-      messages.receiver_room_id === props.currentUser.id &&
+      messages.receiver_room_id === props.currentUserRoomId &&
       messages.sender_id !== props.currentUser.id
     ) {
       console.log("messages received: ", messages.content);
@@ -174,15 +200,27 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
       return (
         <>
           <div className="flex justify-start" key={i}>
-            <SimpleMessage
-              content={messages.content}
-              styleStyle={classForMessageReceiver}
-              time={sortMessageList[0].created_at
-                .split("T")[1]
-                .split(".")[0]
-                .slice(0, 5)}
-            />
-
+            {props.isGroupdiscussion ? (
+              <SimpleMessage
+                content={messages.content}
+                styleStyle={classForMessageReceiver}
+                time={sortMessageList[0].created_at
+                  .split("T")[1]
+                  .split(".")[0]
+                  .slice(0, 5)}
+                senderName={props.recipient ? props.recipient.name : ""}
+                phoneNumber={props.recipient ? props.recipient.phone : ""}
+              />
+            ) : (
+              <SimpleMessage
+                content={messages.content}
+                styleStyle={classForMessageReceiver}
+                time={sortMessageList[0].created_at
+                  .split("T")[1]
+                  .split(".")[0]
+                  .slice(0, 5)}
+              />
+            )}
             <span
               className=" opacity-0 hover:opacity-100 mx-1  hover:block  rounded-full bg-[#a3adb3a7] w-8 h-8 flex justify-center items-center place-content-center pl-[6px] pt-[5px] cursor-pointer"
               onClick={() => handleTargetEmoji(messages.content, messages.id)}
@@ -210,9 +248,9 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     }
 
     if (
-      (messages.receiver_room_id !== props.currentUser.id &&
+      (messages.receiver_room_id !== props.currentUserRoomId &&
         messages.sender_id === props.currentUser.id) ||
-      (messages.receiver_id === props.currentUser.id &&
+      (messages.receiver_room_id === props.currentUserRoomId &&
         messages.sender_id === props.currentUser.id)
     ) {
       return (
@@ -232,14 +270,27 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
               <FaFaceGrinWide className=" text-white" size={20} />
             </span>
 
-            <SimpleMessage
-              content={messages.content}
-              styleStyle={classForMessageSender}
-              time={sortMessageList[0].created_at
-                .split("T")[1]
-                .split(".")[0]
-                .slice(0, 5)}
-            />
+            {props.isGroupdiscussion ? (
+              <SimpleMessage
+                content={messages.content}
+                styleStyle={classForMessageSender}
+                time={sortMessageList[0].created_at
+                  .split("T")[1]
+                  .split(".")[0]
+                  .slice(0, 5)}
+                senderName={props.currentUser.name}
+                phoneNumber={props.currentUser.phone}
+              />
+            ) : (
+              <SimpleMessage
+                content={messages.content}
+                styleStyle={classForMessageSender}
+                time={sortMessageList[0].created_at
+                  .split("T")[1]
+                  .split(".")[0]
+                  .slice(0, 5)}
+              />
+            )}
           </div>
 
           <div className=" w-full flex justify-end items-center">
@@ -274,4 +325,4 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
   );
 });
 
-export default Messages;
+export default React.memo(Messages);
