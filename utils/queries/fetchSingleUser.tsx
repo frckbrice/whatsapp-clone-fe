@@ -1,3 +1,4 @@
+import { User } from "@/type"
 import { supabase } from "../supabase/client"
 import fetchSingleRoom from "./fetchSingleRoom"
 
@@ -6,7 +7,7 @@ const fetchSingleUser = async (id: string) => {
   let roomObject: Object
   const { data, error } = await supabase
     .from('user')
-    .select()
+    .select('*')
     .eq('id', id)
     // .single()
 
@@ -14,8 +15,8 @@ const fetchSingleUser = async (id: string) => {
   if (data) {
     console.log("single user object", data)
     localStorage.setItem('reciever', JSON.stringify(data)) // sending the reciever object to the local storage on a click
-   
+    return data[0] as unknown as User
   }
-  return data
+  
 }
 export default fetchSingleUser

@@ -118,6 +118,8 @@ const Discossions = () => {
   // const userImage = currentUser.image;
 
   useEffect(() => {
+    console.log('recipent', recipient)
+
     fetchGroupsOfSingleUser(currentUser?.id)
       .then((grp) => {
         if (grp) {
@@ -254,8 +256,6 @@ const Discossions = () => {
   //     }
   //   )
   //   .subscribe();
-
-  // console.log('eciever from discusssion', receiver)
 
   return (
     <>
