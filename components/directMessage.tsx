@@ -47,7 +47,7 @@ const DirectMessage = ({
 
   const handleDirectMessage = async (id: string) => {
     console.log(id);
-    let data: any = await fetchSingleUser(id);
+    let data: User = (await fetchSingleUser(id)) as User;
     console.log("test after fetchsingleUser", data);
 
     setRecipient(data);
