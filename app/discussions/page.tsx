@@ -118,6 +118,8 @@ const Discossions = () => {
   // console.log(receiver);
 
   useEffect(() => {
+    console.log('recipent', recipient)
+
     fetchGroupsOfSingleUser(currentUser?.id)
       .then((grp) => {
         if (grp) {
@@ -281,8 +283,6 @@ const Discossions = () => {
   function messageReceived(payload: any) {
     console.log(payload);
   }
-
-  // console.log('eciever from discusssion', receiver)
 
   return (
     <>

@@ -24,7 +24,7 @@ const fetchUsers = async (id: string) => {
     groups: groups.flat(),
   });
   const usersInRoomTable = await insertUsersInRooms(newList);
-  // console.log(usersInRoomTable.flat().filter(Boolean));
+  console.log('filtered users', usersInRoomTable.flat().filter(Boolean));
   return {
     merged: usersInRoomTable.flat().filter(Boolean),
     data: data,
