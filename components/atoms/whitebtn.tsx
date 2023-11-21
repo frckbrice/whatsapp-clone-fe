@@ -3,7 +3,7 @@ import React from "react";
 interface WhitebtnProps {
   label: String;
   onClick?: () => void;
-  className: String;
+  className?: String;
 }
 
 const Whitebtn: React.FC<WhitebtnProps> = ({ label, onClick }) => {
