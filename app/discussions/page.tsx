@@ -87,6 +87,7 @@ const Discossions = () => {
     showPPicture,
     importPict,
     profilepict,
+    setProfilPict,
     profileImage,
     setProfileImage,
     start,
@@ -118,7 +119,7 @@ const Discossions = () => {
   // console.log(receiver);
 
   useEffect(() => {
-    console.log('recipent', recipient)
+    console.log("recipent", recipient);
 
     fetchGroupsOfSingleUser(currentUser?.id)
       .then((grp) => {
@@ -160,6 +161,10 @@ const Discossions = () => {
   // this is useEffect is mainly to let user setup their profile after the have signup
   useEffect(() => {
     setImageUrl(LOCAL_STORAGE.get("imageURL"));
+    if (currentUser.image) {
+      setProfilPict(currentUser?.image);
+    }
+
     // i am using this localhost image to check if the use have setup his/her profile
   }, []);
 
@@ -503,22 +508,21 @@ const Discossions = () => {
               </CreateGrt>
             )}
           </div>
-          {!profilepict ||
-            (!currentUser?.image && (
-              <div
-                className={`bg-themecolor ${
-                  openProfile ? "hidden" : "visible"
-                } flex justify-between items-center fixed w-full p-5`}
+          {!profilepict && (
+            <div
+              className={`bg-themecolor ${
+                openProfile ? "hidden" : "visible"
+              } flex justify-between items-center fixed w-full p-5`}
+            >
+              <p>Welcome to WhatsApp Clone..!</p>
+              <button
+                onClick={() => setOpenProfile(true)}
+                className="border p-2 rounded-full"
               >
-                <p>Welcome to WhatsApp Clone..!</p>
-                <button
-                  onClick={() => setOpenProfile(true)}
-                  className="border p-2 rounded-full"
-                >
-                  setup your profile
-                </button>
-              </div>
-            ))}
+                setup your profile
+              </button>
+            </div>
+          )}
         </>
       )}
     </>
