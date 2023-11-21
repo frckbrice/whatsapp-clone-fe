@@ -9,7 +9,7 @@ import React, {
 import SenderMessages from "./SenderMessage";
 import ReceiverMessages from "./ReceiverMessage";
 import SimpleMessage from "./SimpleMessage";
-import { User } from "@/type";
+import { Message, User } from "@/type";
 import { FaFaceGrinWide } from "react-icons/fa6";
 import EmojiMessage from "./EmojiMessage";
 import { supabase } from "@/utils/supabase/client";
@@ -40,7 +40,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     setMessageId(id);
   };
 
-  // console.log("messages list", props.messageList);
+  console.log("messages list", props.messageList);
 
   const getEmoji = async (emoji: string) => {
     setEmojie(emoji);
@@ -59,8 +59,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
   };
 
   let content;
-
-  const sortMessageList = props.messageList.sort((a, b) =>
+  let sortMessageList = props.messageList.sort((a, b) =>
     a.created_at > b.created_at ? 1 : -1
   );
 
@@ -76,7 +75,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
         <div className="flex justify-start items-center">
           <ReceiverMessages
             content={sortMessageList[0].content}
-            time={sortMessageList[0].created_at
+            time={sortMessageList[0]?.created_at
               .split("T")[1]
               .split(".")[0]
               .slice(0, 5)}

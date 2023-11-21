@@ -62,7 +62,7 @@ const Discossions = () => {
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [userGroupsId, setUserGroupsId] = useState<string[]>([]);
   const [currentUserRoomId, setCurreUserRoomId] = useState<string>("");
-  const [sendingMessage, setSendingMessage] = useState<string[]>([]);
+  const [isGroupdiscussion, setIsGroupdiscussion] = useState<boolean>(false);
 
   const [groupMessageDiscussions, setGroupMessageDiscussions] = useState<any[]>(
     []
@@ -152,8 +152,19 @@ const Discossions = () => {
     )
       .then((messages: any) => {
         if (messages.length) {
-          console.log("all messages: ", messages);
-          setDiscussionsMessages(messages);
+          if (userGroupsId?.includes(receiver?.id as string)) {
+            console.log("group messages: ", messages);
+            setDiscussionsMessages(() =>
+              messages.map((message: Message) => ({
+                ...message,
+                receiver_room_id: currentUserRoomId,
+              }))
+            );
+          } else {
+            console.log("all messages: ", messages);
+
+            setDiscussionsMessages(messages);
+          }
         } else {
           setDiscussionsMessages([]);
         }
@@ -210,54 +221,36 @@ const Discossions = () => {
 
         if (payload.eventType === "INSERT")
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
-            setGroupMessageDiscussions(payload.new.content);
+            // setGroupMessageDiscussions(payload.new.content);
             // setDiscussionsMessages((prev) => [...prev, payload.new]);
             groupMembersIds?.map((memberId) => {
               supabase
-                .channel(`group_:${currentUser.id}`)
+                .channel(`group_:${payload.new.receiver_room_id}`)
                 .send({
                   type: "broadcast",
                   event: "test",
-                  receiver_room_id: memberId,
-                  payload: { message: groupMessageDiscussions },
+                  payload: { message: payload.new.content },
                 })
                 .then((data) => {
                   console.log("broadcast messages: ", data);
                 });
             });
-          }
-        setDiscussionsMessages((prev) => [...prev, payload.new]);
-        Realtime.onOpen((subscription) => {
-          subscription.on("message", (message) => {
-            if (message.sender_id !== currentUser.id) {
-              setDiscussionsMessages((prev) => [...prev, payload.new]);
-            }
-          });
-        });
+            supabase
+              .channel(`group_:${payload.new.receiver_room_id}`)
+              .on("broadcast", { event: "test" }, (payload) => {
+                if (payload.receiver_room_id !== currentUser.id) {
+                  console.log("Received room message: ", payload);
+                }
+              })
+              .subscribe();
+            setDiscussionsMessages((prev) => [
+              ...prev,
+              { ...payload.new, receiver_room_id: currentUserRoomId },
+            ]);
+          } else setDiscussionsMessages((prev) => [...prev, payload.new]);
       }
     )
     .subscribe();
-
-  // const channelA = supabase.channel(`group_:${currentUser?.id}`);
-
-  // // Subscribe to the Channel
-  // channelA
-  //   .on("broadcast", { event: "test" }, (payload) => {
-  //     setDiscussionsMessages((prev) => [...prev, payload.new]);
-  //     console.log(payload);
-  //   })
-  //   .subscribe();
-
-  supabase.channel(`group_:${currentUser?.id}`).subscribe((status) => {
-    if (status !== "SUBSCRIBED") {
-      return null;
-    }
-    supabase.channel(`group_:${currentUser?.id}`).send({
-      type: "broadcast",
-      event: "test",
-      payload: { message: groupMessageDiscussions },
-    });
-  });
 
   // Simple function to log any messages we receive
   function messageReceived(payload: any) {

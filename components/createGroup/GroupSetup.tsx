@@ -146,11 +146,6 @@ const GroupSetup = () => {
       console.log("groupData: ", groupData);
       setShowCreateGroupe(false);
     }
-
-    subscription = supabase.channel(`group_:${currentUser.id}`).subscribe();
-    LOCAL_STORAGE.save("groupId", data[0].id);
-    if (subscription)
-      console.log(" creation of a group user subscribed to a group");
   };
 
   return (
