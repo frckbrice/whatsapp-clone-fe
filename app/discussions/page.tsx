@@ -51,7 +51,7 @@ const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
   const [users, setUsers] = useState<User[]>([]);
-  const [groups, setGroups] = useState<Group[]>([])
+  const [groups, setGroups] = useState<Group[]>([]);
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
   const [userInGroupsCreations, setUserInGroupsCreations] = useState<User[]>(
     []
@@ -77,9 +77,10 @@ const Discossions = () => {
     useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
-  
+
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
   const router = useRouter();
+  const [imageUrl, setImageUrl] = useState("");
 
   if (!currentUser) router.push("/");
   const {
@@ -114,23 +115,24 @@ const Discossions = () => {
   };
 
   // const activeUser = LOCAL_STORAGE.get("sender");
-  // const userImage = activeUser.image;
-  // setProfileImage(userImage);
+  // const userImage = currentUser.image;
 
   useEffect(() => {
-    
     fetchGroupsOfSingleUser(currentUser?.id)
       .then((grp) => {
-        if(grp) {
-          setGroups(grp)
+        if (grp) {
+          setGroups(grp);
         }
       })
       .catch((error: any) => {
-        if (error instanceof Error) console.log(error)
-      })
-    getAllGroupsPerUser(groups)
+        if (error instanceof Error) console.log(error);
+      });
+    getAllGroupsPerUser(groups);
     fetchSignupUser()
-      .then((data) => setCurrentUser(data))
+      .then((data) => {
+        setCurrentUser(data);
+        setProfileImage(data.image);
+      })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
@@ -152,7 +154,13 @@ const Discossions = () => {
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [updateUsers]);
 
-  // console.log('these is reciepiant', recipient)
+  // this is useEffect is mainly to let user setup their profile after the have signup
+  useEffect(() => {
+    setImageUrl(LOCAL_STORAGE.get("imageURL"));
+    // i am using this localhost image to check if the use have setup his/her profile
+  }, []);
+
+  console.log("these are groups", groups);
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(currentUser?.id as string, receiver?.id as string)
@@ -180,8 +188,7 @@ const Discossions = () => {
   }, [receiver?.id, addedGroup]);
 
   const sendMessageToDB = async () => {
-    console.log('receipient id from sendmsgtodb', receiver?.id)
-    if (message === "" && receiver?.id ) return;
+    if (message === "" && !receiver?.id) return;
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
@@ -193,7 +200,7 @@ const Discossions = () => {
       .from("messages")
       .insert(sendingMessage);
     console.log(data);
-    if (data) console.log("returned msg", data)
+    if (data) console.log("returned msg", data);
     if (error) console.log("error inserting messages: ", error);
     setMessage("");
   };
@@ -354,9 +361,13 @@ const Discossions = () => {
                     size={10}
                   />
                   <div className="flex flex-col items-start scrollbar-track-bg-red-600 my-auto">
-                    <h4 className="text-gray-700 text-xl">{roomObject?.name}</h4>
-                    <p className="text-gray-500 text-sm">
-                      {roomObject?.phone || roomObject?.email || "Click here to have more info on the contact"}
+                    <h4 className="text-gray-700 text-xl">
+                      {roomObject?.name}
+                    </h4>
+                    <p className="text-gray-500 text-xs">
+                      {roomObject?.phone ||
+                        roomObject?.email ||
+                        "hey there i'm using whatsapp"}
                     </p>
                   </div>
                 </div>
@@ -444,7 +455,7 @@ const Discossions = () => {
             </div>
             {openContactInfo ? (
               <SideNavRight title="Contact Infos">
-                <ContactInfoPage roomObject={roomObject}/>
+                <ContactInfoPage roomObject={roomObject} />
               </SideNavRight>
             ) : (
               <SideNavRight title="Search for messages">
@@ -461,6 +472,22 @@ const Discossions = () => {
               </CreateGrt>
             )}
           </div>
+          {!profilepict ||
+            (!currentUser?.image && (
+              <div
+                className={`bg-themecolor ${
+                  openProfile ? "hidden" : "visible"
+                } flex justify-between items-center fixed w-full p-5`}
+              >
+                <p>Welcome to WhatsApp Clone..!</p>
+                <button
+                  onClick={() => setOpenProfile(true)}
+                  className="border p-2 rounded-full"
+                >
+                  setup your profile
+                </button>
+              </div>
+            ))}
         </>
       )}
     </>
