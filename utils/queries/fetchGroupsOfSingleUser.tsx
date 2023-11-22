@@ -1,4 +1,4 @@
-import { supabase } from "../supabase/client"
+import { supabase } from "../supabase/client";
 
 // get all the groups to which a signup user belongs to
 const fetchGroupsOfSingleUser = async () => {
