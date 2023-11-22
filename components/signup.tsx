@@ -8,48 +8,48 @@ const Signup = () => {
   const [email, setEmail] = React.useState<string>("");
   const [submitted, setSubmitted] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  const [success, setSuccess] = React.useState<string>("")
-  const router = useRouter()
+  const [success, setSuccess] = React.useState<string>("");
+  const router = useRouter();
 
-  if (typeof localStorage === "undefined") return
+  if (typeof localStorage === "undefined") return;
 
   useEffect(() => {
-    const localEmail: any = localStorage.getItem("email")
-    console.log(localEmail)
+    const localEmail: any = localStorage.getItem("email");
+    console.log(localEmail);
     if (localEmail) {
-      router.push('/discussions')
+      router.push("/discussions");
     }
-  }, [])
+  }, []);
 
   const signup = async (e: any) => {
     e.preventDefault();
     if (email === "") {
-      setError("Please enter your email")
+      setError("Please enter your email");
       return;
     } else {
-      let expression: any = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/
-      let regularExp = new RegExp(expression);
+      let expression: any =
+        /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+      let regularExp = new RegExp(expression, "i");
       if (!email.match(regularExp)) {
-        console.log("invalid email address")
-        setError('Invalid email address')
-
+        console.log("invalid email address");
+        setError("Invalid email address");
       } else {
         const { data } = await supabase.from("user").select("email");
         let res = data?.filter((i) => i.email === email);
         console.log(res);
-        if (res?.length === 1) {
-          localStorage.setItem("email", email)
-          setSuccess("Welcome back 🙂")
-          router.push('/discussions')
-          return
+        if (res?.length) {
+          localStorage.setItem("email", email);
+          setSuccess("Welcome back 🙂");
+          router.push("/discussions");
+          return;
         }
         if (res?.length === 0) {
           const { error, data } = await supabase.auth.signInWithOtp({ email });
 
           if (error) {
-            setError('Something went wrong')
+            setError("Something went wrong");
             console.log(error);
-            return
+            return;
           }
           if (data) {
             console.log(data);
@@ -72,6 +72,17 @@ const Signup = () => {
     }
   };
 
+  async function signInWithEmail() {
+    const { data, error } = await supabase.auth.signInWithOtp({
+      email: email,
+      options: {
+        // set this to false if you do not want the user to be automatically signed up
+        shouldCreateUser: true,
+        emailRedirectTo: "https://localhost:3000/discussions",
+      },
+    });
+  }
+
   return (
     <div>
       <div className="flex flex-col justify-center mt-2 xl:mt-5 w-[75vw] mobile:max-sm:w-[95%]">
@@ -88,7 +99,8 @@ const Signup = () => {
           </p>
           <form
             action=""
-            onSubmit={signup}
+            // onSubmit={signup}
+            onSubmit={signInWithEmail}
             className="flex flex-col mt-5 gap-5 items-center"
           >
             <input
@@ -117,4 +129,4 @@ const Signup = () => {
     </div>
   );
 };
-export default Signup
+export default Signup;

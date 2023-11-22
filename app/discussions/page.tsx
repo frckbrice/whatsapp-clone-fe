@@ -51,6 +51,7 @@ import Header from "@/components/profilPage/Header";
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
+  const email: string = (localStorage.getItem("email") as string) || {};
   const [users, setUsers] = useState<User[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
@@ -81,7 +82,7 @@ const Discossions = () => {
   const router = useRouter();
   const [imageUrl, setImageUrl] = useState("");
 
-  if (!currentUser) router.push("/");
+  if (!email && !currentUser) router.push("/");
   const {
     setOpenSideNav,
     openSideNav,
@@ -160,7 +161,7 @@ const Discossions = () => {
   //   // i am using this localhost image to check if the use have setup his/her profile
   // }, []);
 
-  console.log("these are groups", groups);
+  // console.log("these are groups", groups);
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(
