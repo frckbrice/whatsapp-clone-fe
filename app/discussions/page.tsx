@@ -96,6 +96,7 @@ const Discossions = () => {
     label,
     setLabel,
     addedGroup, //to make the the page re-render to get new group added
+    setAddedGroup,
   } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile, setOpenProfile } = useProfileContext();
@@ -141,6 +142,7 @@ const Discossions = () => {
           setUserGroupsId(users.groups);
           setUserInGroupsCreations(users.data);
           setCurreUserRoomId(users.currentUserRoomId);
+          setAddedGroup(false);
         }
       })
       .catch((err) => {
@@ -150,13 +152,13 @@ const Discossions = () => {
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
-  }, [updateUsers, addedGroup]);
+  }, [addedGroup]);
 
   // this is useEffect is mainly to let user setup their profile after the have signup
-  useEffect(() => {
-    setImageUrl(LOCAL_STORAGE.get("imageURL"));
-    // i am using this localhost image to check if the use have setup his/her profile
-  }, []);
+  // useEffect(() => {
+  //   setImageUrl(LOCAL_STORAGE.get("imageURL"));
+  //   // i am using this localhost image to check if the use have setup his/her profile
+  // }, []);
 
   console.log("these are groups", groups);
   useEffect(() => {
@@ -177,7 +179,7 @@ const Discossions = () => {
                 receiver_room_id: currentUserRoomId,
               }))
             );
-            setIsGroupdiscussion(true);
+            setIsGroupdiscussion(true); //to help display group messages with sender name.
           } else {
             console.log("all messages: ", messages);
             setIsGroupdiscussion(false);
@@ -212,6 +214,8 @@ const Discossions = () => {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
       content: message,
+      sender_name: currentUser?.name,
+      phone_number: currentUser?.phone as string,
     };
     // console.log('receiver_room_id', receiver?.id)
 
@@ -243,8 +247,6 @@ const Discossions = () => {
 
         if (payload.eventType === "INSERT")
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
-            // setGroupMessageDiscussions(payload.new.content);
-            // setDiscussionsMessages((prev) => [...prev, payload.new]);
             groupMembersIds?.map((memberId) => {
               supabase
                 .channel(`group_:${payload.new.receiver_room_id}`)
@@ -273,11 +275,6 @@ const Discossions = () => {
       }
     )
     .subscribe();
-
-  // Simple function to log any messages we receive
-  function messageReceived(payload: any) {
-    console.log(payload);
-  }
 
   return (
     <>
@@ -322,7 +319,7 @@ const Discossions = () => {
                 />
 
                 <div className="flex gap-5">
-                  <Header switchTheme={switchTheme} label={label} />
+                  {/* <Header switchTheme={switchTheme} label={label} /> */}
                   <button className="text-2xl text-gray-600">
                     <MdGroups2 />
                   </button>
