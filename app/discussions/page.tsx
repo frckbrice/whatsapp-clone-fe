@@ -51,6 +51,7 @@ import Header from "@/components/profilPage/Header";
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
+  const email: any = localStorage.getItem('email')
   const [users, setUsers] = useState<User[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
@@ -81,7 +82,7 @@ const Discossions = () => {
   const router = useRouter();
   const [imageUrl, setImageUrl] = useState("");
 
-  if (!currentUser) router.push("/");
+  if (!email && !currentUser) router.push("/");
   const {
     setOpenSideNav,
     openSideNav,
