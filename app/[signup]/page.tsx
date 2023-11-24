@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
 import Pulsation from "./component/PulseLoader";
+import { LOCAL_STORAGE } from "@/utils/service/storage";
 
 const Signupb = () => {
   const [error, setError] = useState("");
@@ -25,16 +26,14 @@ const Signupb = () => {
       localStorage.getItem("sb-xkwspfurbsmpwwazlkmu-auth-token") || "{}"
     );
 
-    localStorage.setItem("email", googleUser.user.email);
+    LOCAL_STORAGE.save("email", googleUser.user.email);
 
-    const { data, error } = await supabase
-      .from("user")
-      .insert({
-        email: googleUser.user.email,
-        name: googleUser.user.user_metadata.name,
-        image: googleUser.user.user_metadata.picture,
-        phone: googleUser.user.identities.phone,
-      });
+    const { data, error } = await supabase.from("user").insert({
+      email: googleUser.user.email,
+      name: googleUser.user.user_metadata.name,
+      image: googleUser.user.user_metadata.picture,
+      phone: googleUser.user.identities.phone,
+    });
 
     if (error) console.log("an error occured while sending user", error);
 
