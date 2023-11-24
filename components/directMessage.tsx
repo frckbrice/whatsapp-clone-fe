@@ -100,11 +100,11 @@ const DirectMessage = ({
                 />
                 <div className="leading-2 ">
                   {item.name !== "" ? (
-                    <h6 className="py-1 text-[#111011] font-semibold ">
+                    <h6 className="py-1 text-sm text-[#212021] ">
                       {item.name}
                     </h6>
                   ) : (
-                    <p className="py-1 text-[#111011] font-medium">
+                    <p className="py-1 text-xs text-[#111011] font-normal">
                       {item.email}
                     </p>
                   )}
