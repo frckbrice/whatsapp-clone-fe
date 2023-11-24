@@ -124,9 +124,10 @@ const Discossions = () => {
   };
 
   useEffect(() => {
-    fetchSignupUser()
+    fetchSignupUser(currentUser?.email as string)
       .then((data) => {
-        setCurrentUser(data);
+        console.log(data)
+        // setCurrentUser(data);
       })
       .catch((err) => {
         if (err instanceof Error) console.error(err);

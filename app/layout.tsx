@@ -11,12 +11,12 @@ import { ProfileContextProvider } from "@/components/context/profileContext";
 import Pulsation from "./[signup]/component/PulseLoader";
 import { Suspense, useState } from "react";
 
-// const defaultUrl = process.env.VERCEL_URL
-//   ? `https://${process.env.VERCEL_URL}`
-//   : "http://localhost:3000";
+const defaultUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
 
 export const metadata: Metadata = {
-  // metadataBase: new URL(defaultUrl),
+  metadataBase: new URL(defaultUrl),
   title: "WhatsApp Clone App",
   description: "Reimplementing WhatsApp features with NextJS and Supabase",
 };

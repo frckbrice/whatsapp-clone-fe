@@ -1,13 +1,12 @@
 import { User } from "@/type";
 import { supabase } from "../supabase/client";
 
-const fetchSignupUser = async () => {
-  const googleUser = JSON.parse(localStorage.getItem("sb-xkwspfurbsmpwwazlkmu-auth-token") || '{}')
+const fetchSignupUser = async (email: string) => {
 
   const {data, error} = await supabase
     .from('user')
     .select()
-    .eq('email', googleUser.user.email)
+    .eq('email', email)
     .single()
   if (error) console.log('Error while getting single signup user', error)
   if (data) {
