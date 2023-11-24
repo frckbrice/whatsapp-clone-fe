@@ -49,7 +49,7 @@ import { useRouter } from "next/navigation";
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
-  const email: string = (localStorage.getItem("email") as string);
+  const email = JSON.parse((localStorage.getItem("email") as string));
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
@@ -123,8 +123,9 @@ const Discossions = () => {
     setLabel(() => (label === "Light" ? "Night" : "Light"));
   };
 
+  console.log(email)
   useEffect(() => {
-    fetchSignupUser(currentUser?.email as string)
+    fetchSignupUser(email)
       .then((data) => {
         console.log(data)
         // setCurrentUser(data);
