@@ -1,7 +1,6 @@
 import { supabase } from "../supabase/client";
 
-const fetchSignupUser = async () => {
-  const email = localStorage.getItem("email");
+const fetchSignupUser = async (email: string) => {
   console.log(email);
   const { data, error } = await supabase
     .from("user")
