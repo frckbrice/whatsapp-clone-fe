@@ -44,15 +44,16 @@ import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { useRouter } from "next/navigation";
 
-import Header from "@/components/profilPage/Header";
-
 // import { useWhatSappContext } from "@/components/context";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
-  const email: any = localStorage.getItem("email");
+  const email: string = JSON.parse(localStorage.getItem("email") as string);
   const [users, setUsers] = useState<User[]>([]);
+  const [currentUser, setCurrentUser] = useState<User>(() =>
+    JSON.parse(localStorage.getItem("sender") || "{}")
+  ); // state containing the user info
   const [groups, setGroups] = useState<Group[]>([]);
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
   const [userInGroupsCreations, setUserInGroupsCreations] = useState<User[]>(
@@ -61,9 +62,6 @@ const Discossions = () => {
   const [message, setMessage] = useState<string>("");
   const [updateUsers, setUpdateUsers] = useState<boolean>(false);
   const [recipient, setRecipient] = useState<User>();
-  const [currentUser, setCurrentUser] = useState<User>(() =>
-    JSON.parse(localStorage.getItem("sender") || "{}")
-  ); // state containing the user info
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [userGroupsId, setUserGroupsId] = useState<string[]>([]);
   const [currentUserRoomId, setCurreUserRoomId] = useState<string>("");
@@ -82,16 +80,14 @@ const Discossions = () => {
   const router = useRouter();
   const [imageUrl, setImageUrl] = useState("");
 
-  if (!email && !currentUser) router.push("/");
+  // if (!email && !currentUser) router.push("/");
+
   const {
     setOpenSideNav,
     openSideNav,
     showPPicture,
     importPict,
     profilepict,
-    setProfilPict,
-    profileImage,
-    setProfileImage,
     start,
     isDark,
     setIsDark,
@@ -128,10 +124,10 @@ const Discossions = () => {
   };
 
   useEffect(() => {
-    fetchSignupUser()
+    fetchSignupUser(email)
       .then((data) => {
-        setCurrentUser(data);
-        setProfileImage(data.image);
+        console.log(data);
+        // setCurrentUser(data);
       })
       .catch((err) => {
         if (err instanceof Error) console.error(err);
@@ -155,6 +151,7 @@ const Discossions = () => {
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
+  console.log("this is currentUser", currentUser);
 
   // this is useEffect is mainly to let user setup their profile after the have signup
   // useEffect(() => {
@@ -162,7 +159,7 @@ const Discossions = () => {
   //   // i am using this localhost image to check if the use have setup his/her profile
   // }, []);
 
-  console.log("these are groups", groups);
+  // console.log("these are groups", groups);
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(
@@ -313,7 +310,6 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    profilepict ||
                     currentUser?.image ||
                     "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
