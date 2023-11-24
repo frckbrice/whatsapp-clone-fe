@@ -297,7 +297,8 @@ const Discossions = () => {
           <UploadPicture />
           <div className={importPict ? "hidden" : "flex w-full "}>
             
-            <div className=" w-[25vw] h-screen fixed">
+            
+            <div className=" w-[25vw] h-screen left-0 top-0">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
