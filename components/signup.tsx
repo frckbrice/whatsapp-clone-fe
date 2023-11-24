@@ -2,76 +2,13 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { supabase } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import GoogleButton from "./atoms/googlebtn";
+import { redirect, useRouter } from "next/navigation";
+import { AuthResponse } from "@supabase/supabase-js";
 
 const Signup = () => {
-  const [email, setEmail] = React.useState<string>("");
-  const [submitted, setSubmitted] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string>("");
-  const [success, setSuccess] = React.useState<string>("")
-  const router = useRouter()
 
-  if (typeof localStorage === "undefined") return
-
-  useEffect(() => {
-    const localEmail: any = localStorage.getItem("email")
-    if (localEmail) {
-      router.push('/discussions')
-    }
-  }, [])
-
-  const signup = async (e: any) => {
-    e.preventDefault();
-    if (email === "") {
-      setError("Please enter your email")
-      return;
-    } else {
-      let expression: any = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/
-      let regularExp = new RegExp(expression);
-      if (!email.match(regularExp)) {
-        console.log("invalid email address")
-        setError('Invalid email address')
-
-      } else {
-        const { data } = await supabase.from("user").select("email");
-        let res = data?.filter((i) => i.email === email);
-        console.log(res);
-        if (res?.length === 1) {
-          localStorage.setItem("email", email)
-          setSuccess("Welcome back 🙂")
-          router.push('/discussions')
-          return
-        }
-        // new email not in DB
-        if (res?.length === 0) {
-          const { error, data } = await supabase.auth.signInWithOtp({ email });
-
-          if (error) {
-            setError('Something went wrong')
-            console.log('error from supabase', error);
-            return
-          }
-          if (data) {
-            console.log(data);
-            setError("");
-            localStorage.setItem("email", email);
-            setSubmitted(true);
-          }
-          if (submitted) {
-            console.log("check your email address");
-            return (
-              <div>
-                <h1 className="text-center text-green-600">
-                  Please check your email to signup
-                </h1>
-              </div>
-            );
-          }
-        }
-      }
-    }
-  };
+  if (typeof localStorage === "undefined") return;
 
   async function handleSignInWithGoogle(response: { credential: any; }) {
     const { data, error } = await supabase.auth.signInWithIdToken({
@@ -98,6 +35,8 @@ const Signup = () => {
             A chat app that permits you to chat with your relatives
           </p>
 
+          <GoogleButton />
+
           {/* <div className="w-1/2 hover:cursor-pointer">
             <div id="g_id_onload"
               data-client_id="743181202305-k56gg7eego9at61g95m28u9aikihnltv.apps.googleusercontent.com"
@@ -118,41 +57,11 @@ const Signup = () => {
               data-logo_alignment="left">
             </div>
           </div> */}
-
-
-          <form
-            action=""
-            onSubmit={signup}
-            className="flex flex-col mt-5 gap-5 items-center"
-          >
-            <input
-              className="w-60 mx-auto border border-slate-200 p-2 rounded outline-1 outline-secondry"
-              type="email"
-              placeholder="youremail@gmail.com"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            
-            <p className="text-red-600">{error}</p>
-            <p className="text-center">{success}</p>
-            <button
-              // onClick={() => signup()}
-              type="submit"
-              className="bg-secondry w-20 py-2 text-sm text-white rounded"
-            >
-              NEXT
-            </button>
-            <GoogleButton />
-
-          </form>
-          {submitted ? (
-            <p className="text-center py-4">Please check out your mail</p>
-          ) : (
-            ""
-          )}
         </div>
         
       </div>
     </div>
   );
 };
-export default Signup
+
+export default Signup;

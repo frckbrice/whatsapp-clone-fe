@@ -4,31 +4,30 @@ import React from 'react'
 
 const GoogleButton = () => {
 
-  const handleSignUp = async () => {
+  const handleGoogleSignin = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: {
         queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
+          access_type: "offline",
+          prompt: "consent",
         },
-        redirectTo: "http://localhost:3000/discussions",
+        redirectTo: urlToUse(),
       },
-    })
-    const currentUser =
-      JSON.parse(
-        localStorage.getItem("sb-xkwspfurbsmpwwazlkmu-auth-token") as string
-      ) || {};
-
-    if (error) {
-      console.log("error while signing up with google", error)
-    }
-
-    if (data) {
-      localStorage.setItem("token", JSON.stringify(data))
-      console.log(data)
-    }
-  }
+    });
+  };
+  const urlToUse = () => {
+    let url: string | undefined =
+      // process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in production env.
+      process.env.NODE_ENV === "production" ? 
+      process?.env?.NEXT_PUBLIC_VERCEL_URL : // Automatically set by Vercel.
+      "http://localhost:3000/discussion";
+    // Make sure to include `https://` when not localhost.
+    url = url?.includes("http") ? url : `https://${url}`;
+    // Make sure to include a trailing `/`.
+    url = url?.charAt(url.length - 1) === "/" ? url : `${url}/`;
+    return url;
+  };
 
   // async function handleSignInWithGoogle(response) {
   //   const { data, error } = await supabase.auth.signInWithIdToken({
@@ -62,7 +61,7 @@ const GoogleButton = () => {
 
 
       <div
-        onClick={() => handleSignUp()}
+        onClick={() => handleGoogleSignin()}
         data-u
         className='flex border p-4 gap-3 self-center'>
 
