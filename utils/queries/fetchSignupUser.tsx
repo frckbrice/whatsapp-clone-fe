@@ -10,9 +10,9 @@ const fetchSignupUser = async (email: string) => {
 
   if (error) console.log("error while fetching signup user", error);
   if (data) {
-    // console.log("Here is signup user", data)
+    console.log("Here is signup user", data);
     localStorage.setItem("sender", JSON.stringify(data));
   }
-  return data;
+  return data[0];
 };
 export default fetchSignupUser;

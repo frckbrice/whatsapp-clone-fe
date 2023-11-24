@@ -21,19 +21,26 @@ const Signupb = () => {
 
   const handleInputChange = async () => {
     setIsloading(true);
-    const googleUser = JSON.parse(localStorage.getItem("sb-xkwspfurbsmpwwazlkmu-auth-token") || '{}')
+    const googleUser = JSON.parse(
+      localStorage.getItem("sb-xkwspfurbsmpwwazlkmu-auth-token") || "{}"
+    );
 
-    localStorage.setItem("email", JSON.stringify(googleUser.user.email))
+    localStorage.setItem("email", googleUser.user.email);
 
     const { data, error } = await supabase
-      .from('user')
-      .insert({ email: googleUser.user.email, name: googleUser.user.user_metadata.name, image: googleUser.user.user_metadata.picture, phone: googleUser.user.identities.phone  })
+      .from("user")
+      .insert({
+        email: googleUser.user.email,
+        name: googleUser.user.user_metadata.name,
+        image: googleUser.user.user_metadata.picture,
+        phone: googleUser.user.identities.phone,
+      });
 
-    if (error) console.log('an error occured while sending user', error)
-    
-      console.log('data from DB', data)
-    
-    router.push('/discussions')
+    if (error) console.log("an error occured while sending user", error);
+
+    console.log("data from DB", data);
+
+    router.push("/discussions");
 
     // const email = localStorage.getItem("email");
     // const random = one + two + three + four + five + six;
@@ -61,8 +68,6 @@ const Signupb = () => {
     //   setIsloading(false);
     //   return;
     // }
-
-
   };
 
   return (
@@ -70,8 +75,8 @@ const Signupb = () => {
       <h1>Welcome to Waxchat</h1>
       <h4>A chat app where you can chat with your relatives</h4>
       <button
-      onClick={() => handleInputChange()}
-      className="border p-3 bg-red-300"
+        onClick={() => handleInputChange()}
+        className="border p-3 bg-red-300"
       >
         Next
       </button>

@@ -49,7 +49,7 @@ import { useRouter } from "next/navigation";
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
-  const email: string = localStorage.getItem("email") as string;
+  const email: string = JSON.parse(localStorage.getItem("email") as string);
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
@@ -80,7 +80,7 @@ const Discossions = () => {
   const router = useRouter();
   const [imageUrl, setImageUrl] = useState("");
 
-  // if (!email && !currentUser) router.push("/");s
+  console.log(email);
   const {
     setOpenSideNav,
     openSideNav,
@@ -123,7 +123,7 @@ const Discossions = () => {
   };
 
   useEffect(() => {
-    fetchSignupUser(currentUser?.email as string)
+    fetchSignupUser(email)
       .then((data) => {
         console.log(data);
         // setCurrentUser(data);
