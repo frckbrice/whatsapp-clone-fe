@@ -63,7 +63,7 @@ const GoogleButton = () => {
       <button
         onClick={() => handleGoogleSignin()}
         data-u
-        className='flex border text-xl items-center rounded p-4 gap-3 px-8 text-white bg-themecolor font-bold m-auto'>
+        className='flex border border-themecolor text-xl items-center rounded p-4 gap-3 px-8   font-bold m-auto'>
 
         <Image
           height={22}
