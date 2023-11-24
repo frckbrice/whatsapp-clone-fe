@@ -297,7 +297,7 @@ const Discossions = () => {
           <UploadPicture />
           <div className={importPict ? "hidden" : "flex w-full "}>
             
-            <div className=" w-[25vw] h-full">
+            <div className=" w-[25vw] h-screen fixed">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
@@ -339,7 +339,7 @@ const Discossions = () => {
                 users={users}
                 groups={groups}
                 setReceiver={setReceiver}
-                className="overflow-scroll overscroll-y-contain h-full"
+                className="overflow-scroll overscroll-y-contain h-full "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
