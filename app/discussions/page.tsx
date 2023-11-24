@@ -44,8 +44,6 @@ import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { useRouter } from "next/navigation";
 
-import Header from "@/components/profilPage/Header";
-
 // import { useWhatSappContext } from "@/components/context";
 
 const Discossions = () => {
