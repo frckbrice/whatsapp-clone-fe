@@ -23,16 +23,16 @@ const Signup = () => {
     <div>
       <div className="flex flex-col justify-center mt-2 xl:mt-5 w-[75vw] mobile:max-sm:w-[95%]">
         <div className="flex items-center gap-4 text-white">
-          <Image src={"/logo.png"} width={50} height={50} alt={""}></Image>
-          <p>WHATSAPP WEB</p>
+          <Image src={"/logo.png"} width={60} height={60} alt={""}></Image>
+          <p className="font-bold text-xl">WHATSAPP WEB</p>
         </div>
 
         <div className="bg-white  mobile:max-sm:ml-2 flex flex-col justify-center w-full p-20 mobile:max-sm:p-5 mt-8 rounded drop-shadow">
-          <h2 className="text-center text-gray-900 text-2xl">
-            Welcome to Waxchat
+          <h2 className="text-center text-4xl font-extrabold text-gray-950 mb-4">
+            Log In With Whatsapp Using Just Your Email 
           </h2>
-          <p className="text-center text-slate-500 mt-2">
-            A chat app that permits you to chat with your relatives
+          <p className="text-center text-slate-500 mb-6">
+            Cross platform web messaging with friends and family all over the world.
           </p>
 
           <GoogleButton />

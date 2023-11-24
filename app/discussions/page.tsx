@@ -298,7 +298,7 @@ const Discossions = () => {
           <div className={importPict ? "hidden" : "flex w-full "}>
             
             
-            <div className=" w-[25vw] h-screen left-0 top-0">
+            <div className=" w-[25vw] h-screen">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
@@ -414,7 +414,9 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full mt-10 z-0 px-10 h-[80vh] overflow-y-auto ">
+              {/* chat space board  */}
+
+              <div className=" w-full mt-10 z-0 px-10 h-[80vh] overflow-y-auto bg-slate-900">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -433,6 +435,7 @@ const Discossions = () => {
               </div>
 
 
+{/* input chat message  */}
               <div
                 className={
                   !start
@@ -479,7 +482,7 @@ const Discossions = () => {
                   <IoSendSharp />
                 </button>
               </div>
-
+{/* end of chat message input  */}
               
             </div>
             {openContactInfo ? (
