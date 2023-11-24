@@ -7,8 +7,8 @@ const fetchGroupsOfSingleUser = async () => {
   const { data, error } = await supabase
     .from("roomuser")
     .select("room_id")
-    .eq("user_id", sender.id)
-    .eq("user_id", sender);
+    .eq("user_id", sender.id);
+  // .eq('user_id', sender)
 
   if (error)
     console.log(

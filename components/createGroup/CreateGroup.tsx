@@ -36,7 +36,7 @@ const CreateGroup = ({ users, currentUser }: Props) => {
   const [membersID, setMembersId] = useState<Array<string>>([]);
   const [showNextBtn, setShowNextBtn] = useState(false);
   const [groupSetup, setGroupSetup] = useState(true);
-  const [notify, setNotify] = useState<string>("")
+  const [notify, setNotify] = useState<string>("");
 
   useEffect(() => {
     LOCAL_STORAGE.save("group_members", []);
@@ -46,15 +46,15 @@ const CreateGroup = ({ users, currentUser }: Props) => {
   // Add group members
   function handleDirectMessage(member: any) {
     if (members.find((user) => user.id === member.id)) {
-      setNotify("Already added")
-      
+      setNotify("Already added");
+
       console.log("aready added");
       return;
     }
 
     setTimeout(() => {
-      setNotify('')
-    }, 1000)
+      setNotify("");
+    }, 1000);
 
     let selectedMember = members;
     selectedMember.push(member);
@@ -127,7 +127,7 @@ const CreateGroup = ({ users, currentUser }: Props) => {
               />
             </div>
             <div></div>
-            <div className="px-3 h-[60vh] overflow-scroll">
+            <div className="px-3 h-[60vh] overflow-auto">
               {users && (
                 <div className="flex gap-2 w-full flex-col ">
                   {users?.map((item: any) => (

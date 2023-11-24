@@ -38,6 +38,8 @@ const Signupb = () => {
         .from("user")
         .insert({ email: email });
 
+      console.log(data);
+
       if (error) {
         console.log(error);
         setError("Email address already exist");

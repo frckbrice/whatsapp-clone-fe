@@ -43,12 +43,13 @@ const Signup = () => {
           router.push('/discussions')
           return
         }
+        // new email not in DB
         if (res?.length === 0) {
           const { error, data } = await supabase.auth.signInWithOtp({ email });
 
           if (error) {
             setError('Something went wrong')
-            console.log(error);
+            console.log('error from supabase', error);
             return
           }
           if (data) {
