@@ -144,18 +144,22 @@ const Signup = () => {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: "http://localhost:3000/discussions",
+        redirectTo: usrToUse(),
       },
     });
   };
 
-  const currentUser =
-    JSON.parse(
-      localStorage.getItem("sb-xkwspfurbsmpwwazlkmu-auth-token") as string
-    ) || {};
-
-  // console.log(currentUser.user);
-  console.log("locastorage data", currentUser.user);
+  const usrToUse = () => {
+    let url =
+      process?.env?.NODE_ENV === "production" // Set this to your site URL in production env.
+        ? process?.env?.NEXT_PUBLIC_VERCEL_URL // Automatically set by Vercel.
+        : "http://localhost:3000/discussions";
+    // Make sure to include `https://` when not localhost.
+    url = url?.includes("http") ? url : `https://${url}`;
+    // Make sure to include a trailing `/`.
+    url = url?.charAt(url.length - 1) === "/" ? url : `${url}/`;
+    return url;
+  };
 
   return (
     <div>

@@ -51,7 +51,7 @@ import Header from "@/components/profilPage/Header";
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
-  const email: string = (localStorage.getItem("email") as string) || {};
+  const email: string = localStorage.getItem("email") as string;
   const [users, setUsers] = useState<User[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
@@ -82,7 +82,7 @@ const Discossions = () => {
   const router = useRouter();
   const [imageUrl, setImageUrl] = useState("");
 
-  if (!email && !currentUser) router.push("/");
+  // if (!email && !currentUser) router.push("/");s
   const {
     setOpenSideNav,
     openSideNav,
@@ -154,12 +154,6 @@ const Discossions = () => {
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
-
-  // this is useEffect is mainly to let user setup their profile after the have signup
-  // useEffect(() => {
-  //   setImageUrl(LOCAL_STORAGE.get("imageURL"));
-  //   // i am using this localhost image to check if the use have setup his/her profile
-  // }, []);
 
   // console.log("these are groups", groups);
   useEffect(() => {
