@@ -330,7 +330,7 @@ const Discossions = () => {
                 users={users}
                 groups={groups}
                 setReceiver={setReceiver}
-                className="overflow-scroll overscroll-y-contain h-fit "
+                className=" overflow-y-auto h-fit "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
@@ -403,7 +403,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col mt-3 px-10 h-[80vh] overflow-y-auto ">
+              <div className=" w-full flex flex-col mt-3 px-10 z-0 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -487,22 +487,21 @@ const Discossions = () => {
               </CreateGrt>
             )}
           </div>
-          {!profilepict ||
-            (!currentUser?.image && (
-              <div
-                className={`bg-themecolor ${
-                  openProfile ? "hidden" : "visible"
-                } flex justify-between items-center fixed w-full p-5`}
+          {/* {!profilepict && (
+            <div
+              className={`bg-themecolor ${
+                openProfile ? "hidden" : "visible"
+              } flex justify-between items-center fixed w-full p-5`}
+            >
+              <p>Welcome to WhatsApp Clone..!</p>
+              <button
+                onClick={() => setOpenProfile(true)}
+                className="border p-2 rounded-full"
               >
-                <p>Welcome to WhatsApp Clone..!</p>
-                <button
-                  onClick={() => setOpenProfile(true)}
-                  className="border p-2 rounded-full"
-                >
-                  setup your profile
-                </button>
-              </div>
-            ))}
+                setup your profile
+              </button>
+            </div>
+          )} */}
         </>
       )}
     </>

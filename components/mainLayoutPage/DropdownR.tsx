@@ -32,7 +32,7 @@ const DropDownR = forwardRef<HTMLUListElement>((props, ref) => {
         <AiFillCamera size={25} className=" bg- text-[#ff2a58] " />{" "}
         <span className="ml-2">Camera</span>
       </li>
-      <li className="w-64  text-sm capitalize text-gray-700 hover:bg-bgGray hover:text-black py-[10px] px-[24px] hover:w-full cursor-pointer  nowrap flex items-center">
+      {/* <li className="w-64  text-sm capitalize text-gray-700 hover:bg-bgGray hover:text-black py-[10px] px-[24px] hover:w-full cursor-pointer  nowrap flex items-center">
         <FaUserLarge size={22} className=" bg-white text-[#4a64cb] " />{" "}
         <span className="ml-2">Contact</span>
       </li>
@@ -47,7 +47,7 @@ const DropDownR = forwardRef<HTMLUListElement>((props, ref) => {
       <li className="w-64  text-sm capitalize text-gray-700 hover:bg-bgGray hover:text-black py-[10px] px-[24px] hover:w-full cursor-pointer  nowrap flex items-center">
         <WiStars size={23} className=" bg-[#20c997] text-white rounded-md" />{" "}
         <span className="ml-2">New sticker</span>
-      </li>
+      </li> */}
     </ul>
   );
 });

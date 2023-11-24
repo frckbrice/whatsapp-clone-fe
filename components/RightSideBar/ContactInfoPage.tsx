@@ -16,15 +16,18 @@ import { Room, User } from "@/type";
 
 type Props = {
   children?: React.ReactElement[];
-  roomObject?: Room
+  roomObject?: Room;
 };
 
 const ContactInfoPage = ({ roomObject }: Props) => {
-  const reciever: User = JSON.parse(localStorage.getItem("reciever") || '{}')
+  const reciever: User = JSON.parse(localStorage.getItem("reciever") || "{}");
   return (
-    <div className=" flex flex-col space-y-2 bg-bgGray max-h-screen overflow-auto">
+    <div className=" flex flex-col space-y-2 bg-bgGray max-h-[90vh] overflow-auto">
       <Card
-        image={roomObject?.image || "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="}
+        image={
+          roomObject?.image ||
+          "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
+        }
         phoneNumber={roomObject?.phone || "Edit Your profile"}
         usernames={roomObject?.name || "Edite your profile"}
       />
@@ -121,7 +124,7 @@ const ContactInfoPage = ({ roomObject }: Props) => {
         </div>
       </div>
       <div className=" w-full px-7 py-5 bg-white border-y border-y-gray-200">
-        <ContactAction roomObject={roomObject}/>
+        <ContactAction roomObject={roomObject} />
       </div>
     </div>
   );
