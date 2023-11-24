@@ -310,8 +310,9 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    currentUser?.image ||
-                    "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
+                    currentUser && currentUser.image !== ""
+                      ? `${currentUser.image}`
+                      : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
                   size={10}
                 />
@@ -354,7 +355,7 @@ const Discossions = () => {
                     ? "bg-whatsappdashimg bg-no-repeat bg-cover"
                     : "bg-whatsappimg pb-10"
                   }  border-r border-r-gray-300 z-0`
-                  : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${!start
+                  : `relative w-[75vw] bg-whatsappdashimg bg-fixed z-0 pb-10 ${!start
                     ? "bg-whatsappdashimg bg-no-repeat bg-cover"
                     : "bg-whatsappimg"
                   }`
