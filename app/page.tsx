@@ -1,12 +1,6 @@
-// import DeployButton from "../components/DeployButton";
-// import AuthButton from "../components/AuthButton";
 import { createClient } from "@/utils/supabase/server";
-// import ConnectSupabaseSteps from "@/components/ConnectSupabaseSteps";
-// import SignUpUserSteps from "@/components/SignUpUserSteps";
-// import Header from "@/components/Header";
 import { cookies } from "next/headers";
 import Signup from "@/components/signup";
-import Signupb from "@/components/signupb";
 import Discossions from "@/app/discussions/page";
 import SideNavRight from "@/components/RightSideBar/SideNavRight";
 import SearchField from "@/components/RightSideBar/SearchField";

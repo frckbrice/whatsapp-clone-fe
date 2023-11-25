@@ -22,20 +22,10 @@ const GoogleButton = () => {
       process.env.NODE_ENV === "production" ?
         process?.env?.NEXT_PUBLIC_VERCEL_URL : // Automatically set by Vercel.
         "http://localhost:3000/discussion";
-    // Make sure to include `https://` when not localhost.
     url = url?.includes("http") ? url : `https://${url}`;
-    // Make sure to include a trailing `/`.
     url = url?.charAt(url.length - 1) === "/" ? url : `${url}/`;
     return url;
   };
-
-  // async function handleSignInWithGoogle(response) {
-  //   const { data, error } = await supabase.auth.signInWithIdToken({
-  //     provider: 'google',
-  //     token: response.credential,
-  //     nonce: 'NONCE', // must be the same one as provided in data-nonce (if any)
-  //   })
-  // }
 
   return (
     <div>
@@ -55,4 +45,5 @@ const GoogleButton = () => {
     </div>
   )
 }
+
 export default GoogleButton
