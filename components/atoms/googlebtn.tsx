@@ -22,8 +22,8 @@ const GoogleButton = () => {
       process.env.NODE_ENV === "production" ?
         process?.env?.NEXT_PUBLIC_VERCEL_URL : // Automatically set by Vercel.
         "http://localhost:3000/discussion";
-    url = url?.includes("http") ? url : `https://${url}`;
-    url = url?.charAt(url.length - 1) === "/" ? url : `${url}/`;
+    // url = url?.includes("http") ? url : `https://${url}`;
+    // url = url?.charAt(url.length - 1) === "/" ? url : `${url}/`;
     console.log("hint", process.env.NODE_ENV)
     return url;
   };
