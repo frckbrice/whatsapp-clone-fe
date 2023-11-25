@@ -49,7 +49,7 @@ import { useRouter } from "next/navigation";
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
-  const email = JSON.parse((localStorage.getItem("email") as string));
+  const email: string = JSON.parse(localStorage.getItem("email") as string);
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
@@ -123,11 +123,10 @@ const Discossions = () => {
     setLabel(() => (label === "Light" ? "Night" : "Light"));
   };
 
-  console.log(email)
   useEffect(() => {
     fetchSignupUser(email)
       .then((data) => {
-        console.log(data)
+        console.log(data);
         // setCurrentUser(data);
       })
       .catch((err) => {
@@ -152,7 +151,7 @@ const Discossions = () => {
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
-  console.log('this is currentUser', currentUser)
+  console.log("this is currentUser", currentUser);
 
   // this is useEffect is mainly to let user setup their profile after the have signup
   // useEffect(() => {
@@ -319,9 +318,9 @@ const Discossions = () => {
 
                 <div className="flex gap-5">
                   {/* <Header switchTheme={switchTheme} label={label} /> */}
-                  <button className="text-2xl text-gray-600">
+                  {/* <button className="text-2xl text-gray-600">
                     <MdGroups2 />
-                  </button>
+                  </button> */}
                   <button
                     className="text-2xl text-gray-600 relative rounded-full"
                     onClick={() => setShowDropdownleft((prev) => !prev)}
@@ -338,7 +337,7 @@ const Discossions = () => {
                 users={users}
                 groups={groups}
                 setReceiver={setReceiver}
-                className="overflow-scroll overscroll-y-contain h-fit "
+                className=" overflow-y-auto h-fit "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
@@ -348,14 +347,16 @@ const Discossions = () => {
               ref={ref}
               className={
                 openSideNav || openContactInfo
-                  ? `relative w-[50vw] ${!start
-                    ? "bg-whatsappdashimg bg-no-repeat bg-cover"
-                    : "bg-whatsappimg pb-10"
-                  }  border-r border-r-gray-300 z-0`
-                  : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${!start
-                    ? "bg-whatsappdashimg bg-no-repeat bg-cover"
-                    : "bg-whatsappimg"
-                  }`
+                  ? `relative w-[50vw] ${
+                      !start
+                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
+                        : "bg-whatsappimg pb-10"
+                    }  border-r border-r-gray-300 z-0`
+                  : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${
+                      !start
+                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
+                        : "bg-whatsappimg"
+                    }`
               }
             >
               <div
@@ -409,7 +410,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col mt-3 px-10 h-[80vh] overflow-y-auto ">
+              <div className=" w-full flex flex-col mt-3 px-10 z-0 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -432,8 +433,8 @@ const Discossions = () => {
                   !start
                     ? "hidden"
                     : openSideNav || openContactInfo
-                      ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
-                      : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
+                    ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
+                    : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
                 }
               >
                 {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}
@@ -493,21 +494,6 @@ const Discossions = () => {
               </CreateGrt>
             )}
           </div>
-          {!profilepict ||
-            (!currentUser?.image && (
-              <div
-                className={`bg-themecolor ${openProfile ? "hidden" : "visible"
-                  } flex justify-between items-center fixed w-full p-5`}
-              >
-                <p>Welcome to WhatsApp Clone..!</p>
-                <button
-                  onClick={() => setOpenProfile(true)}
-                  className="border p-2 rounded-full"
-                >
-                  setup your profile
-                </button>
-              </div>
-            ))}
         </>
       )}
     </>
