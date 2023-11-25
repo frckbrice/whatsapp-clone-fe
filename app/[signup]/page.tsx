@@ -47,9 +47,9 @@ const Signupb = () => {
       <h4>A chat app where you can chat with your relatives</h4>
       <button
         onClick={() => handleInputChange()}
-        className={isLoading ? "cursor-not-allowed" : "border p-3 bg-red-300"}
+        className="border p-3 bg-red-300"
       >
-        Next
+        {isLoading ? <Pulsation/> : "Next"}
       </button>
     </div>
   );
