@@ -24,6 +24,7 @@ const GoogleButton = () => {
         "http://localhost:3000/discussion";
     url = url?.includes("http") ? url : `https://${url}`;
     url = url?.charAt(url.length - 1) === "/" ? url : `${url}/`;
+    console.log("hint", process.env.NODE_ENV)
     return url;
   };
 

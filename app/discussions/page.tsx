@@ -49,7 +49,7 @@ import { useRouter } from "next/navigation";
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
-  const email = JSON.parse((localStorage.getItem("email") as string));
+  const email = JSON.parse(localStorage.getItem("email") as string);
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
@@ -123,11 +123,11 @@ const Discossions = () => {
     setLabel(() => (label === "Light" ? "Night" : "Light"));
   };
 
-  console.log(email)
+  console.log(email);
   useEffect(() => {
     fetchSignupUser(email)
       .then((data) => {
-        console.log(data)
+        console.log(data);
         // setCurrentUser(data);
       })
       .catch((err) => {
@@ -276,7 +276,7 @@ const Discossions = () => {
     .subscribe();
 
   return (
-    <>
+    <div className="overflow-hidden h-[100vh]">
       {showPPicture ? (
         <ShowProfilePicture>
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
@@ -296,17 +296,16 @@ const Discossions = () => {
         <>
           <UploadPicture />
           <div className={importPict ? "hidden" : "flex w-full "}>
-            
-            
-            <div className=" w-[25vw] h-screen">
+            <div className=" w-[25vw] bg-white ">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
+
               <div
                 className={
                   openProfile || importPict
                     ? "hidden"
-                    : "flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r z-0 top-0 fixed"
+                    : "flex items-center max-h-16 justify-between bg-bgGray w-[25vw] h-max-5 px-3 py-2 border-r z-0 top-0 fixed"
                 }
               >
                 <Avatar
@@ -340,7 +339,7 @@ const Discossions = () => {
                 users={users}
                 groups={groups}
                 setReceiver={setReceiver}
-                className="overflow-scroll overscroll-y-contain h-full "
+                className="h-full mt-16 overflow-y-scroll no-scrollbar"
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
@@ -367,7 +366,7 @@ const Discossions = () => {
                 className={
                   !start
                     ? "hidden"
-                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 cursor-pointer top-0 fixed"
+                    : "flex items-center bg-bgGray max-h-16 justify-between w-[75vw] h-max-5 px-3 py-2 cursor-pointer top-0 fixed"
                 }
               >
                 <div
@@ -414,7 +413,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full mt-10 z-0 px-10 h-[80vh] overflow-y-auto ">
+              <div className=" w-full mt-16 z-0 px-10 pb-6 h-[88vh] mb-16 overflow-y-scroll no-scrollbar">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -432,9 +431,7 @@ const Discossions = () => {
                 )}
               </div>
 
-
-
-{/* input chat message  */}
+              {/* input chat message  */}
               <div
                 className={
                   !start
@@ -481,33 +478,35 @@ const Discossions = () => {
                   <IoSendSharp />
                 </button>
               </div>
-{/* end of chat message input  */}
-              
+              {/* end of chat message input  */}
             </div>
-            {openContactInfo ? (
-              <SideNavRight title="Contact Infos">
-                <ContactInfoPage roomObject={recipient || roomObject} />
-              </SideNavRight>
-            ) : (
-              <SideNavRight title="Search for messages">
-                <SearchField />
-              </SideNavRight>
-            )}
 
-            {showCreateGroup && (
-              <CreateGrt title="Create new group">
-                <CreateGroup
-                  currentUser={currentUser}
-                  users={userInGroupsCreations}
-                />
-              </CreateGrt>
-            )}
+              {openContactInfo ? (
+                <SideNavRight title="Contact Infos">
+                 <div> <ContactInfoPage roomObject={recipient || roomObject} /></div>
+                </SideNavRight>
+              ) : (
+                <SideNavRight title="Search for messages">
+                  <SearchField />
+                </SideNavRight>
+              )}
+
+              {showCreateGroup && (
+                <CreateGrt title="Create new group">
+                  <CreateGroup
+                    currentUser={currentUser}
+                    users={userInGroupsCreations}
+                  />
+                </CreateGrt>
+              )}
+            
           </div>
           {!profilepict ||
             (!currentUser?.image && (
               <div
-                className={`bg-themecolor ${openProfile ? "hidden" : "visible"
-                  } flex justify-between items-center fixed w-full p-5`}
+                className={`bg-themecolor ${
+                  openProfile ? "hidden" : "visible"
+                } flex justify-between items-center fixed p-5`}
               >
                 <p>Welcome to WhatsApp Clone..!</p>
                 <button
@@ -520,7 +519,7 @@ const Discossions = () => {
             ))}
         </>
       )}
-    </>
+    </div>
   );
 };
 

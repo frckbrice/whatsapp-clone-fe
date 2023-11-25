@@ -118,12 +118,12 @@ const DirectMessage = ({
                 <span className="mx-auto ">
                   {dayjs().to(dayjs(item?.updated_at))}
                 </span>
-                <button
+                {/* <button
                   className="hover:bg-gray-300 rounded-full w-fit self-center"
                   onClick={() => removeMember(item.id)}
                 >
                   <IoIosClose size={20} />
-                </button>
+                </button> */}
               </div>
             </div>
           ))}
