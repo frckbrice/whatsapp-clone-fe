@@ -49,7 +49,7 @@ import { useRouter } from "next/navigation";
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
-  const email: string = (localStorage.getItem("email") as string);
+  const email = JSON.parse((localStorage.getItem("email") as string));
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
@@ -123,8 +123,9 @@ const Discossions = () => {
     setLabel(() => (label === "Light" ? "Night" : "Light"));
   };
 
+  console.log(email)
   useEffect(() => {
-    fetchSignupUser(currentUser?.email as string)
+    fetchSignupUser(email)
       .then((data) => {
         console.log(data)
         // setCurrentUser(data);
@@ -414,9 +415,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              {/* chat space board  */}
-
-              <div className=" w-full mt-10 z-0 px-10 h-[80vh] overflow-y-auto bg-slate-900">
+              <div className=" w-full mt-10 z-0 px-10 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -433,6 +432,7 @@ const Discossions = () => {
                   ""
                 )}
               </div>
+
 
 
 {/* input chat message  */}

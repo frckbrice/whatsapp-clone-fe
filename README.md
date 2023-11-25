@@ -1,41 +1,61 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
+<!-- <a href="https://demo-nextjs-with-supabase.vercel.app/">
   <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
   <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+</a> -->
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+<h1 align="center">
+ WhatsApp Web Clone
+</h1>
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+![WhatsApp Web Clone](/path/to/your/image.png)
+
+This project is a clone of WhatsApp Web built using Supabase and Next.js. It aims to replicate the core functionality of WhatsApp Web, allowing users to send and receive messages through a web interface.
+
 
 ## Features
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+- User authentication: Users can create accounts, log in, and log out.
+- Real-time messaging: Users can send and receive messages in real-time.
+- Contact list: Users can view their contacts and initiate conversations.
+- Message history: Conversations are stored and can be accessed for reference.
+- Responsive design: The web application is optimized for various devices.
+
+## Technologies Used
+
+- [Supabase](https://supabase.io/): Supabase is an open-source alternative to Firebase, providing a back-end infrastructure for authentication, real-time database, and storage.
+- [Next.js](https://nextjs.org/): Next.js is a React framework for building server-side rendered and statically generated web applications.
+- [React](https://reactjs.org/): React is a JavaScript library for building user interfaces.
+- [Tailwind CSS](https://tailwindcss.com/): Tailwind CSS is a utility-first CSS framework for rapidly building custom user interfaces.
 
 ## Demo
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+You can view a fully working demo at [https://waxchat.vercel.app/](https://https://waxchat.vercel.app/).
 
-## Deploy to Vercel
+## Project Description
+
+This project was assigned to us as part of our school curriculum to enhance our web development skills and gain hands-on experience with modern web technologies. Our goal is to learn and apply the concepts of real-time communication, user authentication, and responsive design in the context of building a WhatsApp Web clone.
+
+## Getting Started
+
+To get started with the WhatsApp Web Clone, follow these steps:
+
+1. Clone the repository: `git@github.com:Gmarvis/whatsapp-clone.git`
+2. Navigate to the project directory: `cd whatsapp-web-clone`
+3. Install the dependencies: `npm install`
+4. Set up Supabase:
+   - Create a Supabase project at [supabase.io](https://supabase.io/).
+   - Obtain the Supabase URL and API key.
+   - Configure Supabase in the project by adding the URL and API key to the environment variables.
+5. Start the development server: `npm run dev`
+6. Open your browser and visit `http://localhost:3000` to access the WhatsApp Web Clone.
+
+## Acknowledgements
+
+We would like to acknowledge our school for assigning this project to us as part of our learning journey. This project provides us with an opportunity to explore and apply new technologies and concepts in the field of web development. We are grateful for the guidance and support provided by our teachers and mentors throughout this project.
+
+- The WhatsApp Web interface served as inspiration for this project.
+
+<!-- ## Deploy to Vercel
 
 Vercel deployment will guide you through creating a Supabase account and project.
 
@@ -90,4 +110,4 @@ Please file feedback and issues over on the [Supabase GitHub org](https://github
 
 - [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
 - [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs) -->
