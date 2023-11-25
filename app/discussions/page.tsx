@@ -277,7 +277,7 @@ const Discossions = () => {
     .subscribe();
 
   return (
-    <div className="overflow-hidden">
+    <>
       {showPPicture ? (
         <ShowProfilePicture>
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
@@ -305,7 +305,7 @@ const Discossions = () => {
                 className={
                   openProfile || importPict
                     ? "hidden"
-                    : "flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r z-0 top-0 fixed"
+                    : "flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r z-0"
                 }
               >
                 <Avatar
@@ -334,8 +334,6 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
-
-
               <DirectMessage
                 users={users}
                 groups={groups}
@@ -346,28 +344,25 @@ const Discossions = () => {
                 setRecipient={setRecipient}
               />
             </div>
-
             <div
               ref={ref}
               className={
                 openSideNav || openContactInfo
-                  ? `relative w-[50vw] ${
-                      !start
-                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
-                        : "bg-whatsappimg pb-10"
-                    }  border-r border-r-gray-300 z-0`
-                  : `relative w-[75vw] bg-whatsappdashimg bg-fixed z-0 pb-10 ${
-                      !start
-                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
-                        : "bg-whatsappimg"
-                    }`
+                  ? `relative w-[50vw] ${!start
+                    ? "bg-whatsappdashimg bg-no-repeat bg-cover"
+                    : "bg-whatsappimg pb-10"
+                  }  border-r border-r-gray-300 z-0`
+                  : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${!start
+                    ? "bg-whatsappdashimg bg-no-repeat bg-cover"
+                    : "bg-whatsappimg"
+                  }`
               }
             >
               <div
                 className={
                   !start
                     ? "hidden"
-                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 cursor-pointer fixed top-0 z-10"
+                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 cursor-pointer"
                 }
               >
                 <div
@@ -414,7 +409,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className="w-full mt-10 px-10 h-full overflow-y-auto z-0">
+              <div className=" w-full flex flex-col mt-3 px-10 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -515,7 +510,7 @@ const Discossions = () => {
             ))}
         </>
       )}
-    </div>
+    </>
   );
 };
 
