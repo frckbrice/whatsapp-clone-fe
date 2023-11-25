@@ -17,15 +17,20 @@ This project is a clone of WhatsApp Web built using Supabase and Next.js. It aim
 - User authentication: Users can create accounts, log in, and log out.
 - Real-time messaging: Users can send and receive messages in real-time.
 - Contact list: Users can view their contacts and initiate conversations.
-- Message history: Conversations are stored and can be accessed for reference.
+- Message history: Conversations are stored and can be accessed for reference between two users.
 - Responsive design: The web application is optimized for various devices.
 
 ## Technologies Used
 
-- [Supabase](https://supabase.io/): Supabase is an open-source alternative to Firebase, providing a back-end infrastructure for authentication, real-time database, and storage.
-- [Next.js](https://nextjs.org/): Next.js is a React framework for building server-side rendered and statically generated web applications.
-- [React](https://reactjs.org/): React is a JavaScript library for building user interfaces.
-- [Tailwind CSS](https://tailwindcss.com/): Tailwind CSS is a utility-first CSS framework for rapidly building custom user interfaces.
+- [Supabase](https://supabase.com/): Supabase is an open-source alternative to Firebase, providing a back-end infrastructure for authentication, real-time database, and storage.
+
+  Version Used ; 
+  - @supabase/auth-helpers-nextjs: version 0.8.7
+  - @supabase/ssr: version 0.0.10
+  - @supabase/supabase-js: version 2.38.4
+- [Next.js](https://nextjs.org/) (latest version): Next.js is a React framework for building server-side rendered and statically generated web applications.
+- [React](https://reactjs.org/) (version 18.2.0): React is a JavaScript library for building user interfaces.
+- [Tailwind CSS](https://tailwindcss.com/) (version 3.3.3): Tailwind CSS is a utility-first CSS framework for rapidly building custom user interfaces.
 
 ## Demo
 
