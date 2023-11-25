@@ -276,8 +276,11 @@ const Discossions = () => {
     )
     .subscribe();
 
+
+
+
   return (
-    <>
+    <div className="overflow-hidden h-[100vh]">
       {showPPicture ? (
         <ShowProfilePicture>
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
@@ -341,7 +344,7 @@ const Discossions = () => {
                 users={users}
                 groups={groups}
                 setReceiver={setReceiver}
-                className="overflow-scroll overscroll-y-contain h-full "
+                className="overflow-y-scroll no-scrollbar h-full "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
@@ -415,7 +418,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full mt-10 z-0 px-10 h-[80vh] overflow-y-auto ">
+              <div className=" w-full mt-16 z-0 px-10 pb-6 h-[88vh] mb-16 overflow-y-scroll no-scrollbar">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -521,7 +524,7 @@ const Discossions = () => {
             ))}
         </>
       )}
-    </>
+    </div>
   );
 };
 
