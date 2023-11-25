@@ -482,10 +482,9 @@ const Discossions = () => {
               {/* end of chat message input  */}
             </div>
 
-            <div>
               {openContactInfo ? (
                 <SideNavRight title="Contact Infos">
-                  <ContactInfoPage roomObject={recipient || roomObject} />
+                 <div> <ContactInfoPage roomObject={recipient || roomObject} /></div>
                 </SideNavRight>
               ) : (
                 <SideNavRight title="Search for messages">
@@ -501,7 +500,6 @@ const Discossions = () => {
                   />
                 </CreateGrt>
               )}
-            </div>
             
           </div>
           {!profilepict ||
