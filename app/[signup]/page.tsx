@@ -67,11 +67,11 @@ const Signupb = () => {
 
   return (
     <div className=" mt-56 items-center justify-center text-center">
-      <h1 className="text-3xl font-extrabold text-white font-serif">Welcome to WHATSAPP WEB</h1>
+      <h1 className="text-3xl font-extrabold text-white font-serif">Welcome to WAXCHAT WEB</h1>
       <h4 className="mt-8 mb-6 font-bold text-xl text-gray-950">Read our <span className="text-themecolor">Privacy Policy</span>. Tap 'Agree and Continue' to accept the <span className="text-themecolor">Terms of Service</span></h4>
       <button
       onClick={() => handleInputChange()}
-      className="border p-4 px-5 text-base font-extrabold text-themecolor rounded"
+      className="border p-4 px-5 text-base font-extrabold text-black rounded"
       >
         Agree and Continue
       </button>
