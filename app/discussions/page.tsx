@@ -123,6 +123,7 @@ const Discossions = () => {
     setLabel(() => (label === "Light" ? "Night" : "Light"));
   };
 
+  console.log(email);
   useEffect(() => {
     fetchSignupUser(email)
       .then((data) => {
