@@ -36,27 +36,6 @@ const Signup = () => {
           </p>
 
           <GoogleButton />
-
-          {/* <div className="w-1/2 hover:cursor-pointer">
-            <div id="g_id_onload"
-              data-client_id="743181202305-k56gg7eego9at61g95m28u9aikihnltv.apps.googleusercontent.com"
-              data-context="signin"
-              data-ux_mode="popup"
-              data-callback="handleSignInWithGoogle"
-              data-login_uri="https://xkwspfurbsmpwwazlkmu.supabase.co/auth/v1/callback"
-              data-auto_prompt="false">
-            </div>
-
-            <div className="g_id_signin "
-              data-type="standard"
-              data-shape="pill"
-              data-theme="outline"
-              data-text="signin_with"
-              data-size="large"
-              data-locale="en-US"
-              data-logo_alignment="left">
-            </div>
-          </div> */}
         </div>
         
       </div>

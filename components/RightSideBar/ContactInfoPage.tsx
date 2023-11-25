@@ -39,7 +39,7 @@ const ContactInfoPage = ({ roomObject }: Props) => {
         phoneNumber={roomObject?.phone || "Edit Your profile"}
         usernames={roomObject?.name || "Edite your profile"}
       />
-      {!isGroup ? (
+      {isGroup ? (
         <GroupDetials roomObject={roomObject} />
       ) : (
         <>
