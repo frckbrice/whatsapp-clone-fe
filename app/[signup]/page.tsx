@@ -45,6 +45,7 @@ const Signupb = () => {
     <div>
       <h1>Welcome to Waxchat</h1>
       <h4>A chat app where you can chat with your relatives</h4>
+      <p>{success}</p>
       <button
         onClick={() => handleInputChange()}
         className="border p-3 bg-red-300"
