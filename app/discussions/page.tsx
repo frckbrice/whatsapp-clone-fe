@@ -123,7 +123,6 @@ const Discossions = () => {
     setLabel(() => (label === "Light" ? "Night" : "Light"));
   };
 
-  console.log(email);
   useEffect(() => {
     fetchSignupUser(email)
       .then((data) => {
@@ -277,7 +276,7 @@ const Discossions = () => {
     .subscribe();
 
   return (
-    <div className="overflow-hidden h-[100vh]">
+    <>
       {showPPicture ? (
         <ShowProfilePicture>
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
@@ -297,22 +296,20 @@ const Discossions = () => {
         <>
           <UploadPicture />
           <div className={importPict ? "hidden" : "flex w-full "}>
-            <div className=" w-[25vw] bg-white ">
+            <div className="bg-white w-[25vw] h-screen">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
-
               <div
                 className={
                   openProfile || importPict
                     ? "hidden"
-                    : "flex items-center max-h-16 justify-between bg-bgGray w-[25vw] h-max-5 px-3 py-2 border-r z-0 "
+                    : "flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r z-0"
                 }
               >
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    profilepict ||
                     currentUser?.image ||
                     "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
@@ -340,13 +337,12 @@ const Discossions = () => {
                 users={users}
                 groups={groups}
                 setReceiver={setReceiver}
-                className="overflow-auto h-fit"
+                className=" overflow-y-auto h-fit "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
               />
             </div>
-
             <div
               ref={ref}
               className={
@@ -367,7 +363,7 @@ const Discossions = () => {
                 className={
                   !start
                     ? "hidden"
-                    : "flex items-center bg-bgGray max-h-16 justify-between w-[75vw] h-max-5 px-3 py-2 cursor-pointer  "
+                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 cursor-pointer"
                 }
               >
                 <div
@@ -432,7 +428,6 @@ const Discossions = () => {
                 )}
               </div>
 
-              {/* input chat message  */}
               <div
                 className={
                   !start
@@ -479,12 +474,9 @@ const Discossions = () => {
                   <IoSendSharp />
                 </button>
               </div>
-              {/* end of chat message input  */}
             </div>
             {openContactInfo ? (
-              <SideNavRight
-                title={`${roomObject ? "Group info" : "Contact Info"} `}
-              >
+              <SideNavRight title="Contact Infos">
                 <ContactInfoPage roomObject={recipient || roomObject} />
               </SideNavRight>
             ) : (
@@ -502,25 +494,9 @@ const Discossions = () => {
               </CreateGrt>
             )}
           </div>
-          {!profilepict ||
-            (!currentUser?.image && (
-              <div
-                className={`bg-themecolor ${
-                  openProfile ? "hidden" : "visible"
-                } flex justify-between items-center fixed w-full p-5`}
-              >
-                <p>Welcome to WhatsApp Clone..!</p>
-                <button
-                  onClick={() => setOpenProfile(true)}
-                  className="border p-2 rounded-full"
-                >
-                  setup your profile
-                </button>
-              </div>
-            ))}
         </>
       )}
-    </div>
+    </>
   );
 };
 
