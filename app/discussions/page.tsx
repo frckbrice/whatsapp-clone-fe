@@ -152,7 +152,6 @@ const Discossions = () => {
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
-  console.log('this is currentUser', currentUser)
 
   // this is useEffect is mainly to let user setup their profile after the have signup
   // useEffect(() => {
