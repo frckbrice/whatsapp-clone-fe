@@ -318,9 +318,9 @@ const Discossions = () => {
 
                 <div className="flex gap-5">
                   {/* <Header switchTheme={switchTheme} label={label} /> */}
-                  <button className="text-2xl text-gray-600">
+                  {/* <button className="text-2xl text-gray-600">
                     <MdGroups2 />
-                  </button>
+                  </button> */}
                   <button
                     className="text-2xl text-gray-600 relative rounded-full"
                     onClick={() => setShowDropdownleft((prev) => !prev)}
