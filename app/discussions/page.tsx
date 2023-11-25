@@ -302,7 +302,7 @@ const Discossions = () => {
           <div className={importPict ? "hidden" : "flex w-full "}>
             
             
-            <div className=" w-[25vw] h-screen">
+            <div className=" w-[25vw] bg-white ">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
@@ -344,7 +344,7 @@ const Discossions = () => {
                 users={users}
                 groups={groups}
                 setReceiver={setReceiver}
-                className="overflow-y-scroll no-scrollbar h-full "
+                className="h-full bg-pink-400 mt-16 overflow-y-scroll no-scrollbar"
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
@@ -435,8 +435,6 @@ const Discossions = () => {
                   ""
                 )}
               </div>
-
-
 
 {/* input chat message  */}
               <div
