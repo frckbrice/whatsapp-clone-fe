@@ -477,7 +477,9 @@ const Discossions = () => {
               </div>
             </div>
             {openContactInfo ? (
-              <SideNavRight title="Contact Infos">
+              <SideNavRight
+                title={`${roomObject ? "Group info" : "Contact Info"} `}
+              >
                 <ContactInfoPage roomObject={recipient || roomObject} />
               </SideNavRight>
             ) : (
