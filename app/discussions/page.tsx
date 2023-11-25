@@ -280,7 +280,7 @@ const Discossions = () => {
     <>
       {showPPicture ? (
         <ShowProfilePicture>
-          <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20 items-center z-100">
+          <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
             <Image
               src={
                 profilepict ||
@@ -297,7 +297,7 @@ const Discossions = () => {
         <>
           <UploadPicture />
           <div className={importPict ? "hidden" : "flex w-full "}>
-            <div className="bg-white w-[25vw] h-screen overflow-hidden">
+            <div className="bg-white w-[25vw] h-screen">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
@@ -311,6 +311,7 @@ const Discossions = () => {
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
+                    profilepict ||
                     currentUser?.image ||
                     "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
@@ -334,20 +335,15 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
-
-              <div
-                className="overflow-y-scroll h-full fixed w-[25vw] z-0"
-                // style={{ scrollbarWidth: "none", "-ms-overflow-style": "none" }}
-              >
-                <DirectMessage
-                  users={users}
-                  groups={groups}
-                  setReceiver={setReceiver}
-                  setRoomObject={setRoomObject}
-                  setUsers={setUsers}
-                  setRecipient={setRecipient}
-                />
-              </div>
+              <DirectMessage
+                users={users}
+                groups={groups}
+                setReceiver={setReceiver}
+                className="overflow-scroll overscroll-y-contain h-fit "
+                setRoomObject={setRoomObject}
+                setUsers={setUsers}
+                setRecipient={setRecipient}
+              />
             </div>
             <div
               ref={ref}
@@ -355,7 +351,7 @@ const Discossions = () => {
                 openSideNav || openContactInfo
                   ? `relative w-[50vw] ${
                       !start
-                        ? "bg-whatsappdashimg bg-no-repeat"
+                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
                         : "bg-whatsappimg pb-10"
                     }  border-r border-r-gray-300 z-0`
                   : `relative w-[75vw] bg-whatsappdashimg bg-fixed z-0 pb-10 ${
@@ -369,7 +365,7 @@ const Discossions = () => {
                 className={
                   !start
                     ? "hidden"
-                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 cursor-pointer"
+                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 cursor-pointer top-0 fixed"
                 }
               >
                 <div
@@ -416,7 +412,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col mt-3 px-10 h-[80vh] overflow-y-auto ">
+              <div className=" w-full mt-10 z-0 px-10 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -433,6 +429,7 @@ const Discossions = () => {
                   ""
                 )}
               </div>
+
 
               <div
                 className={
@@ -480,6 +477,8 @@ const Discossions = () => {
                   <IoSendSharp />
                 </button>
               </div>
+
+              
             </div>
             {openContactInfo ? (
               <SideNavRight title="Contact Infos">
