@@ -43,13 +43,15 @@ import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 // import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 // import { useWhatSappContext } from "@/components/context";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
-  const email = JSON.parse(localStorage.getItem("email") as string);
+  const email: string = JSON.parse(localStorage.getItem("email") as string);
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
@@ -123,7 +125,6 @@ const Discossions = () => {
     setLabel(() => (label === "Light" ? "Night" : "Light"));
   };
 
-  console.log(email);
   useEffect(() => {
     fetchSignupUser(email)
       .then((data) => {
@@ -205,6 +206,7 @@ const Discossions = () => {
 
   const sendMessageToDB = async () => {
     if (message === "" || !receiver?.id) {
+      toast.warning('Field cannot be empty', { autoClose: 1000, position: toast.POSITION.TOP_CENTER, hideProgressBar: true })
       console.log("message or receiver of the message can not be empty");
       return;
     }
@@ -276,7 +278,7 @@ const Discossions = () => {
     .subscribe();
 
   return (
-    <div className="overflow-hidden h-[100vh]">
+    <>
       {showPPicture ? (
         <ShowProfilePicture>
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
@@ -296,22 +298,20 @@ const Discossions = () => {
         <>
           <UploadPicture />
           <div className={importPict ? "hidden" : "flex w-full "}>
-            <div className=" w-[25vw] bg-white ">
+            <div className="bg-white w-[25vw] h-screen">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
-
               <div
                 className={
                   openProfile || importPict
                     ? "hidden"
-                    : "flex items-center max-h-16 justify-between bg-bgGray w-[25vw] h-max-5 px-3 py-2 border-r z-0 top-0 fixed"
+                    : "flex items-center max-h-16 justify-between bg-bgGray w-full h-max-5 px-3 py-2 border-r z-0"
                 }
               >
                 <Avatar
                   onClick={() => setOpenProfile(true)}
                   profilePicture={
-                    profilepict ||
                     currentUser?.image ||
                     "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
                   }
@@ -320,9 +320,9 @@ const Discossions = () => {
 
                 <div className="flex gap-5">
                   {/* <Header switchTheme={switchTheme} label={label} /> */}
-                  <button className="text-2xl text-gray-600">
+                  {/* <button className="text-2xl text-gray-600">
                     <MdGroups2 />
-                  </button>
+                  </button> */}
                   <button
                     className="text-2xl text-gray-600 relative rounded-full"
                     onClick={() => setShowDropdownleft((prev) => !prev)}
@@ -339,13 +339,12 @@ const Discossions = () => {
                 users={users}
                 groups={groups}
                 setReceiver={setReceiver}
-                className="h-full mt-16 overflow-y-scroll no-scrollbar"
+                className=" overflow-y-auto h-fit "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
               />
             </div>
-
             <div
               ref={ref}
               className={
@@ -366,7 +365,7 @@ const Discossions = () => {
                 className={
                   !start
                     ? "hidden"
-                    : "flex items-center bg-bgGray max-h-16 justify-between w-[75vw] h-max-5 px-3 py-2 cursor-pointer top-0 fixed"
+                    : "flex items-center bg-bgGray max-h-16 justify-between w-full h-max-5 px-3 py-2 cursor-pointer"
                 }
               >
                 <div
@@ -413,7 +412,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full mt-16 z-0 px-10 pb-6 h-[88vh] mb-16 overflow-y-scroll no-scrollbar">
+              <div className=" w-full flex flex-col mt-3 px-10 z-0 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -431,7 +430,6 @@ const Discossions = () => {
                 )}
               </div>
 
-              {/* input chat message  */}
               <div
                 className={
                   !start
@@ -465,6 +463,7 @@ const Discossions = () => {
                 </button>
 
                 <div className="flex bg-white items-center rounded-md gap-5 p-1 w-full">
+                  <ToastContainer/>
                   <input
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3 "
@@ -478,48 +477,29 @@ const Discossions = () => {
                   <IoSendSharp />
                 </button>
               </div>
-              {/* end of chat message input  */}
             </div>
+            {openContactInfo ? (
+              <SideNavRight title="Contact Infos">
+                <ContactInfoPage roomObject={recipient || roomObject} />
+              </SideNavRight>
+            ) : (
+              <SideNavRight title="Search for messages">
+                <SearchField />
+              </SideNavRight>
+            )}
 
-              {openContactInfo ? (
-                <SideNavRight title="Contact Infos">
-                 <div> <ContactInfoPage roomObject={recipient || roomObject} /></div>
-                </SideNavRight>
-              ) : (
-                <SideNavRight title="Search for messages">
-                  <SearchField />
-                </SideNavRight>
-              )}
-
-              {showCreateGroup && (
-                <CreateGrt title="Create new group">
-                  <CreateGroup
-                    currentUser={currentUser}
-                    users={userInGroupsCreations}
-                  />
-                </CreateGrt>
-              )}
-            
+            {showCreateGroup && (
+              <CreateGrt title="Create new group">
+                <CreateGroup
+                  currentUser={currentUser}
+                  users={userInGroupsCreations}
+                />
+              </CreateGrt>
+            )}
           </div>
-          {!profilepict ||
-            (!currentUser?.image && (
-              <div
-                className={`bg-themecolor ${
-                  openProfile ? "hidden" : "visible"
-                } flex justify-between items-center fixed p-5`}
-              >
-                <p>Welcome to WhatsApp Clone..!</p>
-                <button
-                  onClick={() => setOpenProfile(true)}
-                  className="border p-2 rounded-full"
-                >
-                  setup your profile
-                </button>
-              </div>
-            ))}
         </>
       )}
-    </div>
+    </>
   );
 };
 

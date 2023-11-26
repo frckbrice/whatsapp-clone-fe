@@ -30,8 +30,14 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
 
   const uldd = document.getElementById("uldropdown") as HTMLUListElement;
 
-  const { setShowPPicture, setProfilPict, setImportPict, setSendingFile } =
-    useWhatSappContext();
+  const {
+    setShowPPicture,
+    groupIcon,
+    setGroupIcon,
+    setProfilPict,
+    setImportPict,
+    setSendingFile,
+  } = useWhatSappContext();
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
   const { setOpenContactInfo } = useWhatSappContactContext();
 
@@ -72,14 +78,17 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
         const file = e.target.files[0];
         setSendingFile(file);
         const reader = new FileReader();
-        reader.addEventListener("load", (e: any) => {
+        reader.addEventListener("load", async (e: any) => {
           const fileContent = reader.result;
           if (fileContent) {
             setProfilPict(fileContent as string);
+            // console.log("file content", fileContent);
+            const groupAvatar = await uploadGroupIcon(file);
+            if (groupAvatar) setGroupIcon(groupAvatar);
+            // console.log("groupAvatar: ", groupAvatar);
           }
         });
         reader.readAsDataURL(file);
-        uploadGroupIcon(file);
       });
 
       // setImportPict(true);
@@ -90,8 +99,6 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
     if (uldd !== null) {
       uldd.style.display = "none";
     }
-
-    
   };
 
   const handleOnclose = () => SetDisconPopup(false);
@@ -113,7 +120,7 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
       {!(popupMod && reportPopup && delPopup && cancelPopup && disconPopup) && (
         <ul
           ref={ref}
-          className="absolute mt-8 py-2 w-[250px] bg-white rounded-md shadow-xl transition-transform delay-5000 ease-in-out -translate-x-48 z-100"
+          className="absolute mt-8 py-2 w-[250px] bg-white rounded-md shadow-xl z-40 transition-transform delay-5000 ease-in-out -translate-x-48 z-100"
         >
           {props.dropdownList.map((value, index) => (
             <li

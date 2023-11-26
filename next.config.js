@@ -36,10 +36,16 @@ const nextConfig = {
         hostname: "i.pinimg.com",
       },
       {
-        hostname: "bestcompaniesaz.com"
+        hostname: "bestcompaniesaz.com",
+      },
+      {
+        hostname: "lh3.googleusercontent.com",
       },
       {
         hostname: "lh3.googleusercontent.com"
+      },
+      {
+        hostname: "cdn1.iconfinder.com"
       }
     ],
   },

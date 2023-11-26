@@ -31,14 +31,12 @@ const Signupb = () => {
     }
     if (res?.length === 0) {
       LOCAL_STORAGE.save("email", googleUser.user.email);
-      const { data, error } = await supabase
-        .from("user")
-        .insert({
-          email: googleUser.user.email,
-          name: googleUser.user.user_metadata.name,
-          image: googleUser.user.user_metadata.picture,
-          phone: googleUser.user.identities.phone,
-        });
+      const { data, error } = await supabase.from("user").insert({
+        email: googleUser.user.email,
+        name: googleUser.user.user_metadata.name,
+        image: googleUser.user.user_metadata.picture,
+        phone: googleUser.user.identities.phone,
+      });
       if (error) console.log("an error occured while sending user", error);
       console.log("data from DB", data);
       router.push("/discussions");
@@ -64,7 +62,6 @@ const Signupb = () => {
       </button>
 
       <p className="text-2xl mt-6 font-extrabold text-themecolor">{success}</p>
-
     </div>
   );
 };
