@@ -97,14 +97,14 @@ const GroupSetup = () => {
     const groupMembers = LOCAL_STORAGE.get("group_members");
     const currentUser = LOCAL_STORAGE.get("sender");
     const senderId = currentUser.id;
-    const membersID = groupMembers.map((member: User) => member.id);
+    let membersID = groupMembers.map((member: User) => member.id);
 
     const { data, error } = await supabase
       .from("rooms")
       .insert([
         {
           name: profileName,
-          // user_id: senderId,
+          created_by: senderId,
           image: groupIcon,
           status: true,
         },
@@ -119,6 +119,9 @@ const GroupSetup = () => {
 
     if (data) {
       const groupID = data[0].id;
+      if (membersID.includes(currentUser.id) !== true) {
+        membersID = [...membersID, currentUser.id];
+      }
 
       const groupData = Promise.all(
         membersID.map(async (ID: string) => {

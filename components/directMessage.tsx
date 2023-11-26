@@ -14,7 +14,7 @@ import dayjs from "dayjs";
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
 import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 import { AiOutlineConsoleSql } from "react-icons/ai";
-
+import { useWhatSappContactContext } from "./context/Context";
 import { IoIosClose } from "react-icons/io";
 
 type Props = {
@@ -46,9 +46,11 @@ const DirectMessage = ({
   // console.log(users);
 
   const { setStart } = useWhatSappContext();
+  const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile } = useProfileContext();
 
   const handleDirectMessage = async (id: string) => {
+    setOpenContactInfo(false);
     console.log(id);
     let data: User = (await fetchSingleUser(id)) as User;
     console.log("test after fetchsingleUser", data);
