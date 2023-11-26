@@ -43,6 +43,9 @@ const nextConfig = {
       },
       {
         hostname: "lh3.googleusercontent.com"
+      },
+      {
+        hostname: "cdn1.iconfinder.com"
       }
     ],
   },

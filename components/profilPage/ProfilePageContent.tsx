@@ -70,6 +70,7 @@ const ProfilePageContent = () => {
         })
         .catch((err) => {
           if (err instanceof Error) console.log(err)
+          toast.error('Failed to update name', { autoClose: 1500, position: toast.POSITION.TOP_CENTER, hideProgressBar: true })
         })
       console.log("profile name", profileName);
       setShowInput1((prev) => !prev);
