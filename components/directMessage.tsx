@@ -11,7 +11,6 @@ import dayjs from "dayjs";
 import { updateReadMessageStatus } from "../utils/queries/updateReadMessageStatus";
 import { updateUnreadMessageCount } from "@/utils/queries/updateUnreadMessageCount";
 import { supabase } from "@/utils/supabase/client";
-import { swap } from "@/utils/queries/fetchSignupUser";
 
 type Props = {
   className?: string;
@@ -90,11 +89,13 @@ const DirectMessage = ({
             payload.new.receiver_room_id === currentUserRoomId
         );
         if (index !== -1) {
+          console.log("trying to swap")
           users[index] = {
             ...users[index],
             unread_count: payload.new.unread_count,
           };
-          setDiscussons(() => swap(users, 0, index));
+          users[0] = users.splice(index, 1, users[0])[0];
+          // setDiscussons(users);
         }
       }
     )
@@ -102,9 +103,9 @@ const DirectMessage = ({
 
   return (
     <div className={` ${openProfile ? "hidden" : className} `}>
-      {discussions.reverse().length ? (
+      {users.reverse().length ? (
         <div className="flex gap-2 p-0 w-full h-[85vh] flex-col">
-          {discussions?.map((discussion: any) => {
+          {users?.map((discussion: any) => {
             lastRecievedMessage =
               discussion.user_id === lastMessage?.sender_id
                 ? lastMessage.content

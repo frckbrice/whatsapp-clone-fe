@@ -23,7 +23,7 @@ export const updateUnreadMessageCount = async (
       },
       {
         onConflict: "sender_id, receiver_room_id ",
-        ignoreDuplicates: false,
+        // ignoreDuplicates: false,
       }
     );
 
