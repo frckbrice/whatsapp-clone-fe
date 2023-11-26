@@ -20,6 +20,7 @@
     "emoji-picker-react": "^4.5.15",
     "geist": "^1.0.0",
     "install": "^0.13.0",
+    "isomorphic-dompurify": "^1.9.0",
     "jwt-decode": "^4.0.0",
     "next": "latest",
     "npm": "^10.2.4",

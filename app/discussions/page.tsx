@@ -1,7 +1,7 @@
 "use client";
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Avatar";
-import { MdGroups2, MdRecordVoiceOver } from "react-icons/md";
+import { MdGroups2 } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { GoSearch } from "react-icons/go";
 import { BsEmojiSmile } from "react-icons/bs";
@@ -16,8 +16,7 @@ import DropDownR from "../../components/mainLayoutPage/DropdownR";
 import { useWhatSappContext } from "@/components/context";
 import SideNavRight from "../../components/RightSideBar/SideNavRight";
 import SearchField from "../../components/RightSideBar/SearchField";
-import SenderMessages from "@/components/mainLayoutPage/Messages/SenderMessage";
-import ReceiverMessages from "@/components/mainLayoutPage/Messages/ReceiverMessage";
+
 import Messages from "@/components/mainLayoutPage/Messages/Message";
 import ContactInfoPage from "../../components/RightSideBar/ContactInfoPage";
 import { useWhatSappContactContext } from "../../components/context/Context";
@@ -28,39 +27,35 @@ import ShowProfilePicture from "@/components/profilPage/ShowProfilePicture";
 import Image from "next/image";
 import UploadPicture from "@/components/profilPage/UploadPicture";
 import { supabase } from "@/utils/supabase/client";
-import { RiContactsBookLine } from "react-icons/ri";
 import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
-import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import { Message, PartRoomUser, Room, Roomuser, User, Group } from "@/type";
-import { getMessages, shuffleArr } from "@/utils/queries/getMessage";
+
+import { Message, Room, User, Group } from "@/type";
+import { getMessages } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
-import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
-import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
-// import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
-import { LOCAL_STORAGE } from "@/utils/service/storage";
-import { useRouter } from "next/navigation";
+import DOMPurify from "isomorphic-dompurify";
 
-// import { useWhatSappContext } from "@/components/context";
+import { useRouter } from "next/navigation";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
   const email: string = JSON.parse(localStorage.getItem("email") as string);
   const [users, setUsers] = useState<User[]>([]);
+  // state containing the user info
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
-  ); // state containing the user info
+  );
   const [groups, setGroups] = useState<Group[]>([]);
   const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
   const [userInGroupsCreations, setUserInGroupsCreations] = useState<User[]>(
     []
   );
   const [message, setMessage] = useState<string>("");
-  const [updateUsers, setUpdateUsers] = useState<boolean>(false);
+
   const [recipient, setRecipient] = useState<User>();
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [userGroupsId, setUserGroupsId] = useState<string[]>([]);
@@ -77,10 +72,8 @@ const Discossions = () => {
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
 
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
-  const router = useRouter();
-  const [imageUrl, setImageUrl] = useState("");
 
-  console.log(email);
+  // console.log(email);
   const {
     setOpenSideNav,
     openSideNav,
@@ -123,6 +116,7 @@ const Discossions = () => {
   };
 
   useEffect(() => {
+    setAddedGroup(false);
     fetchSignupUser(email)
       .then((data) => {
         console.log(data);
@@ -150,7 +144,7 @@ const Discossions = () => {
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
-  console.log("this is currentUser", currentUser);
+  // console.log("this is currentUser", currentUser);
 
   // console.log("these are groups", groups);
   useEffect(() => {
@@ -197,7 +191,7 @@ const Discossions = () => {
   }, [receiver?.id]);
 
   const sendMessageToDB = async () => {
-    if (message === "" || !receiver?.id) {
+    if (!message || !receiver?.id) {
       console.log("message or receiver of the message can not be empty");
       return;
     }
@@ -205,7 +199,7 @@ const Discossions = () => {
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
-      content: message,
+      content: DOMPurify.sanitize(message),
       sender_name: currentUser?.name,
       phone_number: currentUser?.phone as string,
     };
@@ -239,7 +233,7 @@ const Discossions = () => {
 
         if (payload.eventType === "INSERT")
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
-            groupMembersIds?.map((memberId) => {
+            groupMembersIds?.map((_) => {
               supabase
                 .channel(`group_:${payload.new.receiver_room_id}`)
                 .send({

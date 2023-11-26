@@ -9,13 +9,13 @@ export const getGroupMembers = async (groupId: string) => {
 
     if (data) {
       console.log(" the members of the group: ", data);
-
+      //subscribe all the member to group
       data?.map((member) => {
         const subscribe = supabase
           .channel(`group_:${groupId}`)
           .subscribe(member.room_id);
         if (subscribe)
-          console.log(" creation of a group user subscribed to a group");
+          console.log(" creation of a group and user subscribed to a group");
       });
 
       return data?.map((member) => member.room_id);
