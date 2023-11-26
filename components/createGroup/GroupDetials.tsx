@@ -23,12 +23,13 @@ interface UserObject {
   id: string;
   image: string;
   name: string;
-  phone: null;
+  phone: string | null;
+  created_by: string;
 }
 
 const GroupDetials = ({ roomObject }: Props) => {
   const [users, setUsers] = useState<Array<User>>([]);
-  const [groupMember, setGroupMembers] = useState<Array<User>>([]);
+  const [groupMember, setGroupMembers] = useState<Array<UserObject>>([]);
 
   const [currentUser, setCurrentUser] = useState();
 
@@ -94,7 +95,7 @@ const GroupDetials = ({ roomObject }: Props) => {
             <div>
               <p
                 className={`${
-                  currentUser === user.id ? "visible" : "hidden"
+                  user.id === user.created_by ? "visible" : "hidden"
                 } bg-[#e7fce3] h-5 px-2 text-xs rounded items-center text-[#2f652b]`}
               >
                 Group Admin
