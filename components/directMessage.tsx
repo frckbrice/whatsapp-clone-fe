@@ -1,30 +1,27 @@
 "use client";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Avatar from "@/components/Avatar";
-import { supabase } from "@/utils/supabase/client";
-// import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
-import { PartRoomUser, User, Group, Room } from "@/type";
+import { Message, User } from "@/type";
 import { useWhatSappContext } from "./context";
 import { useProfileContext } from "./context/profileContext";
 import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
-import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
-import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
-import { AiOutlineConsoleSql } from "react-icons/ai";
-
-import { IoIosClose } from "react-icons/io";
+import { updateReadMessageStatus } from "../utils/queries/updateReadMessageStatus";
+import { updateUnreadMessageCount } from "@/utils/queries/updateUnreadMessageCount";
+import { supabase } from "@/utils/supabase/client";
+import { swap } from "@/utils/queries/fetchSignupUser";
 
 type Props = {
   className?: string;
   users: User[];
-  groups: Group[];
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
   setRecipient: React.Dispatch<React.SetStateAction<User | undefined>>;
+  lastMessage: Message;
+  currentUserRoomId: string;
 };
 
 const DirectMessage = ({
@@ -33,14 +30,14 @@ const DirectMessage = ({
   setReceiver,
   setRoomObject,
   setUsers,
-  groups,
   setRecipient,
+  lastMessage,
+  currentUserRoomId,
 }: Props) => {
   // to style the select room
-  const [target, setTarget] = useState("");
-  const [fetchedGroups, setFetchedGroups] = useState<
-    Promise<any> | undefined
-  >();
+  const [target, setTarget] = useState<string>("");
+  const [discussions, setDiscussons] = useState<User[]>([]);
+
   dayjs.extend(relativeTime);
 
   // console.log(users);
@@ -48,18 +45,22 @@ const DirectMessage = ({
   const { setStart } = useWhatSappContext();
   const { openProfile } = useProfileContext();
 
-  const handleDirectMessage = async (id: string) => {
-    console.log(id);
-    let data: User = (await fetchSingleUser(id)) as User;
+  const handleDirectMessage = async (user_id: string) => {
+    console.log(user_id);
+    let data: User = (await fetchSingleUser(user_id)) as User;
     console.log("test after fetchsingleUser", data);
 
     setRecipient(data);
     setStart(true);
-    setTarget(id);
-    let room: User = (await fetchSingleRoom(id)) as User;
+    setTarget(user_id);
+    let room: User = (await fetchSingleRoom(user_id)) as User;
     setRoomObject(room);
     setReceiver(room);
     console.log("single room object", room);
+    const updateMessage = await updateReadMessageStatus(
+      lastMessage?.sender_id,
+      room.id as string
+    );
   };
 
   const handleClick = () => {
@@ -68,65 +69,100 @@ const DirectMessage = ({
     // console.log("time from dayjs", lastMsg);
   };
 
-  const removeMember = (id: string) => {
-    const filteredMembers = users.filter((member) => member.id !== id);
-    setUsers(filteredMembers);
-  };
+  let lastRecievedMessage = "";
+
+  const unreadMessages = supabase
+    .channel("custom-insert-channel")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "unread_messages" },
+      async (payload) => {
+        console.log("Change received from unread_message table!", payload);
+
+        // const ndex = users?.findIndex(
+        //   (user: User) => user.user_id === payload.new.sender_id
+        // );
+        // if (ndex !== -1) users = swap(users, 0, ndex);
+
+        const index = users?.findIndex(
+          (user: User) =>
+            user.user_id === payload.new.sender_id &&
+            payload.new.receiver_room_id === currentUserRoomId
+        );
+        if (index !== -1) {
+          users[index] = {
+            ...users[index],
+            unread_count: payload.new.unread_count,
+          };
+          setDiscussons(() => swap(users, 0, index));
+        }
+      }
+    )
+    .subscribe();
 
   return (
     <div className={` ${openProfile ? "hidden" : className} `}>
-      {users.reverse().length ? (
+      {discussions.reverse().length ? (
         <div className="flex gap-2 p-0 w-full h-[85vh] flex-col">
-          {users?.map((item: any) => (
-            <div
-              onClick={() => handleDirectMessage(item.user_id)}
-              key={item.id}
-              className={
-                target === item.user_id
-                  ? "bg-gray-300 flex w-full justify-between border-b border-slate-100 py-1 gap-1 hover:cursor-pointer px-4 items-center "
-                  : "flex w-full justify-between border-b border-slate-100  gap-1 hover:bg-gray-100 hover:cursor-pointer px-4 py-1 items-center "
-              }
-            >
-              <div className="flex items-center gap-3 ">
-                <Avatar
-                  onClick={() => handleClick()}
-                  profilePicture={
-                    item.image !== ""
-                      ? `${item.image}`
-                      : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
-                  }
-                  size={10}
-                  className="my-auto"
-                />
-                <div className="leading-2 ">
-                  {item.name !== "" ? (
-                    <h6 className="py-1 text-sm text-[#212021] ">
-                      {item.name}
-                    </h6>
-                  ) : (
-                    <p className="py-1 text-xs text-[#111011] font-normal">
-                      {item.email}
-                    </p>
-                  )}
+          {discussions?.map((discussion: any) => {
+            lastRecievedMessage =
+              discussion.user_id === lastMessage?.sender_id
+                ? lastMessage.content
+                : "";
+            return (
+              <div
+                onClick={() => handleDirectMessage(discussion.user_id)}
+                key={discussion.id}
+                className={
+                  target === discussion.user_id
+                    ? "bg-gray-300 flex w-full justify-between border-b border-slate-100 py-1 gap-1 hover:cursor-pointer px-4 items-center "
+                    : "flex w-full justify-between border-b border-slate-100  gap-1 hover:bg-gray-100 hover:cursor-pointer px-4 py-1 items-center "
+                }
+              >
+                <div className="flex items-center gap-3 ">
+                  <Avatar
+                    onClick={() => handleClick()}
+                    profilePicture={
+                      discussion.image !== ""
+                        ? `${discussion.image}`
+                        : "https://media.istockphoto.com/id/1495088043/vector/user-profile-icon-avatar-or-person-icon-profile-picture-portrait-symbol-default-portrait.jpg?s=612x612&w=0&k=20&c=dhV2p1JwmloBTOaGAtaA3AW1KSnjsdMt7-U_3EZElZ0="
+                    }
+                    size={10}
+                    className="my-auto"
+                  />
+                  <div className="leading-2 ">
+                    {discussion.name !== "" ? (
+                      <h6 className="py-1 text-sm text-[#212021] ">
+                        {discussion.name}
+                      </h6>
+                    ) : (
+                      <p className="py-1 text-xs text-[#111011] font-normal">
+                        {discussion.email}
+                      </p>
+                    )}
 
-                  <span className="py-8 text-[14px]">
-                    Hey there i'm using whatsapp.
-                  </span>
+                    <span className="py-8 text-[14px]">
+                      {lastRecievedMessage}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col gap-1 w-[70px]">
-                <span className="mx-auto ">
-                  {dayjs().to(dayjs(item?.updated_at))}
-                </span>
-                {/* <button
+                <div className="flex flex-col gap-1 w-[70px]">
+                  <span className="mx-auto text-[#1FA855]">
+                    {dayjs().to(dayjs(discussion?.updated_at))}
+                  </span>
+                  <span className=" p-[5px] w-6 h-6 min-w-fit min-h-fit rounded-full    bg-[#25c460] text-white text-[14px] font-[SF Pro Text] flex justify-center items-center">
+                    {discussion.unread_count ?? 0}
+                  </span>
+                  {/* <button
                   className="hover:bg-gray-300 rounded-full w-fit self-center"
                   onClick={() => removeMember(item.id)}
                 >
                   <IoIosClose size={20} />
                 </button> */}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         ""

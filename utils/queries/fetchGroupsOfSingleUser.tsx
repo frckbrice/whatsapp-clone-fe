@@ -14,7 +14,7 @@ const fetchGroupsOfSingleUser = async () => {
       error
     );
   if (data) {
-    console.log("these are groups to which you belong", data);
+    // console.log("these are groups to which you belong", data);
     console.log(typeof data);
   }
   return data;

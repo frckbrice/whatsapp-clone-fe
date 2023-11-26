@@ -39,6 +39,8 @@ import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import DOMPurify from "isomorphic-dompurify";
 
 import { useRouter } from "next/navigation";
+import { updateUnreadMessageCount } from "@/utils/queries/updateUnreadMessageCount";
+import { addUnreadMessageCountToUser } from "@/utils/queries/addUnreadMessagesCountToUser";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -70,8 +72,9 @@ const Discossions = () => {
     useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
+  const [lastMessage, setLastMessage] = useState<Message>();
 
-  const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
+  const { showCreateGroup } = useProfileContext();
 
   // console.log(email);
   const {
@@ -144,9 +147,7 @@ const Discossions = () => {
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
-  // console.log("this is currentUser", currentUser);
 
-  // console.log("these are groups", groups);
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(
@@ -202,8 +203,8 @@ const Discossions = () => {
       content: DOMPurify.sanitize(message),
       sender_name: currentUser?.name,
       phone_number: currentUser?.phone as string,
+      is_read: false,
     };
-    // console.log('receiver_room_id', receiver?.id)
 
     const { error } = await supabase.from("messages").insert(sendingMessage);
 
@@ -220,8 +221,18 @@ const Discossions = () => {
     .on(
       "postgres_changes",
       { event: "*", schema: "public", table: "messages" },
-      (payload: any) => {
+      async (payload: any) => {
         console.log("Change received!", payload);
+        setLastMessage(payload.new);
+
+        updateUnreadMessageCount(
+          payload.new.sender_id,
+          payload.new.receiver_room_id
+        )
+          .then((data) => {
+            if (data) console.log("update unread message count", data);
+          })
+          .catch((err) => console.log(err));
 
         if (payload.eventType === "UPDATE") {
           const newIndex: number = discussionsMessages?.findIndex(
@@ -239,6 +250,7 @@ const Discossions = () => {
                 .send({
                   type: "broadcast",
                   event: "test",
+                  receiver_room_id: payload.new.receiver_room_id,
                   payload: { message: payload.new.content },
                 })
                 .then((data) => {
@@ -322,12 +334,12 @@ const Discossions = () => {
               </div>
               <DirectMessage
                 users={users}
-                groups={groups}
                 setReceiver={setReceiver}
                 className=" overflow-y-auto h-fit "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
+                lastMessage={lastMessage as Message}
               />
             </div>
             <div

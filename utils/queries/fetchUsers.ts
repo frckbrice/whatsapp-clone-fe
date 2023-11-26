@@ -1,3 +1,4 @@
+import { User } from "@/type";
 import { supabase } from "../supabase/client";
 import fetchUserGoups from "./fetchAllUserGroups";
 import fetchGroupsOfSingleUser from "./fetchGroupsOfSingleUser";
@@ -6,27 +7,45 @@ import fetchSingleRoom from "./fetchSingleRoom";
 import { shuffleArr } from "./getMessage";
 import insertUsersInRooms from "./insertUsersInRooms";
 
-const fetchUsers = async (id: string) => {
+const fetchUsers = async (currentUserId: string) => {
   const { data, error } = await supabase.from("user").select();
   if (error) return [];
 
-  const groups = await Promise.all((await fetchUserGoups(id)) as any[]);
-  // console.log("user groups: ", groups.flat());
-  // console.log("users: ", data);
-  const currentUserRoomId = (await fetchSingleRoom(id))?.id;
+  const groups = await Promise.all(
+    (await fetchUserGoups(currentUserId)) as any[]
+  );
+
+  const currentUserRoomId = (await fetchSingleRoom(currentUserId))?.id;
 
   const value = [...groups.flat(), ...data];
   // console.log("user and  groups: ", value);
   const newList = shuffleArr(value);
-  console.log("user and  groups: ", {
-    merged: newList,
-    data: data,
-    groups: groups.flat(),
-  });
-  const usersInRoomTable = await insertUsersInRooms(newList);
-  console.log('filtered users', usersInRoomTable.flat().filter(Boolean));
+
+  const usersInRoomTable = (await insertUsersInRooms(newList))
+    .flat()
+    .filter(Boolean);
+  // console.log("filtered users", usersInRoomTable.flat().filter(Boolean));
+
+  // const listOfunreadMessagesCount = (
+  //   await supabase.from("unread_messages").select("*")
+  // ).data;
+
+  // const listToReturn = listOfunreadMessagesCount?.reduce(
+  //   (acc, curr) => {
+  //     const index = acc?.findIndex(
+  //       (item: User) =>
+  //         item.user_id === curr.sender_id &&
+  //         curr.receiver_room_id === currentUserRoomId
+  //     );
+  //     if (index !== -1)
+  //       acc[index] = { ...acc[index], unread_count: curr.unread_count };
+  //     return acc;
+  //   },
+  //   [...usersInRoomTable]
+  // );
+
   return {
-    merged: usersInRoomTable.flat().filter(Boolean),
+    merged: usersInRoomTable,
     data: data,
     groups: groups.flat().map((group) => group.id),
     currentUserRoomId,
