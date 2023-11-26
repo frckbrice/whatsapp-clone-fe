@@ -43,6 +43,8 @@ import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 // import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 // import { useWhatSappContext } from "@/components/context";
 
@@ -151,7 +153,6 @@ const Discossions = () => {
       ref.current.addEventListener("click", handleClickOutSide);
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
-  console.log("this is currentUser", currentUser);
 
   // this is useEffect is mainly to let user setup their profile after the have signup
   // useEffect(() => {
@@ -205,6 +206,7 @@ const Discossions = () => {
 
   const sendMessageToDB = async () => {
     if (message === "" || !receiver?.id) {
+      toast.warning('Field cannot be empty', { autoClose: 1000, position: toast.POSITION.TOP_CENTER, hideProgressBar: true })
       console.log("message or receiver of the message can not be empty");
       return;
     }
@@ -461,6 +463,7 @@ const Discossions = () => {
                 </button>
 
                 <div className="flex bg-white items-center rounded-md gap-5 p-1 w-full">
+                  <ToastContainer/>
                   <input
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3 "
