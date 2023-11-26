@@ -36,7 +36,7 @@ const GroupDetials = ({ roomObject }: Props) => {
     const { data, error } = await supabase.from("user").select();
     if (data) {
       setUsers(data);
-      console.log("this are all users", data);
+      // console.log("this are all users", data);
       return data;
     }
   };
@@ -48,7 +48,7 @@ const GroupDetials = ({ roomObject }: Props) => {
         if (membersIds?.length) {
           // setMemberid(memberid);
           // console.clear();
-          console.log("the member of selected group: ", membersIds);
+          // console.log("the member of selected group: ", membersIds);
 
           const { data, error } = await supabase
             .from("user")
@@ -64,7 +64,7 @@ const GroupDetials = ({ roomObject }: Props) => {
         if (err instanceof Error) console.error(err);
       });
     setCurrentUser(LOCAL_STORAGE.get("sender").id);
-    console.log("groupMembers: ", getGroupMembers);
+    // console.log("groupMembers: ", getGroupMembers);
   }, []);
 
   return (
