@@ -48,6 +48,7 @@ const DirectMessage = ({
   const { setStart } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile } = useProfileContext();
+  const [userData, setUserData] = useState<Array<User>>();
 
   const handleDirectMessage = async (id: string) => {
     setOpenContactInfo(false);
@@ -75,9 +76,11 @@ const DirectMessage = ({
     setUsers(filteredMembers);
   };
 
+  const handleFilter = () => {};
+
   return (
     <div className={` ${openProfile ? "hidden" : className} `}>
-      {users.reverse().length ? (
+      {users?.reverse().length ? (
         <div className="flex gap-2 p-0 w-full h-[85vh] flex-col">
           {users?.map((item: any) => (
             <div

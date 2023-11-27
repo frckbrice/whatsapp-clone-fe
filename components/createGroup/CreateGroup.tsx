@@ -144,7 +144,6 @@ const CreateGroup = ({ users, currentUser }: Props) => {
                 onChange={handleFilter}
               />
             </div>
-            <div></div>
             <div className="px-3 h-[60vh] overflow-auto">
               {users && (
                 <div className="flex gap-2 w-full flex-col ">
