@@ -78,7 +78,7 @@ const Signup = () => {
       options: {
         // set this to false if you do not want the user to be automatically signed up
         shouldCreateUser: true,
-        emailRedirectTo: "https://localhost:3000/discussions",
+        emailRedirectTo: "https://waxchat.vercel.app/discussions",
       },
     });
   }

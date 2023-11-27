@@ -96,9 +96,6 @@ const CreateGroup = ({ users, currentUser }: Props) => {
       setUserData(users);
     }
     setUserData(newFilter);
-    // console.clear();
-    // console.log("new filter", searchName);
-    // console.log("newFilter", newFilter);
   };
 
   return (
