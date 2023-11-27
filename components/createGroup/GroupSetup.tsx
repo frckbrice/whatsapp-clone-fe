@@ -96,7 +96,6 @@ const GroupSetup = () => {
   const handleCreateGroup = async () => {
     const groupMembers = LOCAL_STORAGE.get("group_members");
     const currentUser = LOCAL_STORAGE.get("sender");
-    const senderId = currentUser.id;
     let membersID = groupMembers.map((member: User) => member.id);
 
     const { data, error } = await supabase
@@ -104,7 +103,7 @@ const GroupSetup = () => {
       .insert([
         {
           name: profileName,
-          created_by: senderId,
+          created_by: currentUser.id,
           image: groupIcon,
           status: true,
         },
@@ -149,6 +148,7 @@ const GroupSetup = () => {
       console.log("data[0].id: ", data[0].id);
       console.log("groupData: ", groupData);
       setShowCreateGroupe(false);
+      
     }
   };
 
@@ -156,6 +156,7 @@ const GroupSetup = () => {
     <div
       ref={ref}
       className="relative p-0 bg-bgGray text-[14px] h-[80vh] border-r border-r-[[#444e54]] "
+      
     >
       {/* //** add profile image and profile name here  */}
       <CardWithoutTitleB
