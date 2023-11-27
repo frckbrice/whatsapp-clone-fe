@@ -37,6 +37,13 @@ import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import DOMPurify from "isomorphic-dompurify";
+import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
+import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
+// import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
+import { LOCAL_STORAGE } from "@/utils/service/storage";
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 import { updateUnreadMessageCount } from "@/utils/queries/updateUnreadMessageCount";
 
@@ -195,7 +202,8 @@ const Discossions = () => {
   }, [receiver?.id]);
 
   const sendMessageToDB = async () => {
-    if (!message || !receiver?.id) {
+    if (message === "" || !receiver?.id) {
+      toast.warning('Field cannot be empty', { autoClose: 1000, position: toast.POSITION.TOP_CENTER, hideProgressBar: true })
       console.log("message or receiver of the message can not be empty");
       return;
     }
@@ -367,9 +375,9 @@ let i = 0;
 
                 <div className="flex gap-5">
                   {/* <Header switchTheme={switchTheme} label={label} /> */}
-                  <button className="text-2xl text-gray-600">
+                  {/* <button className="text-2xl text-gray-600">
                     <MdGroups2 />
-                  </button>
+                  </button> */}
                   <button
                     className="text-2xl text-gray-600 relative rounded-full"
                     onClick={() => setShowDropdownleft((prev) => !prev)}
@@ -514,6 +522,7 @@ let i = 0;
                 </button>
 
                 <div className="flex bg-white items-center rounded-md gap-5 p-1 w-full">
+                  <ToastContainer/>
                   <input
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3 "
@@ -547,21 +556,6 @@ let i = 0;
               </CreateGrt>
             )}
           </div>
-          {/* {!profilepict && (
-            <div
-              className={`bg-themecolor ${
-                openProfile ? "hidden" : "visible"
-              } flex justify-between items-center fixed w-full p-5`}
-            >
-              <p>Welcome to WhatsApp Clone..!</p>
-              <button
-                onClick={() => setOpenProfile(true)}
-                className="border p-2 rounded-full"
-              >
-                setup your profile
-              </button>
-            </div>
-          )} */}
         </>
       )}
     </>
