@@ -24,8 +24,10 @@ const CreateGroup = ({ users }: Props) => {
 
   const [groupSetup, setGroupSetup] = useState(true);
   const [notify, setNotify] = useState<string>("");
+  const [userData, setUserData] = useState<Array<User>>([]);
 
   useEffect(() => {
+    setUserData(users);
     LOCAL_STORAGE.save("group_members", []);
     setMembers([]);
   }, []);
@@ -45,6 +47,7 @@ const CreateGroup = ({ users }: Props) => {
 
     let selectedMember = members;
     selectedMember.push(member);
+    setShowNextBtn(true);
 
     LOCAL_STORAGE.save("group_members", selectedMember);
     setMembers(LOCAL_STORAGE.get("group_members"));
@@ -62,10 +65,24 @@ const CreateGroup = ({ users }: Props) => {
     const filteredMembers = members.filter((member) => member.id !== id);
     setMembers(filteredMembers);
     LOCAL_STORAGE.save("group_members", filteredMembers);
+    if (members.length === 0) setShowNextBtn(false);
   };
 
   const openGroupSetup = () => {
     setGroupSetup((prev) => !prev);
+  };
+
+  // handeFilter
+  const handleFilter = (event: { target: { value: any } }) => {
+    const searchName = event.target.value;
+
+    const newFilter = users.filter((user) => {
+      return user.name.toLowerCase().includes(searchName.toLowerCase());
+    });
+    if (newFilter.length === 0 || searchName === "") {
+      setUserData(users);
+    }
+    setUserData(newFilter);
   };
 
   return (
@@ -111,13 +128,14 @@ const CreateGroup = ({ users }: Props) => {
                 className="w-full border-b outline-none p-2"
                 type="search"
                 placeholder="search name or number"
+                onChange={handleFilter}
               />
             </div>
             <div></div>
             <div className="px-3 h-[60vh] overflow-auto">
               {users && (
                 <div className="flex gap-2 w-full flex-col ">
-                  {users?.map((item: any) => (
+                  {userData?.map((item: any) => (
                     <div
                       onClick={() => handleDirectMessage(item)}
                       key={item.id}
@@ -153,12 +171,14 @@ const CreateGroup = ({ users }: Props) => {
                   ))}
                 </div>
               )}
-              <div className="flex justify-center items-center w-full p-3 relative bottom-0 left-0">
+            </div>
+            {showNextBtn && (
+              <div className="flex justify-center transition duration-1000 items-center ease-in-out bg-white w-full p-4 sticky bottom-0 left-0">
                 <button className="text-themecolor" onClick={openGroupSetup}>
                   <FaCircleArrowRight size={40} />
                 </button>
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}

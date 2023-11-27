@@ -26,10 +26,10 @@ export const updateUnreadMessageCount = async (
     .match({ sender_id: sender_id, receiver_room_id: receiver_room_id })
     .single();
   console.log(data.last_message === content);
-  if (data && data.last_message === content && !is_update) {
+  if (data && data.last_message === content && is_update) {
     console.log("encore du test not accepted");
     return;
-  } else if (is_update === true) {
+  } else if (!is_update) {
     console.log("encore du test mais accepted , content: " + content);
     unreadMessages = await supabase.from("unread_messages").upsert(
       {
@@ -40,7 +40,6 @@ export const updateUnreadMessageCount = async (
       },
       {
         onConflict: "sender_id, receiver_room_id ",
-        // ignoreDuplicates: false,
       }
     );
 

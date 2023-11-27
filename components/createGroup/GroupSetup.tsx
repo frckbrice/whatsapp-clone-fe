@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useWhatSappContext } from "../context";
+// import { useWhatSappContext } from "../context";
 import EmojiePicker from "../profilPage/EmojiePicker";
 import { IoIosArrowForward } from "react-icons/io";
 import { VscPassFilled } from "react-icons/vsc";
@@ -12,6 +12,7 @@ import { supabase } from "@/utils/supabase/client";
 
 import CardWithoutTitleB from "./CardWithoutTitleB";
 import { useProfileContext } from "../context/profileContext";
+import { useWhatSappContext } from "@/components/context";
 
 const GroupSetup = () => {
   const [shosenEmojiesup, setShosenEmojiesup] = useState<string[]>([]);
@@ -22,8 +23,10 @@ const GroupSetup = () => {
 
   const [showDropdrownProfile, setShowDropdownProfile] = useState(false);
 
-  const { profileImage, setAddedGroup } = useWhatSappContext();
+  const {groupIcon, profileImage, setAddedGroup } = useWhatSappContext();
   const { setShowCreateGroupe } = useProfileContext();
+
+  // const { groupIcon, setGroupIcon } = useWhatSappContext();
 
   const dropdownRef = useRef<HTMLUListElement>(null);
   const ref = useRef<HTMLDivElement>(null);
@@ -82,15 +85,15 @@ const GroupSetup = () => {
   const handleCreateGroup = async () => {
     const groupMembers = LOCAL_STORAGE.get("group_members");
     const currentUser = LOCAL_STORAGE.get("sender");
-    const senderId = currentUser.id;
-    const membersID = groupMembers.map((member: User) => member.id);
+    let membersID = groupMembers.map((member: User) => member.id);
 
     const { data, error } = await supabase
       .from("rooms")
       .insert([
         {
           name: groupName,
-          image: currentUser.image,
+          created_by: currentUser.id,
+          image: groupIcon,
           status: true,
         },
       ])
@@ -104,6 +107,9 @@ const GroupSetup = () => {
 
     if (data) {
       const groupID = data[0].id;
+      if (membersID.includes(currentUser.id) !== true) {
+        membersID = [...membersID, currentUser.id];
+      }
 
       const groupData = Promise.all(
         membersID.map(async (ID: string) => {
@@ -127,6 +133,7 @@ const GroupSetup = () => {
           console.log("error creating group", error);
         });
       setShowCreateGroupe(false);
+      
     }
   };
 
@@ -134,11 +141,12 @@ const GroupSetup = () => {
     <div
       ref={ref}
       className="relative p-0 bg-bgGray text-[14px] h-[80vh] border-r border-r-[[#444e54]] "
+      
     >
       {/* //** add profile image and profile name here  */}
       <CardWithoutTitleB
         image={
-          profileImage ||
+          groupIcon ||
           "https://i.pinimg.com/564x/cb/9d/bb/cb9dbbffa2363a2ec0d7a74602b91cd4.jpg"
         }
         ref={dropdownRef}
@@ -178,16 +186,6 @@ const GroupSetup = () => {
               </span>
             </div>
           </div>
-        </div>
-        <div className="">
-          <button className="flex items-center justify-between bg-white w-full px-7 pt-4 pb-5">
-            <p className="flex flex-col self-start text-start">
-              <span>Disappearing Measages</span>
-              <span>off</span>
-            </p>
-
-            <IoIosArrowForward />
-          </button>
         </div>
 
         <div className="flex justify-center w-full pb-10">

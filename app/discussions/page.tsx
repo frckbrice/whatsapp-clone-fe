@@ -37,6 +37,13 @@ import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import DOMPurify from "isomorphic-dompurify";
+import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
+import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
+// import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
+import { LOCAL_STORAGE } from "@/utils/service/storage";
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 import { updateUnreadMessageCount } from "@/utils/queries/updateUnreadMessageCount";
 
@@ -195,7 +202,8 @@ const Discossions = () => {
   }, [receiver?.id]);
 
   const sendMessageToDB = async () => {
-    if (!message || !receiver?.id) {
+    if (message === "" || !receiver?.id) {
+      toast.warning('Field cannot be empty', { autoClose: 1000, position: toast.POSITION.TOP_CENTER, hideProgressBar: true })
       console.log("message or receiver of the message can not be empty");
       return;
     }
@@ -218,7 +226,7 @@ const Discossions = () => {
   const handlekeydown = async (event: any) => {
     if (event.key === "Enter") await sendMessageToDB();
   };
-
+let i = 0;
   const messages = supabase
     .channel("custom-all-channel")
     .on(
@@ -227,19 +235,19 @@ const Discossions = () => {
       async (payload: any) => {
         console.log("Change received!", payload);
         setLastMessage(payload.new);
-        updateUnreadMessageCount(
-          payload.new.sender_id,
-          payload.new.receiver_room_id,
-          insert,
-          payload.new.content
-        )
-          .then((data) => {
-            if (data?.data) console.log("update unread message count", data);
-          })
-          .catch((err) => console.log(err));
+     
 
         if (payload.eventType === "UPDATE") {
-          setInsert(false);
+          updateUnreadMessageCount(
+            payload.new.sender_id,
+            payload.new.receiver_room_id,
+            true,
+            payload.new.content
+          )
+            .then((data) => {
+              if (data?.data) console.log("update unread message count", data);
+            })
+            .catch((err) => console.log(err));
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
           );
@@ -249,7 +257,16 @@ const Discossions = () => {
         }
 
         if (payload.eventType === "INSERT") {
-          setInsert(true);
+          updateUnreadMessageCount(
+            payload.new.sender_id,
+            payload.new.receiver_room_id,
+            false,
+            payload.new.content
+          )
+            .then((data) => {
+              if (data?.data) console.log("update unread message count", data);
+            })
+            .catch((err) => console.log(err));
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
             groupMembersIds?.map((_) => {
               supabase
@@ -283,7 +300,7 @@ const Discossions = () => {
       }
     )
     .subscribe();
-
+    
   const unreadMessages = supabase
     .channel("custom-insert-channel")
     .on(
@@ -312,6 +329,8 @@ const Discossions = () => {
       }
     )
     .subscribe();
+
+
 
   return (
     <>
@@ -356,9 +375,9 @@ const Discossions = () => {
 
                 <div className="flex gap-5">
                   {/* <Header switchTheme={switchTheme} label={label} /> */}
-                  <button className="text-2xl text-gray-600">
+                  {/* <button className="text-2xl text-gray-600">
                     <MdGroups2 />
-                  </button>
+                  </button> */}
                   <button
                     className="text-2xl text-gray-600 relative rounded-full"
                     onClick={() => setShowDropdownleft((prev) => !prev)}
@@ -503,6 +522,7 @@ const Discossions = () => {
                 </button>
 
                 <div className="flex bg-white items-center rounded-md gap-5 p-1 w-full">
+                  <ToastContainer/>
                   <input
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3 "
@@ -536,21 +556,6 @@ const Discossions = () => {
               </CreateGrt>
             )}
           </div>
-          {/* {!profilepict && (
-            <div
-              className={`bg-themecolor ${
-                openProfile ? "hidden" : "visible"
-              } flex justify-between items-center fixed w-full p-5`}
-            >
-              <p>Welcome to WhatsApp Clone..!</p>
-              <button
-                onClick={() => setOpenProfile(true)}
-                className="border p-2 rounded-full"
-              >
-                setup your profile
-              </button>
-            </div>
-          )} */}
         </>
       )}
     </>
