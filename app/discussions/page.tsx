@@ -227,19 +227,19 @@ let i = 0;
       async (payload: any) => {
         console.log("Change received!", payload);
         setLastMessage(payload.new);
-        updateUnreadMessageCount(
-          payload.new.sender_id,
-          payload.new.receiver_room_id,
-          insert,
-          payload.new.content
-        )
-          .then((data) => {
-            if (data?.data) console.log("update unread message count", data);
-          })
-          .catch((err) => console.log(err));
+     
 
         if (payload.eventType === "UPDATE") {
-          setInsert(false);
+          updateUnreadMessageCount(
+            payload.new.sender_id,
+            payload.new.receiver_room_id,
+            true,
+            payload.new.content
+          )
+            .then((data) => {
+              if (data?.data) console.log("update unread message count", data);
+            })
+            .catch((err) => console.log(err));
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
           );
@@ -249,7 +249,16 @@ let i = 0;
         }
 
         if (payload.eventType === "INSERT") {
-          setInsert(true);
+          updateUnreadMessageCount(
+            payload.new.sender_id,
+            payload.new.receiver_room_id,
+            false,
+            payload.new.content
+          )
+            .then((data) => {
+              if (data?.data) console.log("update unread message count", data);
+            })
+            .catch((err) => console.log(err));
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
             groupMembersIds?.map((_) => {
               supabase
