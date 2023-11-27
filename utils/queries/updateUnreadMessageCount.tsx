@@ -29,7 +29,7 @@ export const updateUnreadMessageCount = async (
   if (data && data.last_message === content && !is_update) {
     console.log("encore du test not accepted");
     return;
-  } else {
+  } else if (is_update === true) {
     console.log("encore du test mais accepted , content: " + content);
     unreadMessages = await supabase.from("unread_messages").upsert(
       {
@@ -50,7 +50,6 @@ export const updateUnreadMessageCount = async (
     last_unread_count =
       data === null ? data?.unread_count + 1 : data?.unread_count;
     console.log("unread count: ", last_unread_count);
+    return unreadMessages;
   }
-
-  return unreadMessages;
 };
