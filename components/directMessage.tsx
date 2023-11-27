@@ -40,6 +40,7 @@ const DirectMessage = ({
 }: Props) => {
   // to style the select room
   const [target, setTarget] = useState<string>("");
+  const [clicked, setClicked] = useState<boolean>(false);
   const { setShowPPicture } = useWhatSappContext();
 
   dayjs.extend(relativeTime);
@@ -57,6 +58,7 @@ const DirectMessage = ({
     console.log("test after fetchsingleUser", data);
 
     setRecipient(data);
+    setClicked((prev) => !prev);
     setStart(true);
     setTarget(user_id);
     let room: User = (await fetchSingleRoom(user_id)) as User;
