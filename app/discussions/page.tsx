@@ -38,9 +38,7 @@ import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import DOMPurify from "isomorphic-dompurify";
 
-import { useRouter } from "next/navigation";
 import { updateUnreadMessageCount } from "@/utils/queries/updateUnreadMessageCount";
-import { addUnreadMessageCountToUser } from "@/utils/queries/addUnreadMessagesCountToUser";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -51,8 +49,6 @@ const Discossions = () => {
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
   );
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
   const [userInGroupsCreations, setUserInGroupsCreations] = useState<User[]>(
     []
   );
@@ -109,13 +105,6 @@ const Discossions = () => {
       console.log("emoji component is clicked");
       setMessageEmoji(false);
     }
-  };
-
-  const switchTheme: any = () => {
-    console.log("clicked");
-    setIsDark((prev) => !prev);
-
-    setLabel(() => (label === "Light" ? "Night" : "Light"));
   };
 
   useEffect(() => {
@@ -225,6 +214,7 @@ const Discossions = () => {
         console.log("Change received!", payload);
         setLastMessage(payload.new);
 
+<<<<<<< HEAD
         updateUnreadMessageCount(
           payload.new.sender_id,
           payload.new.receiver_room_id,
@@ -235,11 +225,14 @@ const Discossions = () => {
           })
           .catch((err) => console.log(err));
 
+=======
+>>>>>>> dfe12edb43a6f100cda5bc8aa0a8e859985f1e03
         if (payload.eventType === "UPDATE") {
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
           );
-          discussionsMessages[newIndex].emoji = payload.new.emoji;
+          if (newIndex !== -1)
+            discussionsMessages[newIndex].emoji = payload.new.emoji;
           setDiscussionsMessages(discussionsMessages);
         }
 
@@ -271,6 +264,16 @@ const Discossions = () => {
               { ...payload.new, receiver_room_id: currentUserRoomId },
             ]);
           } else setDiscussionsMessages((prev) => [...prev, payload.new]);
+
+        updateUnreadMessageCount(
+          payload.new.sender_id,
+          payload.new.receiver_room_id,
+          payload.new.content
+        )
+          .then((data) => {
+            if (data) console.log("update unread message count", data);
+          })
+          .catch((err) => console.log(err));
       }
     )
     .subscribe();
@@ -284,15 +287,26 @@ const Discossions = () => {
         console.log("Change received from unread_message table!", payload);
 
         const index = users?.findIndex(
+<<<<<<< HEAD
           (user: User) =>
             user.user_id === payload.new.sender_id 
         );
         if (index !== -1 &&
           payload.new.receiver_room_id === currentUserRoomId) {
+=======
+          (user: User) => user.user_id === payload.new.sender_id
+        );
+        if (
+          index !== -1 &&
+          payload.new.receiver_room_id === currentUserRoomId
+        ) {
+>>>>>>> dfe12edb43a6f100cda5bc8aa0a8e859985f1e03
           console.log("trying to swap", payload);
           users[index] = {
             ...users[index],
             unread_count: payload.new.unread_count,
+            last_message: payload.new.last_message,
+            updated_at: payload.new.updated_at,
           };
           users[0] = users.splice(index, 1, users[0])[0];
           setUsers(users);
@@ -449,7 +463,7 @@ const Discossions = () => {
                     showMessageEmoji={showMessageEmoji}
                     setMessageEmoji={setMessageEmoji}
                     currentUserRoomId={currentUserRoomId}
-                    recipient={recipient as User}
+                    // recipient={recipient as User}
                     isGroupdiscussion={isGroupdiscussion}
                   />
                 ) : (

@@ -33,21 +33,25 @@ const fetchUsers = async (currentUserId: string) => {
   const listToReturn = listOfunreadMessagesCount?.reduce(
     (acc, curr) => {
       const index = acc?.findIndex(
-        (item: User) =>
-          item.user_id === curr.sender_id
+        (item: User) => item.user_id === curr.sender_id
       );
-      if (index !== -1  &&
-        curr.receiver_room_id === currentUserRoomId) {
-          acc[index] = { ...acc[index], unread_count: curr.unread_count, last_message: curr.last_message };
-        }
-       
+      if (index !== -1 && curr.receiver_room_id === currentUserRoomId) {
+        acc[index] = {
+          ...acc[index],
+          unread_count: curr.unread_count,
+          last_message: curr.last_message,
+        };
+      }
+
       return acc;
     },
     [...usersInRoomTable]
   );
 
   return {
-    merged: listToReturn,
+    merged: listToReturn?.sort(
+      (user1: any, user2: any) => user1.unread_count - user2.unread_count
+    ),
     data: data,
     groups: groups.flat().map((group) => group.id),
     currentUserRoomId,
