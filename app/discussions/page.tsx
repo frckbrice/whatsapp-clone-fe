@@ -1,7 +1,7 @@
 "use client";
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Avatar";
-import { MdGroups2, MdRecordVoiceOver } from "react-icons/md";
+import { MdGroups2 } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { GoSearch } from "react-icons/go";
 import { BsEmojiSmile } from "react-icons/bs";
@@ -16,8 +16,7 @@ import DropDownR from "../../components/mainLayoutPage/DropdownR";
 import { useWhatSappContext } from "@/components/context";
 import SideNavRight from "../../components/RightSideBar/SideNavRight";
 import SearchField from "../../components/RightSideBar/SearchField";
-import SenderMessages from "@/components/mainLayoutPage/Messages/SenderMessage";
-import ReceiverMessages from "@/components/mainLayoutPage/Messages/ReceiverMessage";
+
 import Messages from "@/components/mainLayoutPage/Messages/Message";
 import ContactInfoPage from "../../components/RightSideBar/ContactInfoPage";
 import { useWhatSappContactContext } from "../../components/context/Context";
@@ -28,16 +27,16 @@ import ShowProfilePicture from "@/components/profilPage/ShowProfilePicture";
 import Image from "next/image";
 import UploadPicture from "@/components/profilPage/UploadPicture";
 import { supabase } from "@/utils/supabase/client";
-import { RiContactsBookLine } from "react-icons/ri";
 import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
-import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import { Message, PartRoomUser, Room, Roomuser, User, Group } from "@/type";
-import { getMessages, shuffleArr } from "@/utils/queries/getMessage";
+
+import { Message, Room, User, Group } from "@/type";
+import { getMessages } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
+import DOMPurify from "isomorphic-dompurify";
 import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
 import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 // import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
@@ -46,23 +45,22 @@ import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
-// import { useWhatSappContext } from "@/components/context";
+import { updateUnreadMessageCount } from "@/utils/queries/updateUnreadMessageCount";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
 
   const email: string = JSON.parse(localStorage.getItem("email") as string);
   const [users, setUsers] = useState<User[]>([]);
+  // state containing the user info
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
-  ); // state containing the user info
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [rooms, setRooms] = useState<Promise<any[] | undefined>[]>([]);
+  );
   const [userInGroupsCreations, setUserInGroupsCreations] = useState<User[]>(
     []
   );
   const [message, setMessage] = useState<string>("");
-  const [updateUsers, setUpdateUsers] = useState<boolean>(false);
+
   const [recipient, setRecipient] = useState<User>();
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [userGroupsId, setUserGroupsId] = useState<string[]>([]);
@@ -75,15 +73,14 @@ const Discossions = () => {
   const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
+  const [insert, setInsert] = useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
+  const [lastMessage, setLastMessage] = useState<Message>();
 
-  const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
-  const router = useRouter();
-  const [imageUrl, setImageUrl] = useState("");
+  const { showCreateGroup } = useProfileContext();
 
-  // if (!email && !currentUser) router.push("/");
-
+  // console.log(email);
   const {
     setOpenSideNav,
     openSideNav,
@@ -118,14 +115,8 @@ const Discossions = () => {
     }
   };
 
-  const switchTheme: any = () => {
-    console.log("clicked");
-    setIsDark((prev) => !prev);
-
-    setLabel(() => (label === "Light" ? "Night" : "Light"));
-  };
-
   useEffect(() => {
+    setAddedGroup(false);
     fetchSignupUser(email)
       .then((data) => {
         console.log(data);
@@ -154,13 +145,6 @@ const Discossions = () => {
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
 
-  // this is useEffect is mainly to let user setup their profile after the have signup
-  // useEffect(() => {
-  //   setImageUrl(LOCAL_STORAGE.get("imageURL"));
-  //   // i am using this localhost image to check if the use have setup his/her profile
-  // }, []);
-
-  // console.log("these are groups", groups);
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(
@@ -202,6 +186,19 @@ const Discossions = () => {
       .catch((err: any) => {
         if (err instanceof Error) console.error(err);
       });
+    supabase
+      .from("unread_messages")
+      .update({
+        unread_count: 0,
+        last_message: "",
+      })
+      .match({
+        sender_id: receiver?.user_id,
+        receiver_room_id: currentUserRoomId,
+      })
+      .then((data) => {
+        console.log(data);
+      });
   }, [receiver?.id]);
 
   const sendMessageToDB = async () => {
@@ -214,11 +211,11 @@ const Discossions = () => {
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
-      content: message,
+      content: DOMPurify.sanitize(message),
       sender_name: currentUser?.name,
       phone_number: currentUser?.phone as string,
+      is_read: false,
     };
-    // console.log('receiver_room_id', receiver?.id)
 
     const { error } = await supabase.from("messages").insert(sendingMessage);
 
@@ -229,31 +226,55 @@ const Discossions = () => {
   const handlekeydown = async (event: any) => {
     if (event.key === "Enter") await sendMessageToDB();
   };
-
+let i = 0;
   const messages = supabase
     .channel("custom-all-channel")
     .on(
       "postgres_changes",
       { event: "*", schema: "public", table: "messages" },
-      (payload: any) => {
+      async (payload: any) => {
         console.log("Change received!", payload);
+        setLastMessage(payload.new);
+     
 
         if (payload.eventType === "UPDATE") {
+          updateUnreadMessageCount(
+            payload.new.sender_id,
+            payload.new.receiver_room_id,
+            true,
+            payload.new.content
+          )
+            .then((data) => {
+              if (data?.data) console.log("update unread message count", data);
+            })
+            .catch((err) => console.log(err));
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
           );
-          discussionsMessages[newIndex].emoji = payload.new.emoji;
+          if (newIndex !== -1)
+            discussionsMessages[newIndex].emoji = payload.new.emoji;
           setDiscussionsMessages(discussionsMessages);
         }
 
-        if (payload.eventType === "INSERT")
+        if (payload.eventType === "INSERT") {
+          updateUnreadMessageCount(
+            payload.new.sender_id,
+            payload.new.receiver_room_id,
+            false,
+            payload.new.content
+          )
+            .then((data) => {
+              if (data?.data) console.log("update unread message count", data);
+            })
+            .catch((err) => console.log(err));
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
-            groupMembersIds?.map((memberId) => {
+            groupMembersIds?.map((_) => {
               supabase
                 .channel(`group_:${payload.new.receiver_room_id}`)
                 .send({
                   type: "broadcast",
                   event: "test",
+                  receiver_room_id: payload.new.receiver_room_id,
                   payload: { message: payload.new.content },
                 })
                 .then((data) => {
@@ -272,10 +293,44 @@ const Discossions = () => {
               ...prev,
               { ...payload.new, receiver_room_id: currentUserRoomId },
             ]);
-          } else setDiscussionsMessages((prev) => [...prev, payload.new]);
+          } else {
+            setDiscussionsMessages((prev) => [...prev, payload.new]);
+          }
+        }
       }
     )
     .subscribe();
+    
+  const unreadMessages = supabase
+    .channel("custom-insert-channel")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "unread_messages" },
+      async (payload: any) => {
+        console.log("Change received from unread_message table!", payload);
+
+        const index = users?.findIndex(
+          (user: User) => user.user_id === payload.new.sender_id
+        );
+        if (
+          index !== -1 &&
+          payload.new.receiver_room_id === currentUserRoomId
+        ) {
+          console.log("trying to swap", payload);
+          users[index] = {
+            ...users[index],
+            unread_count: payload.new.unread_count,
+            last_message: payload.new.last_message,
+            updated_at: payload.new.updated_at,
+          };
+          users[0] = users.splice(index, 1, users[0])[0];
+          setUsers(users);
+        }
+      }
+    )
+    .subscribe();
+
+
 
   return (
     <>
@@ -336,13 +391,17 @@ const Discossions = () => {
                 </div>
               </div>
               <DirectMessage
-                users={users}
-                groups={groups}
+                users={users?.sort(
+                  (user1: any, user2: any) =>
+                    user2.unread_count - user1.unread_count
+                )}
                 setReceiver={setReceiver}
                 className=" overflow-y-auto h-fit "
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
+                lastMessage={lastMessage as Message}
+                currentUserRoomId={currentUserRoomId as string}
               />
             </div>
             <div
@@ -422,7 +481,7 @@ const Discossions = () => {
                     showMessageEmoji={showMessageEmoji}
                     setMessageEmoji={setMessageEmoji}
                     currentUserRoomId={currentUserRoomId}
-                    recipient={recipient as User}
+                    // recipient={recipient as User}
                     isGroupdiscussion={isGroupdiscussion}
                   />
                 ) : (
