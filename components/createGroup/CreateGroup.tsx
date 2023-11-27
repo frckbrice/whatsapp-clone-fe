@@ -37,8 +37,10 @@ const CreateGroup = ({ users, currentUser }: Props) => {
   const [showNextBtn, setShowNextBtn] = useState(false);
   const [groupSetup, setGroupSetup] = useState(true);
   const [notify, setNotify] = useState<string>("");
+  const [userData, setUserData] = useState<Array<User>>([]);
 
   useEffect(() => {
+    setUserData(users);
     LOCAL_STORAGE.save("group_members", []);
     setMembers([]);
   }, []);
@@ -81,6 +83,22 @@ const CreateGroup = ({ users, currentUser }: Props) => {
 
   const openGroupSetup = () => {
     setGroupSetup((prev) => !prev);
+  };
+
+  // handeFilter
+  const handleFilter = (event: { target: { value: any } }) => {
+    const searchName = event.target.value;
+
+    const newFilter = users.filter((user) => {
+      return user.name.toLowerCase().includes(searchName.toLowerCase());
+    });
+    if (newFilter.length === 0 || searchName === "") {
+      setUserData(users);
+    }
+    setUserData(newFilter);
+    // console.clear();
+    // console.log("new filter", searchName);
+    // console.log("newFilter", newFilter);
   };
 
   return (
@@ -126,13 +144,14 @@ const CreateGroup = ({ users, currentUser }: Props) => {
                 className="w-full border-b outline-none p-2"
                 type="search"
                 placeholder="search name or number"
+                onChange={handleFilter}
               />
             </div>
             <div></div>
             <div className="px-3 h-[60vh] overflow-auto">
               {users && (
                 <div className="flex gap-2 w-full flex-col ">
-                  {users?.map((item: any) => (
+                  {userData?.map((item: any) => (
                     <div
                       onClick={() => handleDirectMessage(item)}
                       key={item.id}

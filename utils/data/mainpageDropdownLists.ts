@@ -25,11 +25,11 @@ export const dropdownProfilePict = [
   "Show the picture",
   "Take a picture",
   "Import a picture",
-  "Delete a picture",
+  // "Delete a picture",
 ];
 
 export const dropdownGroupItems = [
-  "Take photo",
+  // "Take photo",
   "Upload photo",
-  "Emogi & Sticker",
+  // "Emogi & Sticker",
 ];
