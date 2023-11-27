@@ -204,7 +204,7 @@ const Discossions = () => {
   const handlekeydown = async (event: any) => {
     if (event.key === "Enter") await sendMessageToDB();
   };
-
+let i = 0;
   const messages = supabase
     .channel("custom-all-channel")
     .on(
@@ -213,7 +213,9 @@ const Discossions = () => {
       async (payload: any) => {
         console.log("Change received!", payload);
         setLastMessage(payload.new);
-
+       
+       
+        
         if (payload.eventType === "UPDATE") {
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
@@ -250,21 +252,26 @@ const Discossions = () => {
               ...prev,
               { ...payload.new, receiver_room_id: currentUserRoomId },
             ]);
-          } else setDiscussionsMessages((prev) => [...prev, payload.new]);
+          } else {
+            i++;
+            updateUnreadMessageCount(
+              payload.new.sender_id,
+              payload.new.receiver_room_id,
+              payload.new.content
+            )
+              .then((data) => {
+                if (data) console.log("update unread message count", data);
+              })
+              .catch((err) => console.log(err));
+              setDiscussionsMessages((prev) => [...prev, payload.new]);
+              console.log(i)
+          }
 
-        updateUnreadMessageCount(
-          payload.new.sender_id,
-          payload.new.receiver_room_id,
-          payload.new.content
-        )
-          .then((data) => {
-            if (data) console.log("update unread message count", data);
-          })
-          .catch((err) => console.log(err));
+        
       }
     )
     .subscribe();
-
+    
   const unreadMessages = supabase
     .channel("custom-insert-channel")
     .on(
