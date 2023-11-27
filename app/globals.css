@@ -23,13 +23,12 @@
   width: fit-content;
   height: auto;
   background-color: hsla(0, 0%, 100%, 0.95);
-  color: #111b11;
-  /*  color: #54656f;    */
-  padding: 8px;
+  color: #0b0c0d;
+  padding: 3px 5px;
   position: relative;
   float: left;
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 15px;
   border: 1px solid rgb(226, 218, 218);
   box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
 }

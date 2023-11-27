@@ -9,7 +9,6 @@ import { LOCAL_STORAGE } from "@/utils/service/storage";
 // icon imports
 import { FaCircleArrowRight } from "react-icons/fa6";
 import GroupSetup from "./GroupSetup";
-import { supabase } from "@/utils/supabase/client";
 import { User } from "@/type";
 
 type Props = {
@@ -17,27 +16,18 @@ type Props = {
   users: User[];
 };
 
-//  interface User {
-//    created_at: string;
-//    email: string;
-//    id: string;
-//    image: string;
-//    name: string;
-//    phone: null;
-//  }
-
-const CreateGroup = ({ users, currentUser }: Props) => {
+const CreateGroup = ({ users }: Props) => {
   // const [users, setUsers] = useState<Array<{}>>([]);
   const [members, setMembers] = useState<Array<User>>(
     LOCAL_STORAGE.get("group_members") || []
   );
 
-  // const currentUser = LOCAL_STORAGE.get("sender") || {};
-  const [membersID, setMembersId] = useState<Array<string>>([]);
-  const [showNextBtn, setShowNextBtn] = useState(false);
   const [groupSetup, setGroupSetup] = useState(true);
   const [notify, setNotify] = useState<string>("");
   const [userData, setUserData] = useState<Array<User>>([]);
+  const [membersID, setMembersId] = useState<Array<string>>([]);
+  const [showNextBtn, setShowNextBtn] = useState(false);
+
 
   useEffect(() => {
     setUserData(users);
