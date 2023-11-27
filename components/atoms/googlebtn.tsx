@@ -32,8 +32,7 @@ const GoogleButton = () => {
       },
     });
     setIsLoading(true)
-  };
-  
+  };  
 
   return (
     <div>
