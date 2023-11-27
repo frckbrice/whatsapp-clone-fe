@@ -125,9 +125,7 @@ const DirectMessage = ({
                     </span>
                     <span
                       className={` p-[5px] w-6 h-6 min-w-fit min-h-fit rounded-full  ${
-                        !clicked && discussion.unread_count
-                          ? "opacity-100"
-                          : "opacity-0"
+                        discussion.unread_count ? "opacity-100" : "opacity-0"
                       }   bg-[#25c460] text-white text-[14px] font-[SF Pro Text] flex justify-center items-center`}
                     >
                       {discussion.unread_count ?? 0}
