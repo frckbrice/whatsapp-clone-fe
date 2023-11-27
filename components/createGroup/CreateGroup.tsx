@@ -25,6 +25,9 @@ const CreateGroup = ({ users }: Props) => {
   const [groupSetup, setGroupSetup] = useState(true);
   const [notify, setNotify] = useState<string>("");
   const [userData, setUserData] = useState<Array<User>>([]);
+  const [membersID, setMembersId] = useState<Array<string>>([]);
+  const [showNextBtn, setShowNextBtn] = useState(false);
+
 
   useEffect(() => {
     setUserData(users);
