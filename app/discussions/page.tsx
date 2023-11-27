@@ -214,19 +214,6 @@ const Discossions = () => {
         console.log("Change received!", payload);
         setLastMessage(payload.new);
 
-<<<<<<< HEAD
-        updateUnreadMessageCount(
-          payload.new.sender_id,
-          payload.new.receiver_room_id,
-          payload.new.content
-        )
-          .then((data) => {
-            if (data) console.log("update unread message count", data);
-          })
-          .catch((err) => console.log(err));
-
-=======
->>>>>>> dfe12edb43a6f100cda5bc8aa0a8e859985f1e03
         if (payload.eventType === "UPDATE") {
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
@@ -287,20 +274,12 @@ const Discossions = () => {
         console.log("Change received from unread_message table!", payload);
 
         const index = users?.findIndex(
-<<<<<<< HEAD
-          (user: User) =>
-            user.user_id === payload.new.sender_id 
-        );
-        if (index !== -1 &&
-          payload.new.receiver_room_id === currentUserRoomId) {
-=======
           (user: User) => user.user_id === payload.new.sender_id
         );
         if (
           index !== -1 &&
           payload.new.receiver_room_id === currentUserRoomId
         ) {
->>>>>>> dfe12edb43a6f100cda5bc8aa0a8e859985f1e03
           console.log("trying to swap", payload);
           users[index] = {
             ...users[index],
