@@ -21,15 +21,13 @@ type Props = {
   showMessageEmoji: any;
   setMessageEmoji: React.Dispatch<React.SetStateAction<boolean>>;
   currentUserRoomId: string;
-  recipient: User;
+  // recipient: User;
   isGroupdiscussion: boolean;
 };
 const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const [target, setTarget] = useState<string>(props.messageList[0].id);
   const [emojie, setEmojie] = useState<string>();
   const [messageId, setMessageId] = useState<string>("");
-  const [oldmessageId, setOldmessageId] = useState<string>("");
-  const emojieRef = useRef<HTMLDivElement | null>(null);
 
   const classForMessageReceiver = "align-left max-w-4/5 min-w-fit";
   const classForMessageSender = "box-row align-right  max-w-4/5 min-w-fit";
