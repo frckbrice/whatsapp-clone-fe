@@ -20,7 +20,7 @@ const GoogleButton = () => {
   const [isLoading, setIsLoading] = useState<Boolean>(false)
 
   const handleGoogleSignin = async () => {
-    setIsLoading(true)
+    
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -31,7 +31,7 @@ const GoogleButton = () => {
         redirectTo: urlToUse(),
       },
     });
-    // setIsLoading(false)
+    setIsLoading(true)
   };
   
 
@@ -49,7 +49,6 @@ const GoogleButton = () => {
           src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
         />
         <p>Sign In with Google</p>
-        {/* {isLoading ? <Pulsation/> : <p>Sign In with Google</p>} */}
       </button>}
       
     </div>
