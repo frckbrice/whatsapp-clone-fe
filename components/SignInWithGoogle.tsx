@@ -76,9 +76,9 @@ const Signup = () => {
     const { data, error } = await supabase.auth.signInWithOtp({
       email: email,
       options: {
-        // set this to false if you do not want the user to be automatically signed up
+        // set this to false if you do not want the user to be automatically signed up and redirect to the discussions page
         shouldCreateUser: true,
-        emailRedirectTo: "https://localhost:3000/discussions",
+        emailRedirectTo: "https://waxchat.vercel.app/discussions",
       },
     });
   }
