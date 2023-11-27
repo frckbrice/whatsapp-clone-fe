@@ -66,6 +66,7 @@ const Discossions = () => {
   const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
+  const [insert, setInsert] = useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
   const [lastMessage, setLastMessage] = useState<Message>();
@@ -178,6 +179,19 @@ const Discossions = () => {
       .catch((err: any) => {
         if (err instanceof Error) console.error(err);
       });
+    supabase
+      .from("unread_messages")
+      .update({
+        unread_count: 0,
+        last_message: "",
+      })
+      .match({
+        sender_id: receiver?.user_id,
+        receiver_room_id: currentUserRoomId,
+      })
+      .then((data) => {
+        console.log(data);
+      });
   }, [receiver?.id]);
 
   const sendMessageToDB = async () => {
@@ -213,8 +227,19 @@ const Discossions = () => {
       async (payload: any) => {
         console.log("Change received!", payload);
         setLastMessage(payload.new);
+        updateUnreadMessageCount(
+          payload.new.sender_id,
+          payload.new.receiver_room_id,
+          insert,
+          payload.new.content
+        )
+          .then((data) => {
+            if (data?.data) console.log("update unread message count", data);
+          })
+          .catch((err) => console.log(err));
 
         if (payload.eventType === "UPDATE") {
+          setInsert(false);
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
           );
@@ -223,7 +248,8 @@ const Discossions = () => {
           setDiscussionsMessages(discussionsMessages);
         }
 
-        if (payload.eventType === "INSERT")
+        if (payload.eventType === "INSERT") {
+          setInsert(true);
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
             groupMembersIds?.map((_) => {
               supabase
@@ -250,17 +276,10 @@ const Discossions = () => {
               ...prev,
               { ...payload.new, receiver_room_id: currentUserRoomId },
             ]);
-          } else setDiscussionsMessages((prev) => [...prev, payload.new]);
-
-        updateUnreadMessageCount(
-          payload.new.sender_id,
-          payload.new.receiver_room_id,
-          payload.new.content
-        )
-          .then((data) => {
-            if (data) console.log("update unread message count", data);
-          })
-          .catch((err) => console.log(err));
+          } else {
+            setDiscussionsMessages((prev) => [...prev, payload.new]);
+          }
+        }
       }
     )
     .subscribe();
@@ -353,7 +372,10 @@ const Discossions = () => {
                 </div>
               </div>
               <DirectMessage
-                users={users}
+                users={users?.sort(
+                  (user1: any, user2: any) =>
+                    user2.unread_count - user1.unread_count
+                )}
                 setReceiver={setReceiver}
                 className=" overflow-y-auto h-fit "
                 setRoomObject={setRoomObject}
