@@ -70,7 +70,7 @@ const GroupDetials = ({ roomObject }: Props) => {
 
   return (
     <div>
-      <div className="flex flex-col bg-white">
+      <div className="flex flex-col bg-white max-h-screen ">
         <p className="m-4">{groupMember.length} Members</p>
         <button className="hover:bg-slate-200 flex items-center p-4 gap-2">
           <span className="bg-themecolor text-white p-2 rounded-[50%]">

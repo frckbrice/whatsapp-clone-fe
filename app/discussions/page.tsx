@@ -154,13 +154,6 @@ const Discossions = () => {
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
 
-  // this is useEffect is mainly to let user setup their profile after the have signup
-  // useEffect(() => {
-  //   setImageUrl(LOCAL_STORAGE.get("imageURL"));
-  //   // i am using this localhost image to check if the use have setup his/her profile
-  // }, []);
-
-  // console.log("these are groups", groups);
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(
@@ -218,7 +211,6 @@ const Discossions = () => {
       sender_name: currentUser?.name,
       phone_number: currentUser?.phone as string,
     };
-    // console.log('receiver_room_id', receiver?.id)
 
     const { error } = await supabase.from("messages").insert(sendingMessage);
 
@@ -278,7 +270,7 @@ const Discossions = () => {
     .subscribe();
 
   return (
-    <>
+    <div className=" lg:w-[85%] lg:my-auto lg:py-6 ">
       {showPPicture ? (
         <ShowProfilePicture>
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
@@ -298,7 +290,7 @@ const Discossions = () => {
         <>
           <UploadPicture />
           <div className={importPict ? "hidden" : "flex w-full "}>
-            <div className="bg-white w-[25vw] h-screen">
+            <div className="bg-white w-[25vw] h-[10%]">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
@@ -339,7 +331,7 @@ const Discossions = () => {
                 users={users}
                 groups={groups}
                 setReceiver={setReceiver}
-                className=" overflow-y-auto h-fit "
+                className=" overflow-y-auto h-full p-0"
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
@@ -353,10 +345,10 @@ const Discossions = () => {
                       !start
                         ? "bg-whatsappdashimg bg-no-repeat bg-cover"
                         : "bg-whatsappimg pb-10"
-                    }  border-r border-r-gray-300 z-0`
+                    }  border-r border-r-gray-300 z-0 h-[40%]`
                   : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${
                       !start
-                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
+                        ? "bg-whatsappdashimg bg-no-repeat bg-cover "
                         : "bg-whatsappimg"
                     }`
               }
@@ -435,8 +427,8 @@ const Discossions = () => {
                   !start
                     ? "hidden"
                     : openSideNav || openContactInfo
-                    ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
-                    : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
+                    ? "  w-[50vw] lg:w-[42.6%] flex items-center bg-[#e1e1de] h-[] fixed lg:bottom-7 py-2 px-5 gap-5 z-0"
+                    : "lg:w-[63.8%] w-[75vw] flex items-center bg-[#e1e1de] h-[] fixed lg:bottom-7 py-2 px-5 gap-5 z-0"
                 }
               >
                 {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}
@@ -466,7 +458,7 @@ const Discossions = () => {
                   <ToastContainer/>
                   <input
                     type="text"
-                    className="w-full my-2 outline-none text-gray-600 px-3 "
+                    className="w-full my-2 outline-none text-gray-600 px-3"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type a message"
@@ -499,7 +491,7 @@ const Discossions = () => {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

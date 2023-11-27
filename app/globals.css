@@ -35,14 +35,14 @@
 }
 
 .box-row {
-  background-color: #8efd8e;
+  background-color: #d9fdd3;
   justify-items: flex-end;
 }
 
 .box.arrow-right {
   margin-top: 10px;
   border-top-left-radius: 12px;
-  background-color: rgb(142, 253, 142);
+  background-color: #d9fdd3;
 }
 
 .box.arrow-left {
@@ -59,7 +59,7 @@
   border-top: none;
   border-right: 15px solid transparent;
   border-left: 15px solid transparent;
-  border-bottom: 15px solid rgb(142, 253, 142);
+  border-bottom: 15px solid #d9fdd3;
   transform: rotate(-48deg);
 }
 

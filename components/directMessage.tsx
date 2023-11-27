@@ -78,7 +78,7 @@ const DirectMessage = ({
   return (
     <div className={` ${openProfile ? "hidden" : className} `}>
       {users.reverse().length ? (
-        <div className="flex gap-2 p-0 w-full h-[85vh] flex-col">
+        <div className="flex gap-2 p-0 w-full h-[85vh] pb-5 flex-col">
           {users?.map((item: any) => (
             <div
               onClick={() => handleDirectMessage(item.user_id)}
