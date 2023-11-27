@@ -227,7 +227,8 @@ const Discossions = () => {
 
         updateUnreadMessageCount(
           payload.new.sender_id,
-          payload.new.receiver_room_id
+          payload.new.receiver_room_id,
+          payload.new.content
         )
           .then((data) => {
             if (data) console.log("update unread message count", data);
@@ -282,17 +283,12 @@ const Discossions = () => {
       async (payload: any) => {
         console.log("Change received from unread_message table!", payload);
 
-        // const ndex = users?.findIndex(
-        //   (user: User) => user.user_id === payload.new.sender_id
-        // );
-        // if (ndex !== -1) users = swap(users, 0, ndex);
-
         const index = users?.findIndex(
           (user: User) =>
-            user.user_id === payload.new.sender_id &&
-            payload.new.receiver_room_id === currentUserRoomId
+            user.user_id === payload.new.sender_id 
         );
-        if (index !== -1) {
+        if (index !== -1 &&
+          payload.new.receiver_room_id === currentUserRoomId) {
           console.log("trying to swap", payload);
           users[index] = {
             ...users[index],
@@ -304,6 +300,8 @@ const Discossions = () => {
       }
     )
     .subscribe();
+
+
 
   return (
     <>

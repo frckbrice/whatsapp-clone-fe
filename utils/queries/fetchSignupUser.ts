@@ -15,3 +15,5 @@ const fetchSignupUser = async (email: string) => {
   return data as User;
 };
 export default fetchSignupUser;
+
+
