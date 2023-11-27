@@ -333,7 +333,7 @@ let i = 0;
 
 
   return (
-    <>
+    <div className=" lg:w-[85%] lg:my-auto lg:py-6 ">
       {showPPicture ? (
         <ShowProfilePicture>
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
@@ -353,7 +353,7 @@ let i = 0;
         <>
           <UploadPicture />
           <div className={importPict ? "hidden" : "flex w-full "}>
-            <div className="bg-white w-[25vw] h-screen">
+            <div className="bg-white w-[25vw] h-[10%]">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
@@ -396,7 +396,7 @@ let i = 0;
                     user2.unread_count - user1.unread_count
                 )}
                 setReceiver={setReceiver}
-                className=" overflow-y-auto h-fit "
+                className=" overflow-y-auto h-full p-0"
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
@@ -412,10 +412,10 @@ let i = 0;
                       !start
                         ? "bg-whatsappdashimg bg-no-repeat bg-cover"
                         : "bg-whatsappimg pb-10"
-                    }  border-r border-r-gray-300 z-0`
+                    }  border-r border-r-gray-300 z-0 h-[40%]`
                   : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${
                       !start
-                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
+                        ? "bg-whatsappdashimg bg-no-repeat bg-cover "
                         : "bg-whatsappimg"
                     }`
               }
@@ -494,8 +494,8 @@ let i = 0;
                   !start
                     ? "hidden"
                     : openSideNav || openContactInfo
-                    ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
-                    : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
+                    ? "  w-[50vw] lg:w-[42.6%] flex items-center bg-[#e1e1de] h-[] fixed lg:bottom-7 py-2 px-5 gap-5 z-0"
+                    : "lg:w-[63.8%] w-[75vw] flex items-center bg-[#e1e1de] h-[] fixed lg:bottom-7 py-2 px-5 gap-5 z-0"
                 }
               >
                 {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}
@@ -525,7 +525,7 @@ let i = 0;
                   <ToastContainer/>
                   <input
                     type="text"
-                    className="w-full my-2 outline-none text-gray-600 px-3 "
+                    className="w-full my-2 outline-none text-gray-600 px-3"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type a message"
@@ -558,7 +558,7 @@ let i = 0;
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 
