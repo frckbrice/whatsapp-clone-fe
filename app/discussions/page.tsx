@@ -77,6 +77,8 @@ const Discossions = () => {
     useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
+  const [lastMessage, setLastMessage] = useState<Message>();
+
 
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
   const router = useRouter();
@@ -340,29 +342,31 @@ const Discossions = () => {
                 </div>
               </div>
               <DirectMessage
-                users={users}
-                groups={groups}
+                users={users?.sort(
+                  (user1: any, user2: any) =>
+                    user2.unread_count - user1.unread_count
+                )}
                 setReceiver={setReceiver}
-                className=" overflow-y-auto h-fit "
+                className=" overflow-y-auto h-full p-0"
                 setRoomObject={setRoomObject}
                 setUsers={setUsers}
                 setRecipient={setRecipient}
+                lastMessage={lastMessage as Message}
+                currentUserRoomId={currentUserRoomId as string}
               />
             </div>
             <div
               ref={ref}
               className={
                 openSideNav || openContactInfo
-                  ? `relative w-[50vw] ${
-                      !start
-                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
-                        : "bg-whatsappimg pb-10"
-                    }  border-r border-r-gray-300 z-0`
-                  : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${
-                      !start
-                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
-                        : "bg-whatsappimg"
-                    }`
+                  ? `relative w-[50vw] ${!start
+                    ? "bg-whatsappdashimg bg-no-repeat bg-cover"
+                    : "bg-whatsappimg pb-10"
+                  }  border-r border-r-gray-300 z-0`
+                  : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${!start
+                    ? "bg-whatsappdashimg bg-no-repeat bg-cover"
+                    : "bg-whatsappimg"
+                  }`
               }
             >
               <div
@@ -439,8 +443,8 @@ const Discossions = () => {
                   !start
                     ? "hidden"
                     : openSideNav || openContactInfo
-                    ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
-                    : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
+                      ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
+                      : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
                 }
               >
                 {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}

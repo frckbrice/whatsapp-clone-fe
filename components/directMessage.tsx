@@ -123,7 +123,7 @@ const DirectMessage = ({
                     </div>
                   </div>
                   <div className="flex flex-col gap-1 w-[70px]">
-                    <span className="mx-auto ">
+                    <span className="mx-auto text-[#1FA855]">
                       {dayjs().to(dayjs(discussion?.updated_at))}
                     </span>
                     <span
