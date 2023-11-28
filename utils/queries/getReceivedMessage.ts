@@ -15,7 +15,7 @@ export const getReceivedMessages = async (
   }
 
   if (data) {
-    // console.log('these are messages', data)
+    console.log('these are messages', data)
     return data;
   }
 };

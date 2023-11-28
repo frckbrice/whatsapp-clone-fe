@@ -50,7 +50,7 @@ const GoogleButton = () => {
           alt="google logo"
           src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
         />
-        <p>{isLoading ? <Pulsation /> : "Sign In with Google"}</p>
+        <p className="text-center">{isLoading ? <Pulsation /> : "Sign In with Google"}</p>
       </button>
     </div>
   );

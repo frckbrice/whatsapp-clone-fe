@@ -68,7 +68,7 @@ const GroupDetials = ({ roomObject }: Props) => {
             .in("id", membersIds);
           if (data) {
             setGroupMembers(data);
-            console.log("group members#######", data);
+            console.log("group members", data);
           }
         }
       })
