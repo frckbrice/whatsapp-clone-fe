@@ -40,6 +40,7 @@ const DirectMessage = ({
 }: Props) => {
   // to style the select room
   const [target, setTarget] = useState<string>("");
+  const [clicked, setClicked] = useState<boolean>(false);
   const { setShowPPicture } = useWhatSappContext();
 
   dayjs.extend(relativeTime);
@@ -49,6 +50,7 @@ const DirectMessage = ({
   const { setStart } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile } = useProfileContext();
+  const [userData, setUserData] = useState<Array<User>>();
 
   const handleDirectMessage = async (user_id: string) => {
     setOpenContactInfo(false);
@@ -57,6 +59,7 @@ const DirectMessage = ({
     console.log("test after fetchsingleUser", data);
 
     setRecipient(data);
+    setClicked((prev) => !prev);
     setStart(true);
     setTarget(user_id);
     let room: User = (await fetchSingleRoom(user_id)) as User;
@@ -70,6 +73,8 @@ const DirectMessage = ({
   function handleClick() {
     setShowPPicture(true);
   }
+
+  const handleFilter = () => {};
 
   return (
     <div className={` ${openProfile ? "hidden" : className} `}>
@@ -118,7 +123,7 @@ const DirectMessage = ({
                     </div>
                   </div>
                   <div className="flex flex-col gap-1 w-[70px]">
-                    <span className="mx-auto text-[#1FA855]">
+                    <span className="mx-auto ">
                       {dayjs().to(dayjs(discussion?.updated_at))}
                     </span>
                     <span

@@ -43,7 +43,7 @@ import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
 // import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import { useRouter } from "next/navigation";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // import { useWhatSappContext } from "@/components/context";
@@ -206,7 +206,11 @@ const Discossions = () => {
 
   const sendMessageToDB = async () => {
     if (message === "" || !receiver?.id) {
-      toast.warning('Field cannot be empty', { autoClose: 1000, position: toast.POSITION.TOP_CENTER, hideProgressBar: true })
+      toast.warning("Field cannot be empty", {
+        autoClose: 1000,
+        position: toast.POSITION.TOP_RIGHT,
+        hideProgressBar: true,
+      });
       console.log("message or receiver of the message can not be empty");
       return;
     }
@@ -412,7 +416,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col mt-3 px-10 z-0 h-[80vh] overflow-y-auto ">
+              <div className=" w-full flex flex-col pb-2 mt-3 px-10 z-0 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -422,7 +426,7 @@ const Discossions = () => {
                     showMessageEmoji={showMessageEmoji}
                     setMessageEmoji={setMessageEmoji}
                     currentUserRoomId={currentUserRoomId}
-                    recipient={recipient as User}
+                    // recipient={recipient as User}
                     isGroupdiscussion={isGroupdiscussion}
                   />
                 ) : (
@@ -463,7 +467,7 @@ const Discossions = () => {
                 </button>
 
                 <div className="flex bg-white items-center rounded-md gap-5 p-1 w-full">
-                  <ToastContainer/>
+                  <ToastContainer />
                   <input
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3 "
