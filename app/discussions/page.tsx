@@ -216,7 +216,7 @@ const Discossions = () => {
       phone_number: currentUser?.phone as string,
       is_read: false,
     };
-    console.log(sendingMessage);
+    // console.log(sendingMessage);
     const { error } = await supabase.from("messages").insert(sendingMessage);
 
     if (error) console.log("error inserting messages: ", error);
@@ -228,7 +228,7 @@ const Discossions = () => {
   };
 
   const messages = supabase
-    .channel("custom-all-channel")
+    .channel("custom-messages-channel")
     .on(
       "postgres_changes",
       { event: "*", schema: "public", table: "messages" },
@@ -327,7 +327,7 @@ const Discossions = () => {
   console.log(discussionsMessages);
 
   const user = supabase
-    .channel("custom-all-channel")
+    .channel("custom-allusers-channel")
     .on(
       "postgres_changes",
       { event: "INSERT", schema: "public", table: "user" },
@@ -340,7 +340,7 @@ const Discossions = () => {
     .subscribe();
 
   const rooms = supabase
-    .channel("custom-all-channel")
+    .channel("custom-allrooms-channel")
     .on(
       "postgres_changes",
       { event: "INSERT", schema: "public", table: "rooms" },
