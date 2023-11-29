@@ -216,7 +216,7 @@ const Discossions = () => {
       phone_number: currentUser?.phone as string,
       is_read: false,
     };
-
+    console.log(sendingMessage);
     const { error } = await supabase.from("messages").insert(sendingMessage);
 
     if (error) console.log("error inserting messages: ", error);
@@ -236,7 +236,15 @@ const Discossions = () => {
         console.log("Change received!", payload);
         setLastMessage(payload.new);
 
+        await updateUnreadMessageCount(
+          payload.new.sender_id,
+          payload.new.receiver_room_id,
+          insert,
+          payload.new.content
+        );
+
         if (payload.eventType === "UPDATE") {
+          setInsert(false);
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
           );
@@ -246,6 +254,7 @@ const Discossions = () => {
         }
 
         if (payload.eventType === "INSERT") {
+          setInsert(true);
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
             groupMembersIds?.map((_) => {
               supabase
@@ -274,12 +283,12 @@ const Discossions = () => {
             ]);
           } else setDiscussionsMessages((prev) => [...prev, payload.new]);
 
-          await updateUnreadMessageCount(
-            payload.new.sender_id,
-            payload.new.receiver_room_id,
-            insert,
-            payload.new.content
-          );
+          // await updateUnreadMessageCount(
+          //   payload.new.sender_id,
+          //   payload.new.receiver_room_id,
+          //   insert,
+          //   payload.new.content
+          // );
         }
         // setInsert(false);
       }

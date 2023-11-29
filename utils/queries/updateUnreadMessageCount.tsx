@@ -7,18 +7,17 @@ export const updateUnreadMessageCount = async (
   insert: boolean,
   content?: string
 ) => {
-  console.log("inside the main function");
+  let unreadMessages: PostgrestSingleResponse<null>;
+
   const { data, error } = await supabase
     .from("unread_messages")
     .select("*")
     .match({ sender_id: sender_id, receiver_room_id: receiver_room_id })
     .single();
 
-  if (error) console.log(error);
-
   if (insert) {
     console.log("encore du test mais accepted , content: " + content);
-    await supabase.from("unread_messages").upsert(
+    unreadMessages = await supabase.from("unread_messages").upsert(
       {
         sender_id: sender_id,
         receiver_room_id: receiver_room_id,
@@ -29,5 +28,7 @@ export const updateUnreadMessageCount = async (
         onConflict: "sender_id, receiver_room_id ",
       }
     );
-  } else console.log("not inserted");
+
+    return unreadMessages;
+  }
 };
