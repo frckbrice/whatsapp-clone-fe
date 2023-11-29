@@ -35,11 +35,11 @@ const fetchUsers = async (currentUserId: string) => {
       const index = acc?.findIndex(
         (item: User) => item.user_id === curr.sender_id
       );
-      if (index !== -1 && curr.receiver_room_id === currentUserRoomId) {
+      if (index !== -1 && curr?.receiver_room_id === currentUserRoomId) {
         acc[index] = {
           ...acc[index],
-          unread_count: curr.unread_count,
-          last_message: curr.last_message,
+          unread_count: curr?.unread_count,
+          last_message: curr?.last_message,
         };
       }
 

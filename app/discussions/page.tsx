@@ -37,15 +37,11 @@ import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import DOMPurify from "isomorphic-dompurify";
-import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
-import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
-// import fetchUserGoups from "@/utils/queries/fetchAllUserGroups";
-import { LOCAL_STORAGE } from "@/utils/service/storage";
-import { useRouter } from "next/navigation";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { updateUnreadMessageCount } from "@/utils/queries/updateUnreadMessageCount";
+import insertIntoRooms from "@/utils/queries/insertIntoRoom";
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -203,7 +199,11 @@ const Discossions = () => {
 
   const sendMessageToDB = async () => {
     if (message === "" || !receiver?.id) {
-      toast.warning('Field cannot be empty', { autoClose: 1000, position: toast.POSITION.TOP_CENTER, hideProgressBar: true })
+      toast.warning("Field cannot be empty", {
+        autoClose: 1000,
+        position: toast.POSITION.TOP_CENTER,
+        hideProgressBar: true,
+      });
       console.log("message or receiver of the message can not be empty");
       return;
     }
@@ -226,7 +226,7 @@ const Discossions = () => {
   const handlekeydown = async (event: any) => {
     if (event.key === "Enter") await sendMessageToDB();
   };
-let i = 0;
+
   const messages = supabase
     .channel("custom-all-channel")
     .on(
@@ -235,19 +235,8 @@ let i = 0;
       async (payload: any) => {
         console.log("Change received!", payload);
         setLastMessage(payload.new);
-     
 
         if (payload.eventType === "UPDATE") {
-          updateUnreadMessageCount(
-            payload.new.sender_id,
-            payload.new.receiver_room_id,
-            true,
-            payload.new.content
-          )
-            .then((data) => {
-              if (data?.data) console.log("update unread message count", data);
-            })
-            .catch((err) => console.log(err));
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
           );
@@ -257,16 +246,6 @@ let i = 0;
         }
 
         if (payload.eventType === "INSERT") {
-          updateUnreadMessageCount(
-            payload.new.sender_id,
-            payload.new.receiver_room_id,
-            false,
-            payload.new.content
-          )
-            .then((data) => {
-              if (data?.data) console.log("update unread message count", data);
-            })
-            .catch((err) => console.log(err));
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
             groupMembersIds?.map((_) => {
               supabase
@@ -293,14 +272,20 @@ let i = 0;
               ...prev,
               { ...payload.new, receiver_room_id: currentUserRoomId },
             ]);
-          } else {
-            setDiscussionsMessages((prev) => [...prev, payload.new]);
-          }
+          } else setDiscussionsMessages((prev) => [...prev, payload.new]);
+
+          await updateUnreadMessageCount(
+            payload.new.sender_id,
+            payload.new.receiver_room_id,
+            insert,
+            payload.new.content
+          );
         }
+        // setInsert(false);
       }
     )
     .subscribe();
-    
+
   const unreadMessages = supabase
     .channel("custom-insert-channel")
     .on(
@@ -316,7 +301,7 @@ let i = 0;
           index !== -1 &&
           payload.new.receiver_room_id === currentUserRoomId
         ) {
-          console.log("trying to swap", payload);
+          console.log("promote to the first place", payload);
           users[index] = {
             ...users[index],
             unread_count: payload.new.unread_count,
@@ -330,7 +315,45 @@ let i = 0;
     )
     .subscribe();
 
+  console.log(discussionsMessages);
 
+  const user = supabase
+    .channel("custom-all-channel")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "user" },
+      async (payload: any) => {
+        console.log("Change received from user table!", payload);
+
+        await insertIntoRooms(payload.new);
+      }
+    )
+    .subscribe();
+
+  const rooms = supabase
+    .channel("custom-all-channel")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "rooms" },
+      (payload: any) => {
+        console.log("Change received from room table!", payload);
+
+        setUsers(() => [
+          {
+            id: payload.new.id,
+            name: payload.new.name,
+            created_at: payload.new.created,
+            image: payload.new.image,
+            updated_at: payload.new.updated,
+            status: payload.new.status,
+            user_id: payload.new.user_id,
+            created_by: payload.new.created_by,
+          },
+          ...users,
+        ]);
+      }
+    )
+    .subscribe();
 
   return (
     <div className=" lg:w-[85%] lg:my-auto lg:py-6 ">
@@ -522,7 +545,7 @@ let i = 0;
                 </button>
 
                 <div className="flex bg-white items-center rounded-md gap-5 p-1 w-full">
-                  <ToastContainer/>
+                  <ToastContainer />
                   <input
                     type="text"
                     className="w-full my-2 outline-none text-gray-600 px-3"

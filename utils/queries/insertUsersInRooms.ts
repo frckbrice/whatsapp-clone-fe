@@ -15,7 +15,7 @@ const insertUsersInRooms = async (users: User[]) => {
             image: `${user.image}`,
           },
           {
-            onConflict: "name", // Specify the column to check for conflicts
+            onConflict: "name",
           }
         )
         .select();

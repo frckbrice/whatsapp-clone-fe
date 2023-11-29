@@ -115,7 +115,7 @@ const DirectMessage = ({
                       )}
 
                       <span className="py-8 text-[14px]">
-                        {discussion.last_message}
+                        {discussion?.last_message}
                       </span>
                     </div>
                   </div>
