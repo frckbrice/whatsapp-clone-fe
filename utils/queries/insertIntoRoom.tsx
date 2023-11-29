@@ -8,12 +8,17 @@ const insertIntoRooms = async (user: User) => {
   if (user.name !== "" && user.id !== "") {
     const { data, error } = await supabase
       .from("rooms")
-      .insert({
-        name: `${user.name}`,
-        user_id: `${user.id}`,
-        image: `${user.image}`,
-        status: false,
-      })
+      .upsert(
+        {
+          name: user.name,
+          image: user.image,
+          status: false,
+        },
+        {
+          onConflict: "user_id, name, image",
+        }
+      )
+      .match({ user_id: user.id })
       .select();
     if (error) {
       console.log("could not post users in room", error);
@@ -21,7 +26,7 @@ const insertIntoRooms = async (user: User) => {
     }
     if (data) {
       // console.log("this is data from insert data", data);
-      return data;
+      return data[0];
     }
   }
 };

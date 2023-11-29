@@ -18,21 +18,21 @@ const Signupb = () => {
       localStorage.getItem("sb-xkwspfurbsmpwwazlkmu-auth-token") || "{}"
     );
     const { data } = await supabase.from("user").select("email");
-    let res = data?.filter((i) => i.email === googleUser.user.email);
+    let res = data?.filter((i) => i.email === googleUser?.user?.email);
     if (res?.length === 1) {
-      LOCAL_STORAGE.save("email", googleUser.user.email);
+      LOCAL_STORAGE.save("email", googleUser?.user?.email);
       setSuccess("Welcome back 🙂");
       router.push("/discussions");
       setIsLoading(false);
       return;
     }
     if (res?.length === 0) {
-      LOCAL_STORAGE.save("email", googleUser.user.email);
+      LOCAL_STORAGE.save("email", googleUser?.user?.email);
       const { data, error } = await supabase.from("user").insert({
-        email: googleUser.user.email,
-        name: googleUser.user.user_metadata.name,
-        image: googleUser.user.user_metadata.picture,
-        phone: googleUser.user.identities.phone,
+        email: googleUser?.user.email,
+        name: googleUser?.user.user_metadata.name,
+        image: googleUser?.user.user_metadata.picture,
+        phone: googleUser?.user.identities.phone,
       });
       if (error) console.log("an error occured while sending user", error);
       console.log("data from DB", data);

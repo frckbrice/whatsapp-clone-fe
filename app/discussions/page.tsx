@@ -236,13 +236,6 @@ const Discossions = () => {
         console.log("Change received!", payload);
         setLastMessage(payload.new);
 
-        await updateUnreadMessageCount(
-          payload.new.sender_id,
-          payload.new.receiver_room_id,
-          insert,
-          payload.new.content
-        );
-
         if (payload.eventType === "UPDATE") {
           setInsert(false);
           const newIndex: number = discussionsMessages?.findIndex(
@@ -281,14 +274,30 @@ const Discossions = () => {
               ...prev,
               { ...payload.new, receiver_room_id: currentUserRoomId },
             ]);
-          } else setDiscussionsMessages((prev) => [...prev, payload.new]);
+          } else {
+            setDiscussionsMessages((prev) => [...prev, payload.new]);
+          }
 
-          // await updateUnreadMessageCount(
-          //   payload.new.sender_id,
-          //   payload.new.receiver_room_id,
-          //   insert,
-          //   payload.new.content
-          // );
+          const { data, error } = await supabase
+            .from("unread_messages")
+            .select("*")
+            .match({
+              sender_id: payload.new.sender_id,
+              receiver_room_id: payload.new.receiver_room_id,
+            })
+            .single();
+
+          await supabase.from("unread_messages").upsert(
+            {
+              sender_id: payload.new.sender_id,
+              receiver_room_id: payload.new.receiver_room_id,
+              unread_count: !data ? 1 : data.unread_count + 1,
+              last_message: payload.new.content,
+            },
+            {
+              onConflict: "sender_id, receiver_room_id ",
+            }
+          );
         }
         // setInsert(false);
       }
@@ -310,27 +319,28 @@ const Discossions = () => {
           index !== -1 &&
           payload.new.receiver_room_id === currentUserRoomId
         ) {
-          console.log("promote to the first place", payload);
+          console.log("promote to thfirst place", payload);
           users[index] = {
             ...users[index],
             unread_count: payload.new.unread_count,
             last_message: payload.new.last_message,
             updated_at: payload.new.updated_at,
           };
-          users[0] = users.splice(index, 1, users[0])[0];
+          if (payload.new.unread_count)
+            users[0] = users.splice(index, 1, users[0])[0];
           setUsers(users);
         }
       }
     )
     .subscribe();
 
-  console.log(discussionsMessages);
+  // console.log(discussionsMessages);
 
   const user = supabase
     .channel("custom-allusers-channel")
     .on(
       "postgres_changes",
-      { event: "INSERT", schema: "public", table: "user" },
+      { event: "*", schema: "public", table: "user" },
       async (payload: any) => {
         console.log("Change received from user table!", payload);
 
@@ -343,7 +353,7 @@ const Discossions = () => {
     .channel("custom-allrooms-channel")
     .on(
       "postgres_changes",
-      { event: "INSERT", schema: "public", table: "rooms" },
+      { event: "*", schema: "public", table: "rooms" },
       (payload: any) => {
         console.log("Change received from room table!", payload);
 
