@@ -216,7 +216,7 @@ const Discossions = () => {
       phone_number: currentUser?.phone as string,
       is_read: false,
     };
-
+console.log(sendingMessage)
     const { error } = await supabase.from("messages").insert(sendingMessage);
 
     if (error) console.log("error inserting messages: ", error);
@@ -236,18 +236,18 @@ let i = 0;
         console.log("Change received!", payload);
         setLastMessage(payload.new);
      
-
+        updateUnreadMessageCount(
+          payload.new.sender_id,
+          payload.new.receiver_room_id,
+          insert,
+          payload.new.content
+        )
+          .then((data) => {
+            if (data?.data) console.log("update unread message count", data);
+          })
+          .catch((err) => console.log(err));
         if (payload.eventType === "UPDATE") {
-          updateUnreadMessageCount(
-            payload.new.sender_id,
-            payload.new.receiver_room_id,
-            true,
-            payload.new.content
-          )
-            .then((data) => {
-              if (data?.data) console.log("update unread message count", data);
-            })
-            .catch((err) => console.log(err));
+         
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
           );
@@ -257,16 +257,7 @@ let i = 0;
         }
 
         if (payload.eventType === "INSERT") {
-          updateUnreadMessageCount(
-            payload.new.sender_id,
-            payload.new.receiver_room_id,
-            false,
-            payload.new.content
-          )
-            .then((data) => {
-              if (data?.data) console.log("update unread message count", data);
-            })
-            .catch((err) => console.log(err));
+         setInsert(true)
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
             groupMembersIds?.map((_) => {
               supabase
