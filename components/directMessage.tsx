@@ -50,6 +50,7 @@ const DirectMessage = ({
   const { setStart } = useWhatSappContext();
   const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile } = useProfileContext();
+  const [userData, setUserData] = useState<Array<User>>();
 
   const handleDirectMessage = async (user_id: string) => {
     setOpenContactInfo(false);
@@ -72,6 +73,8 @@ const DirectMessage = ({
   function handleClick() {
     setShowPPicture(true);
   }
+
+  const handleFilter = () => {};
 
   return (
     <div className={` ${openProfile ? "hidden" : className} `}>

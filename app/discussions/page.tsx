@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Avatar";
-import { MdGroups2 } from "react-icons/md";
+import { MdGroups2, MdRecordVoiceOver } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { GoSearch } from "react-icons/go";
 import { BsEmojiSmile } from "react-icons/bs";
@@ -16,7 +16,8 @@ import DropDownR from "../../components/mainLayoutPage/DropdownR";
 import { useWhatSappContext } from "@/components/context";
 import SideNavRight from "../../components/RightSideBar/SideNavRight";
 import SearchField from "../../components/RightSideBar/SearchField";
-
+import SenderMessages from "@/components/mainLayoutPage/Messages/SenderMessage";
+import ReceiverMessages from "@/components/mainLayoutPage/Messages/ReceiverMessage";
 import Messages from "@/components/mainLayoutPage/Messages/Message";
 import ContactInfoPage from "../../components/RightSideBar/ContactInfoPage";
 import { useWhatSappContactContext } from "../../components/context/Context";
@@ -27,12 +28,13 @@ import ShowProfilePicture from "@/components/profilPage/ShowProfilePicture";
 import Image from "next/image";
 import UploadPicture from "@/components/profilPage/UploadPicture";
 import { supabase } from "@/utils/supabase/client";
+import { RiContactsBookLine } from "react-icons/ri";
 import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
-
-import { Message, Room, User, Group } from "@/type";
-import { getMessages } from "@/utils/queries/getMessage";
+import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
+import { Message, PartRoomUser, Room, Roomuser, User, Group } from "@/type";
+import { getMessages, shuffleArr } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
 import { getGroupMembers } from "@/utils/queries/getGroupMembers";
@@ -48,15 +50,15 @@ const Discossions = () => {
 
   const email: string = JSON.parse(localStorage.getItem("email") as string);
   const [users, setUsers] = useState<User[]>([]);
-  // state containing the user info
   const [currentUser, setCurrentUser] = useState<User>(() =>
     JSON.parse(localStorage.getItem("sender") || "{}")
-  );
+  ); // state containing the user info
+
   const [userInGroupsCreations, setUserInGroupsCreations] = useState<User[]>(
     []
   );
   const [message, setMessage] = useState<string>("");
-
+  const [updateUsers, setUpdateUsers] = useState<boolean>(false);
   const [recipient, setRecipient] = useState<User>();
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [userGroupsId, setUserGroupsId] = useState<string[]>([]);
@@ -69,14 +71,14 @@ const Discossions = () => {
   const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
-  const [insert, setInsert] = useState<boolean>(false);
   const [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
   const [lastMessage, setLastMessage] = useState<Message>();
 
-  const { showCreateGroup } = useProfileContext();
+  const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
 
-  // console.log(email);
+  // if (!email && !currentUser) router.push("/");
+
   const {
     setOpenSideNav,
     openSideNav,
@@ -111,8 +113,14 @@ const Discossions = () => {
     }
   };
 
+  const switchTheme: any = () => {
+    console.log("clicked");
+    setIsDark((prev) => !prev);
+
+    setLabel(() => (label === "Light" ? "Night" : "Light"));
+  };
+
   useEffect(() => {
-    setAddedGroup(false);
     fetchSignupUser(email)
       .then((data) => {
         console.log(data);
@@ -141,6 +149,13 @@ const Discossions = () => {
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
 
+  // this is useEffect is mainly to let user setup their profile after the have signup
+  // useEffect(() => {
+  //   setImageUrl(LOCAL_STORAGE.get("imageURL"));
+  //   // i am using this localhost image to check if the use have setup his/her profile
+  // }, []);
+
+  // console.log("these are groups", groups);
   useEffect(() => {
     setDiscussionsMessages([]);
     getMessages(
@@ -182,26 +197,13 @@ const Discossions = () => {
       .catch((err: any) => {
         if (err instanceof Error) console.error(err);
       });
-    supabase
-      .from("unread_messages")
-      .update({
-        unread_count: 0,
-        last_message: "",
-      })
-      .match({
-        sender_id: receiver?.user_id,
-        receiver_room_id: currentUserRoomId,
-      })
-      .then((data) => {
-        console.log(data);
-      });
   }, [receiver?.id]);
 
   const sendMessageToDB = async () => {
     if (message === "" || !receiver?.id) {
       toast.warning("Field cannot be empty", {
         autoClose: 1000,
-        position: toast.POSITION.TOP_CENTER,
+        position: toast.POSITION.TOP_RIGHT,
         hideProgressBar: true,
       });
       console.log("message or receiver of the message can not be empty");
@@ -211,10 +213,9 @@ const Discossions = () => {
     const sendingMessage: Message = {
       sender_id: currentUser.id as string,
       receiver_room_id: receiver?.id as string,
-      content: DOMPurify.sanitize(message),
+      content: message,
       sender_name: currentUser?.name,
       phone_number: currentUser?.phone as string,
-      is_read: false,
     };
     // console.log(sendingMessage);
     const { error } = await supabase.from("messages").insert(sendingMessage);
@@ -237,25 +238,21 @@ const Discossions = () => {
         setLastMessage(payload.new);
 
         if (payload.eventType === "UPDATE") {
-          setInsert(false);
           const newIndex: number = discussionsMessages?.findIndex(
             (message: any) => message.id === payload.new.id
           );
-          if (newIndex !== -1)
-            discussionsMessages[newIndex].emoji = payload.new.emoji;
+          discussionsMessages[newIndex].emoji = payload.new.emoji;
           setDiscussionsMessages(discussionsMessages);
         }
 
         if (payload.eventType === "INSERT") {
-          setInsert(true);
           if (userGroupsId?.includes(payload.new.receiver_room_id)) {
-            groupMembersIds?.map((_) => {
+            groupMembersIds?.map((memberId) => {
               supabase
                 .channel(`group_:${payload.new.receiver_room_id}`)
                 .send({
                   type: "broadcast",
                   event: "test",
-                  receiver_room_id: payload.new.receiver_room_id,
                   payload: { message: payload.new.content },
                 })
                 .then((data) => {
@@ -375,7 +372,7 @@ const Discossions = () => {
     .subscribe();
 
   return (
-    <div className=" lg:w-[85%] lg:my-auto lg:py-6 ">
+    <>
       {showPPicture ? (
         <ShowProfilePicture>
           <div className=" w-full h-full bg-white/90 flex flex-col justify-start pt-20  items-center z-100">
@@ -395,7 +392,7 @@ const Discossions = () => {
         <>
           <UploadPicture />
           <div className={importPict ? "hidden" : "flex w-full "}>
-            <div className="bg-white w-[25vw] h-[10%]">
+            <div className="bg-white w-[25vw] h-screen">
               <ProfilePage title="Profil">
                 <ProfilePageContent />
               </ProfilePage>
@@ -454,10 +451,10 @@ const Discossions = () => {
                       !start
                         ? "bg-whatsappdashimg bg-no-repeat bg-cover"
                         : "bg-whatsappimg pb-10"
-                    }  border-r border-r-gray-300 z-0 h-[40%]`
+                    }  border-r border-r-gray-300 z-0`
                   : `relative w-[75vw] bg-whatsappdashimg z-0 pb-10 ${
                       !start
-                        ? "bg-whatsappdashimg bg-no-repeat bg-cover "
+                        ? "bg-whatsappdashimg bg-no-repeat bg-cover"
                         : "bg-whatsappimg"
                     }`
               }
@@ -513,7 +510,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col mt-3 px-10 z-0 h-[80vh] overflow-y-auto ">
+              <div className=" w-full flex flex-col pb-2 mt-3 px-10 z-0 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -536,8 +533,8 @@ const Discossions = () => {
                   !start
                     ? "hidden"
                     : openSideNav || openContactInfo
-                    ? "  w-[50vw] lg:w-[42.6%] flex items-center bg-[#e1e1de] h-[] fixed lg:bottom-7 py-2 px-5 gap-5 z-0"
-                    : "lg:w-[63.8%] w-[75vw] flex items-center bg-[#e1e1de] h-[] fixed lg:bottom-7 py-2 px-5 gap-5 z-0"
+                    ? "  w-[50vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
+                    : "w-[75vw] flex items-center bg-bgGray h-[] fixed bottom-0 py-2 px-5 gap-5 z-0"
                 }
               >
                 {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}
@@ -567,7 +564,7 @@ const Discossions = () => {
                   <ToastContainer />
                   <input
                     type="text"
-                    className="w-full my-2 outline-none text-gray-600 px-3"
+                    className="w-full my-2 outline-none text-gray-600 px-3 "
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Type a message"
@@ -600,7 +597,7 @@ const Discossions = () => {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 };
 
