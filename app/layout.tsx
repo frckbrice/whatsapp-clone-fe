@@ -26,10 +26,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const { isDark } = useWhatSappContext();
-
-  // console.log(isDark);
-
   return (
     <html dir="ltr" lang="en">
       <body>
@@ -47,10 +43,7 @@ export default function RootLayout({
                       </div>
                     }
                   >
-                    {/* <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-                      <CssBaseline /> */}
                     {children}
-                    {/* </ThemeProvider> */}
                   </Suspense>
                 </ProfileContextProvider>
               </WhatSappContactContextProvider>{" "}

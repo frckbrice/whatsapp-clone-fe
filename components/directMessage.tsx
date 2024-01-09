@@ -1,30 +1,24 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Avatar from "@/components/Avatar";
 import fetchSingleUser from "@/utils/queries/fetchSingleUser";
-import { Message, User } from "@/type";
+import { User } from "@/type";
 import { useWhatSappContext } from "./context";
 import { useProfileContext } from "./context/profileContext";
 import fetchSingleRoom from "@/utils/queries/fetchSingleRoom";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import { updateReadMessageStatus } from "../utils/queries/updateReadMessageStatus";
-import { updateUnreadMessageCount } from "@/utils/queries/updateUnreadMessageCount";
-import { supabase } from "@/utils/supabase/client";
-import fetchGroupsOfSingleUser from "@/utils/queries/fetchGroupsOfSingleUser";
-import getAllGroupsPerUser from "@/utils/queries/getAllGroups";
-import { AiOutlineConsoleSql } from "react-icons/ai";
+
 import { useWhatSappContactContext } from "./context/Context";
-import { IoIosClose } from "react-icons/io";
 
 type Props = {
   className?: string;
   users: User[];
   setReceiver: React.Dispatch<React.SetStateAction<User | undefined>>;
   setRoomObject: (room: User) => void;
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
   setRecipient: React.Dispatch<React.SetStateAction<User | undefined>>;
-  lastMessage: Message;
+
   currentUserRoomId: string;
 };
 
@@ -33,9 +27,9 @@ const DirectMessage = ({
   users,
   setReceiver,
   setRoomObject,
-  setUsers,
+
   setRecipient,
-  lastMessage,
+
   currentUserRoomId,
 }: Props) => {
   // to style the select room
@@ -48,9 +42,8 @@ const DirectMessage = ({
   // console.log(users);
 
   const { setStart } = useWhatSappContext();
-  const { openContactInfo, setOpenContactInfo } = useWhatSappContactContext();
+  const { setOpenContactInfo } = useWhatSappContactContext();
   const { openProfile } = useProfileContext();
-  const [userData, setUserData] = useState<Array<User>>();
 
   const handleDirectMessage = async (user_id: string) => {
     setOpenContactInfo(false);
@@ -74,7 +67,7 @@ const DirectMessage = ({
     setShowPPicture(true);
   }
 
-  const handleFilter = () => {};
+  console.log(users);
 
   return (
     <div className={` ${openProfile ? "hidden" : className} `}>
@@ -84,11 +77,11 @@ const DirectMessage = ({
             ?.sort(
               (user1: any, user2: any) => user1.updated_at - user2.updated_at
             )
-            .map((discussion: any) => {
+            .map((discussion: any, i) => {
               return (
                 <div
                   onClick={() => handleDirectMessage(discussion.user_id)}
-                  key={discussion.id}
+                  key={i}
                   className={
                     target === discussion.user_id
                       ? "bg-gray-300 flex w-full justify-between border-b border-slate-100 py-1 gap-1 hover:cursor-pointer px-4 items-center "

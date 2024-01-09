@@ -55,7 +55,7 @@ const GroupDetials = ({ roomObject }: Props) => {
 
   useEffect(() => {
     fetchAllUsers();
-    getMembersInGroup(roomObject?.id as string)
+    getGroupMembers(roomObject?.id as string)
       .then(async (membersIds) => {
         if (membersIds?.length) {
           // setMemberid(memberid);

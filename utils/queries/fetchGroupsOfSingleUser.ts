@@ -11,10 +11,7 @@ const fetchGroupsOfSingleUser = async (userId: string | undefined) => {
     }
   } catch (error) {
     if (error)
-      console.log(
-        "could not search for all groups to which user belongs to",
-        error
-      );
+      console.log("Cannot get all groups to which user belongs to", error);
   }
 };
 export default fetchGroupsOfSingleUser;

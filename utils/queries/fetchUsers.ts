@@ -50,7 +50,7 @@ const fetchUsers = async (currentUserId: string) => {
 
   return {
     merged: listToReturn,
-    data: data,
+    data,
     groups: groups.flat().map((group) => group.id),
     currentUserRoomId,
   };
