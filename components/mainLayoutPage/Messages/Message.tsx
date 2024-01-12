@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import React, { useTransition, forwardRef, useState } from "react";
 import SenderMessages from "./SenderMessage";
@@ -21,10 +20,8 @@ type Props = {
   isGroupdiscussion: boolean;
 };
 const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
-  const router = useRouter();
   const [target, setTarget] = useState<string>(props.messageList[0].id);
-  const [isPending, startTransition] = useTransition();
-  const [isFetching, setIsFetching] = useState(false);
+
   const [emojie, setEmojie] = useState<string>();
   const [messageId, setMessageId] = useState<string>("");
 
@@ -41,7 +38,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   const getEmoji = async (emoji: string) => {
     setEmojie(emoji);
-    setIsFetching(true);
+
     const { data, error } = await supabase
       .from("messages")
       .update({
@@ -51,10 +48,6 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
       })
       .eq("id", messageId)
       .single();
-
-    setIsFetching(false);
-    // startTransition(() => router.refresh());
-    // props.setMessageEmoji(false);
   };
 
   let content;

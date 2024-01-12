@@ -4,9 +4,15 @@ import React, { useEffect, useState } from "react";
 import ToastContainer from "rsuite/esm/toaster/ToastContainer";
 import { IoSendSharp } from "react-icons/io5";
 import { Message, User } from "@/type";
-import { client } from "@/app/discussions/page";
+import { RealtimeClient } from "@supabase/realtime-js";
 import { toast } from "react-toastify";
-import { supabase } from "@/utils/supabase/client";
+import { supabase, API_KEY, REALTIME_URL } from "@/utils/supabase/client";
+
+const client = new RealtimeClient(REALTIME_URL, {
+  params: {
+    apikey: API_KEY.toString(),
+  },
+});
 
 type Props = {
   setDiscussionsMessages: React.Dispatch<React.SetStateAction<Message[]>>;
@@ -26,7 +32,7 @@ const MessageInput = ({
   const [message, setMessage] = useState<string>("");
   // const [newMessage, setNewMessage] = useState<Message>();
   let messageIds: string[] = [];
-  console.log(newMessage);
+
   const channel = client.channel(`${receiverId}`, {
     config: {
       broadcast: {

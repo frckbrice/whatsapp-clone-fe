@@ -4,7 +4,7 @@ import Avatar from "../../components/Avatar";
 import { HiDotsVertical } from "react-icons/hi";
 import { GoSearch } from "react-icons/go";
 import { BsEmojiSmile } from "react-icons/bs";
-import { IoSendSharp } from "react-icons/io5";
+
 import { IoMdAdd } from "react-icons/io";
 import DropDown from "../../components/mainLayoutPage/DropDown";
 import {
@@ -25,7 +25,7 @@ import { useProfileContext } from "../../components/context/profileContext";
 import ShowProfilePicture from "@/components/profilPage/ShowProfilePicture";
 import Image from "next/image";
 import UploadPicture from "@/components/profilPage/UploadPicture";
-import { API_KEY, REALTIME_URL, supabase } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
@@ -38,16 +38,9 @@ import DOMPurify from "isomorphic-dompurify";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import insertIntoRooms from "@/utils/queries/insertIntoRoom";
-import { RealtimeChannel } from "@supabase/supabase-js";
-import { RealtimeClient } from "@supabase/realtime-js";
+
 import MessageInput from "@/components/mainLayoutPage/Messages/MessageInput";
 import DisplaySearchResult from "@/components/RightSideBar/DisplaySearchResult";
-
-export const client = new RealtimeClient(REALTIME_URL, {
-  params: {
-    apikey: API_KEY.toString(),
-  },
-});
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -167,7 +160,7 @@ const Discossions = () => {
 
   // Postgres CDc
 
-  const messages = client
+  const messages = supabase
     .channel("message-channel")
     ?.on(
       "postgres_changes",
@@ -462,5 +455,7 @@ const Discossions = () => {
     </>
   );
 };
+
+Discossions.displayName = Discossions;
 
 export default Discossions;
