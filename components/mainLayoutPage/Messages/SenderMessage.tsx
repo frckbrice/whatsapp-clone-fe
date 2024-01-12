@@ -8,12 +8,7 @@ type Props = {
   time?: string;
 };
 
-export default function SenderMessages({
-  content,
-  senderName,
-  phoneNumber,
-  time,
-}: Props) {
+const SenderMessages = ({ content, senderName, phoneNumber, time }: Props) => {
   return (
     <div className="box arrow-right">
       <div className=" py-3 text-[#111b21]">
@@ -33,4 +28,6 @@ export default function SenderMessages({
       </div>
     </div>
   );
-}
+};
+
+export default React.memo(SenderMessages);

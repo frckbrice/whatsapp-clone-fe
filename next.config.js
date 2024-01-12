@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false,
+
   images: {
     remotePatterns: [
       {
@@ -42,11 +44,11 @@ const nextConfig = {
         hostname: "lh3.googleusercontent.com",
       },
       {
-        hostname: "lh3.googleusercontent.com"
+        hostname: "lh3.googleusercontent.com",
       },
       {
-        hostname: "cdn1.iconfinder.com"
-      }
+        hostname: "cdn1.iconfinder.com",
+      },
     ],
   },
 };

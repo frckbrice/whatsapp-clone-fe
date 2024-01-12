@@ -1,8 +1,5 @@
 "use client";
-import {
-  getGroupMembers,
-  getMembersInGroup,
-} from "@/utils/queries/getGroupMembers";
+import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import { data } from "autoprefixer";
 import React, { useEffect, useState } from "react";
 import { IoMdPersonAdd } from "react-icons/io";

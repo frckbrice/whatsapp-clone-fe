@@ -6,7 +6,7 @@ import { useWhatSappContext } from "@/components/context";
 import { useWhatSappContactContext } from "../context/Context";
 
 type Props = {
-  children: React.ReactElement;
+  children: React.ReactNode;
   title: string;
 };
 

@@ -1,4 +1,5 @@
 "use client";
+import { Message } from "@/type";
 import { LOCAL_STORAGE } from "@/utils/service/storage";
 import React from "react";
 import {
@@ -10,6 +11,8 @@ import {
 } from "react";
 
 type WhatSappContextType = {
+  messages: Message[];
+  setMessages: (messages: Message[]) => void;
   openSideNav: boolean;
   showPPicture: boolean;
   openCreateGroup: boolean;
@@ -19,10 +22,7 @@ type WhatSappContextType = {
   groupIcon: string;
   start: boolean;
   addedGroup: boolean;
-  isDark: boolean;
-  label: string;
-  setLabel: Dispatch<SetStateAction<string>>;
-  setIsDark: Dispatch<SetStateAction<boolean>>;
+
   setAddedGroup: Dispatch<SetStateAction<boolean>>;
   setStart: Dispatch<SetStateAction<boolean>>;
   sendingFile: any;
@@ -35,9 +35,22 @@ type WhatSappContextType = {
   setOpenCreateGroup: Dispatch<SetStateAction<boolean>>;
 
   setOpenSideNav: Dispatch<SetStateAction<boolean>>;
+
+  // openProfile: boolean;
+  // setOpenProfile: Dispatch<SetStateAction<boolean>>;
+
+  // showCreateGroup: boolean;
+  // setShowCreateGroupe: Dispatch<SetStateAction<boolean>>;
 };
 
 const initContextState: WhatSappContextType = {
+  // openProfile: false,
+  // setOpenProfile: (openProfile) => !openProfile,
+  // showCreateGroup: false,
+  // setShowCreateGroupe: (showCreateGroup) => !showCreateGroup,
+
+  messages: [],
+  setMessages: () => [],
   openSideNav: false,
   showPPicture: false,
   openCreateGroup: false,
@@ -47,10 +60,7 @@ const initContextState: WhatSappContextType = {
   profileImage: "",
   sendingFile: "",
   addedGroup: false,
-  isDark: false,
-  setIsDark: (label) => !label,
-  label: "",
-  setLabel: () => "",
+
   setAddedGroup: (addedGroup) => !addedGroup,
   groupIcon: "",
   setSendingFile: () => "",
@@ -80,14 +90,15 @@ export const WhatSappContextProvider = ({ children }: any) => {
   const [sendingFile, setSendingFile] = useState<any>();
   const [start, setStart] = useState<boolean>(false);
   const [addedGroup, setAddedGroup] = useState<boolean>(false);
-  const [isDark, setIsDark] = useState(false);
-  const [label, setLabel] = useState("Night");
+
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  // const [openProfile, setOpenProfile] = useState<boolean>(false);
+  // const [showCreateGroup, setShowCreateGroupe] = useState<boolean>;
 
   const values = {
-    isDark,
-    setIsDark,
-    label,
-    setLabel,
+    messages,
+    setMessages,
     openSideNav,
     setOpenSideNav,
     showPPicture,
@@ -108,6 +119,11 @@ export const WhatSappContextProvider = ({ children }: any) => {
     setAddedGroup,
     groupIcon,
     setGroupIcon,
+
+    // openProfile,
+    // setOpenProfile,
+    // showCreateGroup,
+    // setShowCreateGroupe,
   };
 
   if (importPict) console.log("importPict: ", importPict);
@@ -120,57 +136,4 @@ export const WhatSappContextProvider = ({ children }: any) => {
   );
 };
 
-export const useWhatSappContext = () => {
-  const {
-    openSideNav,
-    setOpenSideNav,
-    showPPicture,
-    setShowPPicture,
-    openCreateGroup,
-    setOpenCreateGroup,
-    importPict,
-    setImportPict,
-    profilepict,
-    setProfilPict,
-    profileImage,
-    setProfileImage,
-    sendingFile,
-    setSendingFile,
-    start,
-    setStart,
-    addedGroup,
-    setAddedGroup,
-    groupIcon,
-    setGroupIcon,
-    isDark,
-    setIsDark,
-    label,
-    setLabel,
-  } = useContext(WhatSappContext);
-  return {
-    openSideNav,
-    setOpenSideNav,
-    showPPicture,
-    setShowPPicture,
-    openCreateGroup,
-    setOpenCreateGroup,
-    importPict,
-    setImportPict,
-    profilepict,
-    setProfilPict,
-    profileImage,
-    setProfileImage,
-    sendingFile,
-    setSendingFile,
-    start,
-    setStart,
-    addedGroup,
-    setAddedGroup,
-    groupIcon,
-    setGroupIcon,
-    isDark,
-    setIsDark,
-    label,
-    setLabel,
-  };
-};
+export const useWhatSappContext = () => useContext(WhatSappContext);
