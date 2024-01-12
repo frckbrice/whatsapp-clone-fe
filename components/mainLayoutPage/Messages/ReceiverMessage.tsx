@@ -8,12 +8,12 @@ type Props = {
   time?: string;
 };
 
-export default function ReceiverMessages({
+const ReceiverMessages = ({
   content,
   senderName,
   phoneNumber,
   time,
-}: Props) {
+}: Props) => {
   // console.log("receved message", content);
 
   return (
@@ -36,4 +36,6 @@ export default function ReceiverMessages({
       </div>
     </div>
   );
-}
+};
+
+export default React.memo(ReceiverMessages);

@@ -41,11 +41,7 @@ export const ProfileContextProvider = ({ children }: any) => {
   );
 };
 
-export const useProfileContext = () => {
-  const { openProfile, setOpenProfile, showCreateGroup, setShowCreateGroupe } =
-    useContext(ProfileContext);
-  return { openProfile, setOpenProfile, showCreateGroup, setShowCreateGroupe };
-};
+export const useProfileContext = () => useContext(ProfileContext);
 
 // export const useRecieverInfoContext = () => {
 //   const reciever: any = JSON.parse(localStorage.getItem('reciever') || '{}')

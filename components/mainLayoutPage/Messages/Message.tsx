@@ -1,11 +1,6 @@
+"use client";
 import Image from "next/image";
-import React, {
-  MouseEventHandler,
-  forwardRef,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useTransition, forwardRef, useState } from "react";
 import SenderMessages from "./SenderMessage";
 import ReceiverMessages from "./ReceiverMessage";
 import SimpleMessage from "./SimpleMessage";
@@ -13,6 +8,7 @@ import { Message, User } from "@/type";
 import { FaFaceGrinWide } from "react-icons/fa6";
 import EmojiMessage from "./EmojiMessage";
 import { supabase } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 type Props = {
   messageList: any[];
@@ -25,7 +21,10 @@ type Props = {
   isGroupdiscussion: boolean;
 };
 const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
+  const router = useRouter();
   const [target, setTarget] = useState<string>(props.messageList[0].id);
+  const [isPending, startTransition] = useTransition();
+  const [isFetching, setIsFetching] = useState(false);
   const [emojie, setEmojie] = useState<string>();
   const [messageId, setMessageId] = useState<string>("");
 
@@ -40,10 +39,9 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
     setMessageId(id);
   };
 
-  // console.log("messages list", props.messageList);
-
   const getEmoji = async (emoji: string) => {
     setEmojie(emoji);
+    setIsFetching(true);
     const { data, error } = await supabase
       .from("messages")
       .update({
@@ -54,9 +52,9 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
       .eq("id", messageId)
       .single();
 
-    if (data) console.log("message containing emoji: ", data);
-    if (error) console.log("Error inserting emoji: ", error);
-    props.setMessageEmoji(false);
+    setIsFetching(false);
+    // startTransition(() => router.refresh());
+    // props.setMessageEmoji(false);
   };
 
   let content;
@@ -128,20 +126,22 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
         {props.showMessageEmoji && sortMessageList[0].id === target && (
           <EmojiMessage
             setEmojie={getEmoji}
-            classname="absolute top-[250px] right-[300px]"
+            classname="relative -right-[300px] top-7"
             ref={ref}
           />
         )}
-        <div className="flex justify-end">
-          <span
-            className="w-10 h-10 flex justify-center items-center opacity-0 hover:opacity-100 mx-1  hover:block p-[5px] rounded-full bg-[#a3adb3a7] cursor-pointer"
-            onClick={() => handleTargetEmoji(sortMessageList[0].id)}
-          >
-            <FaFaceGrinWide
-              className=" text-white  mr-[5px] mb-[5px] ml-[5px] "
-              size={25}
-            />
-          </span>
+        <div className="flex justify-end items-center">
+          <div className=" opacity-0 hover:opacity-100 flex justify-end items-center w-full">
+            <span
+              className="w-10 h-10 flex justify-center items-center opacity-0 hover:opacity-100 mx-1  hover:block p-[5px] rounded-full bg-[#a3adb3a7] cursor-pointer"
+              onClick={() => handleTargetEmoji(sortMessageList[0].id)}
+            >
+              <FaFaceGrinWide
+                className=" text-white  mr-[5px] mb-[5px] ml-[5px] "
+                size={25}
+              />
+            </span>
+          </div>
           {props.isGroupdiscussion ? (
             <SenderMessages
               content={sortMessageList[0].content}
@@ -248,14 +248,14 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
           {props.showMessageEmoji && messages.id === target && (
             <EmojiMessage
               setEmojie={getEmoji}
-              classname="relative -right-72 top-5"
+              classname="relative -right-[350px] top-5"
               ref={ref}
             />
           )}
-          <div className="flex justify-end items-center" key={i}>
+          <div className="flex justify-end items-center " key={i}>
             <div className=" opacity-0 hover:opacity-100 flex justify-end items-center w-full">
               <span
-                className="  mx-1  hover:block  rounded-full bg-[#a3adb3a7] w-8 h-8 flex justify-center items-center place-content-center pl-[6px] pt-[5px] cursor-pointer"
+                className="w-12 h-12 p-[5px] flex justify-center items-center  mx-1  rounded-full bg-[#a3adb3a7] cursor-pointer"
                 onClick={() => handleTargetEmoji(messages.id)}
               >
                 <FaFaceGrinWide className=" text-white" size={20} />

@@ -147,9 +147,11 @@ const Discossions = () => {
     )
       .then((messages: any) => {
         if (messages.length) {
+          // to check if the rceiver Id is one my groups' Id.
           if (userGroupsId?.includes(receiver?.id as string)) {
             console.log("group messages: ", messages);
             setDiscussionsMessages(() =>
+              // to change the receiver as me
               messages.map((message: Message) => ({
                 ...message,
                 receiver_room_id: currentUserRoomId,
@@ -168,6 +170,7 @@ const Discossions = () => {
       .catch((err) => {
         if (err instanceof Error) console.error(err);
       });
+    // to get group member Ids
     getGroupMembers(receiver?.id as string)
       .then((membersIds) => {
         if (membersIds?.length) {
@@ -241,14 +244,14 @@ const Discossions = () => {
                   console.log("broadcast messages: ", data);
                 });
             });
-            supabase
-              .channel(`group_:${payload.new.receiver_room_id}`)
-              .on("broadcast", { event: "test" }, (payload) => {
-                if (payload.receiver_room_id !== currentUser.id) {
-                  console.log("Received room message: ", payload);
-                }
-              })
-              .subscribe();
+            // supabase
+            //   .channel(`group_:${payload.new.receiver_room_id}`)
+            //   .on("broadcast", { event: "test" }, (payload) => {
+            //     if (payload.receiver_room_id !== currentUser.id) {
+            //       console.log("Received room message: ", payload);
+            //     }
+            //   })
+            //   .subscribe();
             setDiscussionsMessages((prev) => [
               ...prev,
               { ...payload.new, receiver_room_id: currentUserRoomId },

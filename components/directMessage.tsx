@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import { updateReadMessageStatus } from "../utils/queries/updateReadMessageStatus";
 
 import { useWhatSappContactContext } from "./context/Context";
+import { formatLastMessageTime } from "@/utils/queries/format_time";
 
 type Props = {
   className?: string;
@@ -47,9 +48,9 @@ const DirectMessage = ({
 
   const handleDirectMessage = async (user_id: string) => {
     setOpenContactInfo(false);
-    console.log(user_id);
+    // console.log(user_id);
     let data: User = (await fetchSingleUser(user_id)) as User;
-    console.log("test after fetchsingleUser", data);
+    // console.log("test after fetchsingleUser", data);
 
     setRecipient(data);
     setClicked((prev) => !prev);
@@ -58,7 +59,7 @@ const DirectMessage = ({
     let room: User = (await fetchSingleRoom(user_id)) as User;
     setRoomObject(room);
     setReceiver(room);
-    console.log("single room object", room);
+    // console.log("single room object", room);
 
     await updateReadMessageStatus(user_id, currentUserRoomId as string);
   };
@@ -67,7 +68,7 @@ const DirectMessage = ({
     setShowPPicture(true);
   }
 
-  console.log(users);
+  // console.log(users);
 
   return (
     <div className={` ${openProfile ? "hidden" : className} `}>
@@ -117,7 +118,7 @@ const DirectMessage = ({
                   </div>
                   <div className="flex flex-col gap-1 w-[70px]">
                     <span className="mx-auto text-[#1FA855]">
-                      {dayjs().to(dayjs(discussion?.updated_at))}
+                      {formatLastMessageTime(discussion?.updated_at)}
                     </span>
                     <span
                       className={` p-[5px] w-6 h-6 min-w-fit min-h-fit rounded-full  ${
@@ -126,12 +127,6 @@ const DirectMessage = ({
                     >
                       {discussion.unread_count ?? 0}
                     </span>
-                    {/* <button
-                  className="hover:bg-gray-300 rounded-full w-fit self-center"
-                  onClick={() => removeMember(item.id)}
-                >
-                  <IoIosClose size={20} />
-                </button> */}
                   </div>
                 </div>
               );

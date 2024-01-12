@@ -1,7 +1,6 @@
 "use client";
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Avatar from "../../components/Avatar";
-import { MdGroups2, MdRecordVoiceOver } from "react-icons/md";
 import { HiDotsVertical } from "react-icons/hi";
 import { GoSearch } from "react-icons/go";
 import { BsEmojiSmile } from "react-icons/bs";
@@ -16,8 +15,7 @@ import DropDownR from "../../components/mainLayoutPage/DropdownR";
 import { useWhatSappContext } from "@/components/context";
 import SideNavRight from "../../components/RightSideBar/SideNavRight";
 import SearchField from "../../components/RightSideBar/SearchField";
-import SenderMessages from "@/components/mainLayoutPage/Messages/SenderMessage";
-import ReceiverMessages from "@/components/mainLayoutPage/Messages/ReceiverMessage";
+
 import Messages from "@/components/mainLayoutPage/Messages/Message";
 import ContactInfoPage from "../../components/RightSideBar/ContactInfoPage";
 import { useWhatSappContactContext } from "../../components/context/Context";
@@ -27,23 +25,29 @@ import { useProfileContext } from "../../components/context/profileContext";
 import ShowProfilePicture from "@/components/profilPage/ShowProfilePicture";
 import Image from "next/image";
 import UploadPicture from "@/components/profilPage/UploadPicture";
-import { supabase } from "@/utils/supabase/client";
-import { RiContactsBookLine } from "react-icons/ri";
+import { API_KEY, REALTIME_URL, supabase } from "@/utils/supabase/client";
 import DirectMessage from "@/components/directMessage";
 import fetchUsers from "@/utils/queries/fetchUsers";
 import fetchSignupUser from "@/utils/queries/fetchSignupUser";
 import insertUsersInRooms from "@/utils/queries/insertUsersInRooms";
-import { Message, PartRoomUser, Room, Roomuser, User, Group } from "@/type";
-import { getMessages, shuffleArr } from "@/utils/queries/getMessage";
+import { Message, Room, User } from "@/type";
+import { getMessages } from "@/utils/queries/getMessage";
 import CreateGrt from "@/components/profilPage/CreateGrt";
 import CreateGroup from "@/components/createGroup/CreateGroup";
-import { getGroupMembers } from "@/utils/queries/getGroupMembers";
 import DOMPurify from "isomorphic-dompurify";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import { updateUnreadMessageCount } from "@/utils/queries/updateUnreadMessageCount";
 import insertIntoRooms from "@/utils/queries/insertIntoRoom";
+import { RealtimeChannel } from "@supabase/supabase-js";
+import { RealtimeClient } from "@supabase/realtime-js";
+import MessageInput from "@/components/mainLayoutPage/Messages/MessageInput";
+import DisplaySearchResult from "@/components/RightSideBar/DisplaySearchResult";
+
+export const client = new RealtimeClient(REALTIME_URL, {
+  params: {
+    apikey: API_KEY.toString(),
+  },
+});
 
 const Discossions = () => {
   if (typeof localStorage === "undefined") return;
@@ -58,7 +62,7 @@ const Discossions = () => {
     []
   );
   const [message, setMessage] = useState<string>("");
-  const [updateUsers, setUpdateUsers] = useState<boolean>(false);
+  const [roomMessages, setRoomMessages] = useState<Message[]>([]);
   const [recipient, setRecipient] = useState<User>();
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [userGroupsId, setUserGroupsId] = useState<string[]>([]);
@@ -66,18 +70,16 @@ const Discossions = () => {
   const [isGroupdiscussion, setIsGroupdiscussion] = useState<boolean>(false);
 
   const [roomObject, setRoomObject] = useState<Room>();
-  const [groupMembersIds, setGroupMembersIds] = useState<string[]>();
+  const [newMessage, setNewMessage] = useState<Message>();
   const [showDropdrownright, setShowDropdownright] = useState<boolean>(false);
   const [receiver, setReceiver] = useState<User>();
   const [showDropdrownBottonL, setShowDropdrownBottonL] =
     useState<boolean>(false);
-  const [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
+  let [discussionsMessages, setDiscussionsMessages] = useState<Message[]>([]);
   const [showMessageEmoji, setMessageEmoji] = useState<boolean>(false);
-  const [lastMessage, setLastMessage] = useState<Message>();
+  // const [channel, setChannel] = useState<RealtimeChannel>();
 
   const { showCreateGroup, setShowCreateGroupe } = useProfileContext();
-
-  // if (!email && !currentUser) router.push("/");
 
   const {
     setOpenSideNav,
@@ -104,6 +106,7 @@ const Discossions = () => {
       setMessageEmoji(false);
     }
     if (emojiRef.current && !emojiRef.current.contains(event.target)) {
+      console.log("clicked");
       setMessageEmoji(false);
     }
   };
@@ -139,158 +142,62 @@ const Discossions = () => {
 
   useEffect(() => {
     setDiscussionsMessages([]);
-    getMessages(
-      currentUser?.id as string,
-      receiver?.id as string,
-      receiver?.user_id as string,
-      currentUserRoomId
-    )
-      .then((messages: any) => {
-        if (messages.length) {
-          if (userGroupsId?.includes(receiver?.id as string)) {
-            console.log("group messages: ", messages);
-            setDiscussionsMessages(() =>
-              messages.map((message: Message) => ({
-                ...message,
-                receiver_room_id: currentUserRoomId,
-              }))
-            );
-            setIsGroupdiscussion(true); //to help display group messages with sender name.
-          } else {
-            console.log("all messages: ", messages);
-            setIsGroupdiscussion(false);
+    if (userGroupsId.length)
+      localStorage.setItem("userGroupsId", JSON.stringify(userGroupsId));
+    if (receiver)
+      getMessages(
+        currentUser?.id!,
+        receiver?.id!,
+        receiver?.user_id!,
+        currentUserRoomId
+      )
+        .then((messages: Message[] | undefined): void | PromiseLike<void> => {
+          if (messages?.length) {
             setDiscussionsMessages(messages);
+            if (userGroupsId?.includes(receiver?.id as string))
+              setIsGroupdiscussion(true);
+          } else {
+            setDiscussionsMessages([]);
           }
-        } else {
-          setDiscussionsMessages([]);
-        }
-      })
-      .catch((err) => {
-        if (err instanceof Error) console.error(err);
-      });
-    getGroupMembers(receiver?.id as string)
-      .then((membersIds) => {
-        if (membersIds?.length) {
-          console.log("the member of selected group: ", membersIds);
-          setGroupMembersIds(membersIds);
-        }
-      })
-      .catch((err: any) => {
-        if (err instanceof Error) console.error(err);
-      });
+        })
+        .catch((err) => {
+          if (err instanceof Error) console.error(err);
+        });
   }, [receiver?.id]);
 
-  const sendMessageToDB = async () => {
-    if (message === "" || !receiver?.id) {
-      toast.warning("Field cannot be empty", {
-        autoClose: 1000,
-        position: toast.POSITION.TOP_RIGHT,
-        hideProgressBar: true,
-      });
-      console.log("message or receiver of the message can not be empty");
-      return;
-    }
+  // Postgres CDc
 
-    const sendingMessage: Message = {
-      sender_id: currentUser.id as string,
-      receiver_room_id: receiver?.id as string,
-      content: message,
-      sender_name: currentUser?.name,
-      phone_number: currentUser?.phone as string,
-    };
-    // console.log(sendingMessage);
-    const { error } = await supabase.from("messages").insert(sendingMessage);
-
-    if (error) console.log("error inserting messages: ", error);
-    setMessage("");
-  };
-
-  const handlekeydown = async (event: any) => {
-    if (event.key === "Enter") await sendMessageToDB();
-  };
-
-  const messages = supabase
-    .channel("custom-messages-channel")
-    .on(
+  const messages = client
+    .channel("message-channel")
+    ?.on(
       "postgres_changes",
       { event: "*", schema: "public", table: "messages" },
       async (payload: any) => {
         console.log("Change received!", payload);
-        setLastMessage(payload.new);
 
-        if (payload.eventType === "UPDATE") {
-          const newIndex: number = discussionsMessages?.findIndex(
-            (message: any) => message.id === payload.new.id
-          );
-          if (newIndex != -1)
-            discussionsMessages[newIndex].emoji = payload.new?.emoji;
-          setDiscussionsMessages(discussionsMessages);
-        }
-
-        if (payload.eventType === "INSERT") {
-          if (userGroupsId?.includes(payload.new.receiver_room_id)) {
-            groupMembersIds?.map((memberId) => {
-              supabase
-                .channel(`group_:${payload.new.receiver_room_id}`)
-                .send({
-                  type: "broadcast",
-                  event: "test",
-                  payload: { message: payload.new.content },
-                })
-                .then((data) => {
-                  console.log("broadcast messages: ", data);
-                });
-            });
-            supabase
-              .channel(`group_:${payload.new.receiver_room_id}`)
-              .on("broadcast", { event: "test" }, (payload) => {
-                if (payload.receiver_room_id !== currentUser.id) {
-                  console.log("Received room message: ", payload);
-                }
-              })
-              .subscribe();
-            setDiscussionsMessages((prev) => [
-              ...prev,
-              { ...payload.new, receiver_room_id: currentUserRoomId },
-            ]);
-          } else {
-            setDiscussionsMessages((prev) => [...prev, payload.new]);
+        if (payload.new.receiver_room_id === receiver?.id) {
+          if (payload.eventType === "INSERT") {
+            console.log("this message concernes the room ");
+            setNewMessage(payload.new);
           }
 
-          const { data, error } = await supabase
-            .from("unread_messages")
-            .select("*")
-            .match({
-              sender_id: payload.new.sender_id,
-              receiver_room_id: payload.new.receiver_room_id,
-            })
-            .single();
-
-          let value = 0;
-          if (!data) {
-            value = 1;
-          } else {
-            value = data.unread_count + 1;
-          }
-          await supabase.from("unread_messages").upsert(
-            {
-              sender_id: payload.new.sender_id,
-              receiver_room_id: payload.new.receiver_room_id,
-              unread_count: value,
-              last_message: payload.new.content,
-            },
-            {
-              onConflict: "sender_id, receiver_room_id ",
+          if (payload.eventType === "UPDATE") {
+            console.log("update done");
+            const newIndex: number = discussionsMessages?.findIndex(
+              (message: any) => message.id === payload.new.id
+            );
+            if (newIndex != -1) {
+              discussionsMessages[newIndex].emoji = payload.new?.emoji;
+              setDiscussionsMessages(discussionsMessages);
             }
-          );
+          }
         }
-        // setInsert(false);
       }
     )
     .subscribe();
 
   const unreadMessages = supabase
-    .channel("custom-insert-channel")
+    .channel("unread_messages-channel")
     .on(
       "postgres_changes",
       { event: "*", schema: "public", table: "unread_messages" },
@@ -302,7 +209,8 @@ const Discossions = () => {
         );
         if (
           index !== -1 &&
-          payload.new.receiver_room_id === currentUserRoomId
+          payload.new.receiver_room_id === currentUserRoomId &&
+          (payload.new.last_message || payload.new.unread_count)
         ) {
           console.log("promote to thfirst place", payload);
           users[index] = {
@@ -323,10 +231,10 @@ const Discossions = () => {
     )
     .subscribe();
 
-  // console.log(discussionsMessages);
+  // console.log(roomMessages);
 
   const user = supabase
-    .channel("custom-allusers-channel")
+    .channel("allusers-channel")
     .on(
       "postgres_changes",
       { event: "*", schema: "public", table: "user" },
@@ -337,21 +245,6 @@ const Discossions = () => {
       }
     )
     .subscribe();
-
-  // const rooms = supabase
-  //   .channel("custom-allrooms-channel")
-  //   .on(
-  //     "postgres_changes",
-  //     { event: "*", schema: "public", table: "rooms" },
-  //     (payload: any) => {
-  //       console.log("Change received from room table!", payload);
-  //       if (payload.eventType === "INSERT") {
-  //         if (!users?.find((user) => user.id === payload.new.id))
-  //           setUsers((prev) => [payload.new, ...users]);
-  //       }
-  //     }
-  //   )
-  //   .subscribe();
 
   return (
     <>
@@ -395,10 +288,6 @@ const Discossions = () => {
                 />
 
                 <div className="flex gap-5">
-                  {/* <Header switchTheme={switchTheme} label={label} /> */}
-                  {/* <button className="text-2xl text-gray-600">
-                    <MdGroups2 />
-                  </button> */}
                   <button
                     className="text-2xl text-gray-600 relative rounded-full"
                     onClick={() => setShowDropdownleft((prev) => !prev)}
@@ -489,7 +378,7 @@ const Discossions = () => {
                 </div>
               </div>
 
-              <div className=" w-full flex flex-col pb-2 mt-3 px-10 z-0 h-[80vh] overflow-y-auto ">
+              <div className=" w-full flex flex-col pb-2 mt-3 px-10 h-[80vh] overflow-y-auto ">
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -539,20 +428,13 @@ const Discossions = () => {
                   />
                 </button>
 
-                <div className="flex bg-white items-center rounded-md gap-5 p-1 w-full">
-                  <ToastContainer />
-                  <input
-                    type="text"
-                    className="w-full my-2 outline-none text-gray-600 px-3 "
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Type a message"
-                    onKeyDown={handlekeydown}
-                  />
-                </div>
-                <button className="text-2xl " onClick={sendMessageToDB}>
-                  <IoSendSharp />
-                </button>
+                <MessageInput
+                  setDiscussionsMessages={setDiscussionsMessages}
+                  receiverId={receiver?.id as string}
+                  currentUser={currentUser}
+                  newMessage={newMessage!}
+                  discussionsMessages={discussionsMessages}
+                />
               </div>
             </div>
             {openContactInfo ? (
@@ -561,7 +443,8 @@ const Discossions = () => {
               </SideNavRight>
             ) : (
               <SideNavRight title="Search for messages">
-                <SearchField />
+                <SearchField messageList={discussionsMessages} />
+                <DisplaySearchResult />
               </SideNavRight>
             )}
 
