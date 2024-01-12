@@ -34,23 +34,30 @@ const GoogleButton = () => {
   };
 
   return (
-    <div>
+    <div className=" text-center flex justify-center items-center">
       <button
         onClick={() => handleGoogleSignin()}
         data-u
         className={
           isLoading
-            ? "hover:cursor-not-allowed"
-            : "flex border border-themecolor text-xl items-center rounded p-4 gap-3 px-8   font-bold m-auto"
+            ? "hover:cursor-not-allowed "
+            : "flex border border-themecolor text-xl items-center jus rounded p-4 gap-3 px-8 font-bold m-auto"
         }
       >
-        <Image
-          height={40}
-          width={40}
-          alt="google logo"
-          src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
-        />
-        <p className="text-center">{isLoading ? <Pulsation /> : "Sign In with Google"}</p>
+        {isLoading ? (
+          <Pulsation />
+        ) : (
+          <span className=" flex items-center jus rounded">
+            {" "}
+            <Image
+              height={40}
+              width={40}
+              alt="google logo"
+              src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
+            />
+            <span>&nbsp; Sign In with Google</span>
+          </span>
+        )}
       </button>
     </div>
   );

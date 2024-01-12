@@ -1,5 +1,11 @@
 import Image from "next/image";
-import React, { useTransition, forwardRef, useState } from "react";
+import React, {
+  useTransition,
+  forwardRef,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 import SenderMessages from "./SenderMessage";
 import ReceiverMessages from "./ReceiverMessage";
 import SimpleMessage from "./SimpleMessage";
@@ -59,8 +65,10 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
   console.log("current User room id", props.currentUserRoomId);
 
   if (
-    sortMessageList[0].receiver_room_id === props.currentUserRoomId &&
-    sortMessageList[0].sender_id !== props.currentUser.id
+    (sortMessageList[0].receiver_room_id === props.currentUserRoomId &&
+      sortMessageList[0].sender_id !== props.currentUser.id) ||
+    (sortMessageList[0]?.receiver_room_id !== props.currentUser.id &&
+      sortMessageList[0]?.sender_id !== props.currentUser.id)
   )
     content = (
       <>
@@ -84,12 +92,14 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
                 .slice(0, 5)}
             />
           )}
-          <span
-            className=" opacity-0 hover:opacity-100 mx-1  hover:block p-[5px] rounded-full bg-[#a3adb3a7] "
-            onClick={() => handleTargetEmoji(sortMessageList[0].id)}
-          >
-            <FaFaceGrinWide className=" text-white" size={20} />
-          </span>
+          <div className="opacity-0 hover:opacity-100 flex justify-start items-end w-full ">
+            <span
+              className=" w-12 h-12  mx-1 p-1 pt-[8px] rounded-full bg-[#a3adb3a7] "
+              onClick={() => handleTargetEmoji(sortMessageList[0].id)}
+            >
+              <FaFaceGrinWide className=" text-white" size={20} />
+            </span>
+          </div>
         </div>
         {props.showMessageEmoji && sortMessageList[0].id === target && (
           <EmojiMessage
@@ -173,8 +183,10 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
   const listOfMessages = sortMessageList?.slice(1).map((messages, i) => {
     if (
-      messages.receiver_room_id === props.currentUserRoomId &&
-      messages.sender_id !== props.currentUser.id
+      (messages.receiver_room_id === props.currentUserRoomId &&
+        messages.sender_id !== props.currentUser.id) ||
+      (messages?.receiver_room_id !== props.currentUser.id &&
+        messages?.sender_id !== props.currentUser.id)
     ) {
       // console.log("messages received: ", messages.content);
 
@@ -204,7 +216,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
             )}
             <div className=" opacity-0 hover:opacity-100 flex justify-start items-center w-full">
               <span
-                className=" mx-1  hover:block  rounded-full bg-[#a3adb3a7] w-8 h-8 flex justify-center items-center place-content-center pl-[6px] pt-[5px] cursor-pointer"
+                className=" w-12 h-12 p-[5px] flex justify-center items-center  mx-1  rounded-full bg-[#a3adb3a7] cursor-pointer"
                 onClick={() => handleTargetEmoji(messages.id)}
               >
                 <FaFaceGrinWide className=" text-white" size={20} />
@@ -293,7 +305,7 @@ const Messages = forwardRef<HTMLDivElement, Props>((props, ref) => {
   });
 
   return (
-    <div className=" max-w-full flex flex-col ">
+    <div className="max-w-full flex flex-col h-auto pb-[20px]">
       <div className=" flex justify-center flex-col items-center pt-10 text-[#54656f] mb-3">
         <span className=" w-fit pt-1 pb-[8px] px-3 bg-white shadow-sm rounded-[8px] mb-4 ">
           {" "}

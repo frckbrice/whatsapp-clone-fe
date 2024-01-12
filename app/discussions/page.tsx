@@ -54,8 +54,7 @@ const Discossions = () => {
   const [userInGroupsCreations, setUserInGroupsCreations] = useState<User[]>(
     []
   );
-  const [message, setMessage] = useState<string>("");
-  const [roomMessages, setRoomMessages] = useState<Message[]>([]);
+
   const [recipient, setRecipient] = useState<User>();
   const [showDropdrownleft, setShowDropdownleft] = useState<boolean>(false);
   const [userGroupsId, setUserGroupsId] = useState<string[]>([]);
@@ -103,7 +102,7 @@ const Discossions = () => {
       setMessageEmoji(false);
     }
   };
-
+  const divMessageRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     fetchSignupUser(email)
       .then((data) => {
@@ -130,6 +129,7 @@ const Discossions = () => {
 
     if (ref.current !== null)
       ref.current.addEventListener("click", handleClickOutSide);
+
     return () => document.removeEventListener("click", handleClickOutSide);
   }, [addedGroup]);
 
@@ -156,9 +156,12 @@ const Discossions = () => {
         .catch((err) => {
           if (err instanceof Error) console.error(err);
         });
+    if (divMessageRef && divMessageRef.current) {
+      divMessageRef.current.scrollTo(0, divMessageRef.current.scrollHeight);
+    }
   }, [receiver?.id]);
 
-  // Postgres CDc
+  // Postgres CDC
 
   const messages = supabase
     .channel("message-channel")
@@ -168,7 +171,10 @@ const Discossions = () => {
       async (payload: any) => {
         console.log("Change received!", payload);
 
-        if (payload.new.receiver_room_id === receiver?.id) {
+        if (
+          payload.new.receiver_room_id === receiver?.id ||
+          payload.new.receiver_room_id === currentUserRoomId
+        ) {
           if (payload.eventType === "INSERT") {
             console.log("this message concernes the room ");
             setNewMessage(payload.new);
@@ -216,7 +222,7 @@ const Discossions = () => {
             setUsers(() => [users[index], ...users]);
             return;
           }
-          // * swap two (postion index and 0) elements in an array
+          // * swap two (postions: index and 0) elements in an array
           // users[0] = users.splice(index, 1, users[0])[0];
           setUsers(users);
         }
@@ -370,8 +376,10 @@ const Discossions = () => {
                   )}
                 </div>
               </div>
-
-              <div className=" w-full flex flex-col pb-2 mt-3 px-10 h-[80vh] overflow-y-auto ">
+              <div
+                className="w-full h-[calc(100vh-117px)] bigScreen:h-[calc(100vh-117px-39px)] overflow-y-auto p-4 overflow-x-clip "
+                ref={divMessageRef}
+              >
                 {discussionsMessages.length ? (
                   <Messages
                     messageList={discussionsMessages}
@@ -381,7 +389,6 @@ const Discossions = () => {
                     showMessageEmoji={showMessageEmoji}
                     setMessageEmoji={setMessageEmoji}
                     currentUserRoomId={currentUserRoomId}
-                    // recipient={recipient as User}
                     isGroupdiscussion={isGroupdiscussion}
                   />
                 ) : (
@@ -427,6 +434,7 @@ const Discossions = () => {
                   currentUser={currentUser}
                   newMessage={newMessage!}
                   discussionsMessages={discussionsMessages}
+                  currentUserRoomId={currentUserRoomId}
                 />
               </div>
             </div>
