@@ -233,7 +233,7 @@
     animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
   }
 
-  &::after {
+  /* &::after {
     content: "";
     position: absolute;
     left: 0;
@@ -245,7 +245,7 @@
     border-radius: 15px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
     animation: pulse-dot 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite;
-  }
+  } */
 }
 
 @keyframes pulse-ring {

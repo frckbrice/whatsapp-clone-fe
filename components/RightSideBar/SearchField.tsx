@@ -18,7 +18,7 @@ function SearchField({ messageList }: Props) {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilterdList(messageList.slice());
-    console.log(messageList);
+
     setChangeArrow(true);
     setSearchText(e.target.value);
 

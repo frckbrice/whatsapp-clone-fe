@@ -7,6 +7,7 @@ import { Message, User } from "@/type";
 import { RealtimeClient } from "@supabase/realtime-js";
 import { toast } from "react-toastify";
 import { supabase, API_KEY, REALTIME_URL } from "@/utils/supabase/client";
+import { randomUUID } from "crypto";
 
 const client = new RealtimeClient(REALTIME_URL, {
   params: {
@@ -20,6 +21,7 @@ type Props = {
   currentUser: User;
   newMessage: Message;
   discussionsMessages: Message[];
+  currentUserRoomId: string;
 };
 
 const MessageInput = ({
@@ -28,11 +30,11 @@ const MessageInput = ({
   currentUser,
   newMessage,
   discussionsMessages,
+  currentUserRoomId,
 }: Props) => {
   const [message, setMessage] = useState<string>("");
-  // const [newMessage, setNewMessage] = useState<Message>();
-  let messageIds: string[] = [];
 
+  //* create channel for a room
   const channel = client.channel(`${receiverId}`, {
     config: {
       broadcast: {
@@ -41,6 +43,7 @@ const MessageInput = ({
     },
   });
 
+  //*subscribe to a room channel
   channel?.subscribe(async (status: string, err: any) => {
     // Wait for successful connection
     if (status === "SUBSCRIBED") {
@@ -54,6 +57,7 @@ const MessageInput = ({
 
     if (status === "CHANNEL_ERROR") {
       console.log(`There was an error subscribing to channel: ${err?.message}`);
+
       setTimeout(() => channel.socket.connect(), 100);
     }
 
@@ -68,26 +72,32 @@ const MessageInput = ({
     }
   });
 
-  channel.on("broadcast", { event: "message" }, ({ payload }) => {
-    if (payload && payload.id) {
-      const existingMessage = discussionsMessages?.find(
-        (message) => message.id === payload.id
-      );
-
-      if (!existingMessage && payload.receiver_room_id === receiverId) {
-        console.log("payload from broadcast", payload);
-        console.log(payload.receiver_room_id === receiverId);
-        setDiscussionsMessages((prev) => [...prev, payload]);
-      }
-    }
-  });
-
-  // Unsubscribe when the component unmounts or when no longer needed
   useEffect(() => {
+    channel.on("broadcast", { event: "message" }, ({ payload }) => {
+      if (
+        payload?.receiver_room_id === receiverId ||
+        payload?.receiver_room_id === currentUserRoomId
+      ) {
+        console.log("received payload", newMessage);
+
+        const existingMessage = discussionsMessages?.find(
+          (message) => message.id === payload.id
+        );
+
+        if (!existingMessage) {
+          console.log(
+            "payload from broadcast for non existing message",
+            payload
+          );
+          setDiscussionsMessages((prev) => [...prev, payload]);
+        }
+      }
+    });
+    // Unsubscribe when the component unmounts or when no longer needed
     return () => {
       channel.unsubscribe();
     };
-  }, []);
+  }, [newMessage]);
 
   const sendMessageToDB = async () => {
     if (message === "" || !receiverId) {
@@ -114,6 +124,7 @@ const MessageInput = ({
   const handlekeydown = async (event: any) => {
     if (event.key === "Enter") await sendMessageToDB();
   };
+
   return (
     <div className=" w-full flex items-center justify-center gap-3 ">
       <ToastContainer />
