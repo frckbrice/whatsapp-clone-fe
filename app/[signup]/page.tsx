@@ -63,7 +63,14 @@ const Signupb = () => {
         {isLoading ? <Pulsation /> : "Agree and Continue"}
       </button>
 
-      <p className="text-2xl mt-6 font-extrabold text-themecolor">{success}</p>
+      {success && (
+        <div className="text-2xl mt-6 font-extrabold text-themecolor flex flex-col gap-10">
+          <p>{success} </p>
+          <div>
+            <Pulsation />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
