@@ -55,7 +55,7 @@ const Signupb = () => {
       <button
         onClick={() => handleInputChange()}
         className={`${
-          isLoading ? "hidden" : "border  border-green-400"
+          isLoading ? "border-none" : "border  border-green-400"
         } p-4 px-5 text-[20px] font-extrabold text-black rounded w-fit h-auto flex justify-center items-center ${
           success ? "hidden" : ""
         }`}
