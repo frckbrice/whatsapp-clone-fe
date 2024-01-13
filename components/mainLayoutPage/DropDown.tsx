@@ -50,6 +50,7 @@ const DropDown = forwardRef<HTMLUListElement, IAppProps>((props, ref) => {
     else if (value === "disconnect") SetDisconPopup(true);
 
     if (value === "Show the picture") setShowPPicture(true);
+    if (value === "contact infos") setOpenContactInfo(true);
     if (value === "Import a picture") {
       const inputFile = document.createElement("input") as HTMLInputElement;
       inputFile.type = "file";
