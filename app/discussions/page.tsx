@@ -156,12 +156,15 @@ const Discossions = () => {
         .catch((err) => {
           if (err instanceof Error) console.error(err);
         });
-    if (divMessageRef && divMessageRef.current) {
-      divMessageRef.current.scrollTo(0, divMessageRef.current.scrollHeight);
-    }
   }, [receiver?.id]);
 
   // Postgres CDC
+
+  useEffect(() => {
+    if (ref && ref.current) {
+      ref.current.scrollTo(0, ref.current.scrollHeight);
+    }
+  }, [newMessage]);
 
   const messages = supabase
     .channel("message-channel")
@@ -377,7 +380,7 @@ const Discossions = () => {
                 </div>
               </div>
               <div
-                className="w-full h-[calc(100vh-117px)] bigScreen:h-[calc(100vh-117px-39px)] overflow-y-auto p-4 overflow-x-clip "
+                className="w-full h-[calc(100vh-117px)] bigScreen:h-[calc(100vh-117px-39px)] overflow-y-auto p-4 mb-10 overflow-x-clip "
                 ref={divMessageRef}
               >
                 {discussionsMessages.length ? (
@@ -406,27 +409,6 @@ const Discossions = () => {
                 }
               >
                 {showDropdrownBottonL && <DropDownR ref={dropdownRef} />}
-                <BsEmojiSmile className="text-2xl text-gray-700" />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowDropdrownBottonL((prev) => !prev);
-                    console.log("clicked third");
-                  }}
-                  className={
-                    showDropdrownBottonL
-                      ? " bg-zinc-400 rounded-full transition-opacity-1 duration-150 ease-in"
-                      : "w-fit -rotate-45"
-                  }
-                >
-                  <IoMdAdd
-                    className={
-                      showDropdrownBottonL
-                        ? "text-2xl m-2 text-gray-900 rotate-45 transition-opacity-1 duration-150 ease-in"
-                        : "text-2xl m-2 text-gray-700 -rotate-45"
-                    }
-                  />
-                </button>
 
                 <MessageInput
                   setDiscussionsMessages={setDiscussionsMessages}
