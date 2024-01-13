@@ -4,7 +4,7 @@
 </a> -->
 
 <h1 align="center">
- WhatsApp Web Clone(WaxChat Web)
+ WhatsApp Web Clone(whatsuparealtime Web)
 </h1>
 
 ![WhatsApp Web Clone](/path/to/your/image.png)
