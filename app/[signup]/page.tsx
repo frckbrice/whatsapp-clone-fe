@@ -31,9 +31,9 @@ const Signupb = () => {
       LOCAL_STORAGE.save("email", googleUser?.user?.email);
       const { data, error } = await supabase.from("user").insert({
         email: googleUser?.user.email,
-        name: googleUser?.user.user_metadata.name,
-        image: googleUser?.user.user_metadata.picture,
-        phone: googleUser?.user.identities.phone,
+        name: googleUser?.user.displayName,
+        image: googleUser?.user.photoURL,
+        phone: googleUser?.user.phoneNumber,
       });
       if (error) console.log("an error occured while sending user", error);
       console.log("data from DB", data);
