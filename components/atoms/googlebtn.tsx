@@ -4,6 +4,9 @@ import { supabase } from "@/utils/supabase/client";
 import Image from "next/image";
 import React, { useState } from "react";
 
+import { GoogleAuthProvider, signOut, signInWithPopup } from "firebase/auth";
+import { auth } from "@/utils/firebase/firebase";
+
 const urlToUse = () => {
   let url: string | undefined =
     // process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in production env.
@@ -19,18 +22,38 @@ const urlToUse = () => {
 const GoogleButton = () => {
   const [isLoading, setIsLoading] = useState<Boolean>(false);
 
+  // const handleGoogleSignin = async () => {
+  //   const { data, error } = await supabase.auth.signInWithOAuth({
+  //     provider: "google",
+  //     options: {
+  //       queryParams: {
+  //         access_type: "offline",
+  //         prompt: "consent",
+  //       },
+  //       redirectTo: urlToUse(),
+  //     },
+  //   });
+  //   setIsLoading(true);
+  // };
   const handleGoogleSignin = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        queryParams: {
-          access_type: "offline",
-          prompt: "consent",
-        },
-        redirectTo: urlToUse(),
-      },
-    });
     setIsLoading(true);
+    try {
+      const res = await signInWithPopup(auth, new GoogleAuthProvider());
+
+      if (res) {
+        localStorage.setItem(
+          "sb-xkwspfurbsmpwwazlkmu-auth-token",
+          JSON.stringify(res)
+        );
+      } else {
+        // User is signed out
+        // ...
+        console.log("User is no more connected: ");
+        signOut(auth);
+      }
+    } catch (error) {
+      console.log("error signing with redirect");
+    }
   };
 
   return (
