@@ -4,7 +4,7 @@
 </a> -->
 
 <h1 align="center">
- WhatsApp Web Clone(WaxChat Web)
+ WhatsApp Web Clone(whatsuparealtime Web)
 </h1>
 
 ![WhatsApp Web Clone](/path/to/your/image.png)
@@ -25,16 +25,19 @@ This project is a clone of WhatsApp Web built using Supabase and Next.js. It aim
 - [Supabase](https://supabase.com/): Supabase is an open-source alternative to Firebase, providing a back-end infrastructure for authentication, real-time database, and storage.
 
   Versions Used ; 
-  - @supabase/auth-helpers-nextjs: version 0.8.7
+  -@supabase/realtime-js": "^2.9.1"
   - @supabase/ssr: version 0.0.10
   - @supabase/supabase-js: version 2.38.4
+  -  supabase: "^1.131.3",
+   - tailwindcss: "3.3.3",
+   - typescript: "5.1.3"
 - [Next.js](https://nextjs.org/) (latest version): Next.js is a React framework for building server-side rendered and statically generated web applications.
 - [React](https://reactjs.org/) (version 18.2.0): React is a JavaScript library for building user interfaces.
 - [Tailwind CSS](https://tailwindcss.com/) (version 3.3.3): Tailwind CSS is a utility-first CSS framework for rapidly building custom user interfaces.
 
 ## Demo
 
-You can view a fully working demo at [https://waxchat.vercel.app/](https://https://waxchat.vercel.app/discussions).
+You can view a fully working demo at [https://whatsuparealtime.vercel.app/](https://https://whatsuparealtime.vercel.app/discussions).
 
 ## Project Description
 
