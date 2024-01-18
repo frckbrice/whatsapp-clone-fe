@@ -7,7 +7,8 @@
  WhatsApp Web Clone(whatsuparealtime Web)
 </h1>
 
-![WhatsApp Web Clone](/path/to/your/image.png)
+![home](/public/waxchathomepage.png)
+![dashboard](/public/waxchat1.png)
 
 This project is a clone of WhatsApp Web built using Supabase and Next.js. It aims to replicate the core functionality of WhatsApp Web, allowing users to send and receive messages through a web interface.
 
@@ -29,15 +30,14 @@ This project is a clone of WhatsApp Web built using Supabase and Next.js. It aim
   - @supabase/ssr: version 0.0.10
   - @supabase/supabase-js: version 2.38.4
   -  supabase: "^1.131.3",
-   - tailwindcss: "3.3.3",
-   - typescript: "5.1.3"
+  - tailwindcss: "3.3.3",
+  - typescript: "5.1.3"
 - [Next.js](https://nextjs.org/) (latest version): Next.js is a React framework for building server-side rendered and statically generated web applications.
-- [React](https://reactjs.org/) (version 18.2.0): React is a JavaScript library for building user interfaces.
 - [Tailwind CSS](https://tailwindcss.com/) (version 3.3.3): Tailwind CSS is a utility-first CSS framework for rapidly building custom user interfaces.
 
-## Demo
+## live site
 
-You can view a fully working demo at [https://whatsuparealtime.vercel.app/](https://https://whatsuparealtime.vercel.app/discussions).
+You can view a fully working demo at [https://whatsuparealtime.vercel.app/].
 
 ## Project Description
 
@@ -62,3 +62,26 @@ To get started with the WhatsApp Web Clone (WaxChat Web), follow these steps:
 We would like to acknowledge our school for assigning this project to us as part of our learning journey. This project provides us with an opportunity to explore and apply new technologies and concepts in the field of web development. We are grateful for the guidance and support provided by our teachers and mentors throughout this project.
 
 - The WhatsApp Web interface served as inspiration for this project.
+
+ ## Author
+
+👤 **avom Brice**
+
+- GitHub: [@frckbrice](https://github.com/frckbrice)
+- Twitter: [@johndoe](https://twitter.com/evaristeavom)
+- LinkedIn: [John Doe](https://www.linkedin.com/in/avom-brice/)
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+Feel free to check the [issues page](link to issue page on GitHub).
+
+## Show your support
+
+Give a ⭐️ if you like this project!
+
+## 📝 License (optional)
+
+This project is [MIT](./LICENSE) licensed.
+
